@@ -1,4 +1,4 @@
-package com.matchingMatch.match.domain;
+package com.matchingMatch.match.domain.enums;
 
 
 import lombok.Getter;

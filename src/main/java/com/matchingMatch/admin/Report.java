@@ -1,33 +1,30 @@
-package com.matchingMatch.match.domain;
+package com.matchingMatch.admin;
 
 
-import jakarta.persistence.CascadeType;
+import com.matchingMatch.match.domain.BaseEntity;
+import com.matchingMatch.match.domain.Team;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import lombok.Builder;
 import lombok.Getter;
 
 @Entity
 @Getter
-@Builder
-public class MatchRequest {
-
+public class Report extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Team requestingTeam;
+    private Team team;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private Match targetMatch;
+    private String title;
 
-    public MatchRequest() {
+    private String content;
 
-    }
+    private Long hits;
+
 }

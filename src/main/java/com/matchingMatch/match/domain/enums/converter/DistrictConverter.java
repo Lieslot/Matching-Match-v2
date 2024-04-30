@@ -1,6 +1,6 @@
-package com.matchingMatch.match.converter;
+package com.matchingMatch.match.domain.enums.converter;
 
-import com.matchingMatch.match.domain.SeoulDistrict;
+import com.matchingMatch.match.domain.enums.SeoulDistrict;
 import jakarta.persistence.AttributeConverter;
 
 public class DistrictConverter implements AttributeConverter<SeoulDistrict, String> {

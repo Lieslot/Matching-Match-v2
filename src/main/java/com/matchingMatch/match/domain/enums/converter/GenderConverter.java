@@ -1,6 +1,6 @@
-package com.matchingMatch.match.converter;
+package com.matchingMatch.match.domain.enums.converter;
 
-import com.matchingMatch.match.domain.Gender;
+import com.matchingMatch.match.domain.enums.Gender;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import java.util.stream.Stream;

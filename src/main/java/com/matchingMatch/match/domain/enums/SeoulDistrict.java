@@ -1,4 +1,4 @@
-package com.matchingMatch.match.domain;
+package com.matchingMatch.match.domain.enums;
 
 import java.util.stream.Stream;
 import lombok.Getter;
