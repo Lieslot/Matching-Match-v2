@@ -47,7 +47,7 @@ public class Team extends BaseEntity {
     @Column(nullable = false)
     private Gender gender;
 
-    @Column(nullable = false)
+    @Column
     private Role role;
 
     @OneToMany(mappedBy = "hostId")
