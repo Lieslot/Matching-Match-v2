@@ -17,7 +17,6 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Builder
 public class Team extends BaseEntity {
 
     @Id
@@ -56,6 +55,24 @@ public class Team extends BaseEntity {
     @OneToMany(mappedBy = "participantId")
     private List<Match> participatedMatches;
 
+    @Builder
+    public Team(String account, String password, String teamName, String teamDescription, String teamLogoUrl,
+                Long mannerPointSum, Long matchCount, String region, Gender gender, Role role,
+                List<Match> hostedMatches,
+                List<Match> participatedMatches) {
+        this.account = account;
+        this.password = password;
+        this.teamName = teamName;
+        this.teamDescription = teamDescription;
+        this.teamLogoUrl = teamLogoUrl;
+        this.mannerPointSum = mannerPointSum;
+        this.matchCount = matchCount;
+        this.region = region;
+        this.gender = gender;
+        this.role = role;
+        this.hostedMatches = hostedMatches;
+        this.participatedMatches = participatedMatches;
+    }
 
     public Team() {
 

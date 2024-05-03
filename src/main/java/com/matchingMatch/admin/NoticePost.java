@@ -10,8 +10,14 @@ import lombok.Getter;
 
 @Getter
 @Entity
-@Builder
 public class NoticePost extends BaseEntity {
+
+    @Builder
+    public NoticePost(String title, String content, Long hits) {
+        this.title = title;
+        this.content = content;
+        this.hits = hits;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

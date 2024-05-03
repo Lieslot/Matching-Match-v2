@@ -14,7 +14,6 @@ import lombok.Getter;
 
 @Entity
 @Getter
-@Builder
 public class MatchRequest {
 
     @Id
@@ -26,6 +25,12 @@ public class MatchRequest {
 
     @OneToOne(fetch = FetchType.LAZY)
     private Match targetMatch;
+
+    @Builder
+    public MatchRequest(Team requestingTeam, Match targetMatch) {
+        this.requestingTeam = requestingTeam;
+        this.targetMatch = targetMatch;
+    }
 
     public MatchRequest() {
 

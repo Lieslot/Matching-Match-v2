@@ -2,6 +2,7 @@ package com.matchingMatch.match.service;
 
 
 import com.matchingMatch.match.domain.Match;
+import com.matchingMatch.match.domain.Team;
 import com.matchingMatch.match.domain.repository.MatchRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +17,12 @@ public class MatchService {
 
 
 
-    public void save(Match match) {
-        Match save = matchRepository.save(match);
+    public Long save(Match match) {
+        Team hostId = match.getHostId();
+
+        Match newMatch = matchRepository.save(match);
+
+        return newMatch.getId();
     }
 
     public Match getMatchPostBy(Long matchId) {

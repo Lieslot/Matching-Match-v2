@@ -10,11 +10,17 @@ import lombok.Getter;
 
 @Entity
 @Getter
-@Builder
 public class Stadium {
 
     public Stadium() {
 
+    }
+    @Builder
+    public Stadium(String name, SeoulDistrict district, String isParkPossible, String address) {
+        this.name = name;
+        this.district = district;
+        this.isParkPossible = isParkPossible;
+        this.address = address;
     }
 
     @Id

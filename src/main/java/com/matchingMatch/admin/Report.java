@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import lombok.Builder;
 import lombok.Getter;
 
 @Entity
@@ -27,4 +28,11 @@ public class Report extends BaseEntity {
 
     private Long hits;
 
+    @Builder
+    public Report(Team team, String title, String content, Long hits) {
+        this.team = team;
+        this.title = title;
+        this.content = content;
+        this.hits = hits;
+    }
 }

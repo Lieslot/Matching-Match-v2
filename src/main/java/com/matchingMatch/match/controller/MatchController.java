@@ -7,6 +7,7 @@ import com.matchingMatch.match.dto.MatchPostResponse;
 import com.matchingMatch.match.service.MatchService;
 import jakarta.validation.Valid;
 import java.net.URI;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,13 +29,12 @@ public class MatchController {
 
         Match newMatch = matchPostRequest.toEntity();
 
-        matchService.save(newMatch);
-        URI redirectUri = URI.create(String.format("match/%d", newMatch.getId()));
-        return ResponseEntity.created(redirectUri)
-                             .body("매치 생성");
+        Long id = matchService.save(newMatch);
+
+        URI redirectUri = URI.create(String.format("/match/post/%d", id));
+        return ResponseEntity.created(redirectUri).build();
 
     }
-
 
     @GetMapping(value = "/post/{id}")
     public MatchPostResponse getMatchPost(@PathVariable Long id) {
@@ -42,16 +42,20 @@ public class MatchController {
         Match matchPost = matchService.getMatchPostBy(id);
 
         return MatchPostResponse.builder()
-                                .hostId(matchPost.getHostId())
-                                .participantId(matchPost.getParticipantId())
-                                .stadiumCost(matchPost.getStadiumCost())
-                                .startTime(matchPost.getStartTime())
-                                .endTime(matchPost.getEndTime())
-                                .gender(matchPost.getGender())
-                                .etc(matchPost.getEtc())
-                                .build();
+                .hostId(matchPost.getHostId())
+                .participantId(matchPost.getParticipantId())
+                .stadiumCost(matchPost.getStadiumCost())
+                .startTime(matchPost.getStartTime())
+                .endTime(matchPost.getEndTime())
+                .gender(matchPost.getGender())
+                .etc(matchPost.getEtc())
+                .build();
 
     }
+
+
+
+
 
 
 }
