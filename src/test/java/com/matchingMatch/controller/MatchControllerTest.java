@@ -67,20 +67,19 @@ public class MatchControllerTest {
                 .role(Role.USER)
                 .region("서울 관악구")
                 .build();
-        // 매치를 요청
+
         MatchPostRequest matchPostRequest = MatchPostRequest.builder()
                 .hostId(team)
                 .startTime(LocalDateTime.of(2024, Month.MAY, 15, 20, 15))
-                .endTime(LocalDateTime.of(2024, Month.MAY, 15, 20, 15))
+                .endTime(LocalDateTime.of(2024, Month.MAY, 15, 20, 55))
                 .stadiumCost(15000)
                 .gender(Gender.FEMALE)
                 .build();
-        Match entity = matchPostRequest.toEntity();
 
         String matchPostRequestJson = objectMapper.writeValueAsString(matchPostRequest);
         when(matchService.save(any(Match.class))).thenReturn(1L);
 
-        mockMvc.perform(post("/match/create")
+        mockMvc.perform(post("/match/post/create")
                         .with(csrf()) // post이므로 csrf 추가 안하면 403 반환
                         .content(matchPostRequestJson)
                         .contentType(MediaType.APPLICATION_JSON))

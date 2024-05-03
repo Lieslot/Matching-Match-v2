@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/match")
+@RequestMapping("/match/post")
 @RequiredArgsConstructor
 public class MatchController {
 
@@ -36,7 +36,7 @@ public class MatchController {
 
     }
 
-    @GetMapping(value = "/post/{id}")
+    @GetMapping(value = "/{id}")
     public MatchPostResponse getMatchPost(@PathVariable Long id) {
 
         Match matchPost = matchService.getMatchPostBy(id);
@@ -52,6 +52,8 @@ public class MatchController {
                 .build();
 
     }
+
+
 
 
 
