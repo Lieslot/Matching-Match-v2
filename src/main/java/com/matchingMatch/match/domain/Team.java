@@ -1,6 +1,7 @@
 package com.matchingMatch.match.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.matchingMatch.match.domain.enums.Gender;
 import com.matchingMatch.match.domain.enums.Role;
 import jakarta.persistence.Column;
@@ -21,11 +22,13 @@ public class Team extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
+    @JsonIgnore
     @Column(unique = true, nullable = false)
     private String account;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 
