@@ -15,8 +15,6 @@ public class MatchService {
 
     private final MatchRepository matchRepository;
 
-
-
     public Long save(Match match) {
         Team hostId = match.getHostId();
 
@@ -30,6 +28,25 @@ public class MatchService {
         Optional<Match> result = matchRepository.findById(matchId);
         return result.orElse(null);
     }
+
+    public void deleteMatchPostBy(Long matchId) {
+
+        matchRepository.deleteById(matchId);
+
+    }
+
+    public void updateMatchPostBy(Match updatedMatchPost) {
+
+        boolean isExists = matchRepository.existsById(updatedMatchPost.getId());
+
+        if (!isExists) {
+            throw new IllegalArgumentException();
+        }
+
+        matchRepository.save(updatedMatchPost);
+
+    }
+
 
 
 
