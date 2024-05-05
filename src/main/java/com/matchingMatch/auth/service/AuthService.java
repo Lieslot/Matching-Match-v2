@@ -6,7 +6,6 @@ import com.matchingMatch.match.domain.repository.TeamRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,18 +25,18 @@ public class AuthService {
             throw new BadCredentialsException("아이디 또는 비밀번호가 잘못됨");
         }
         Team team = result.get();
-        String encoded = passwordEncoder.encode(password);
-        if (!encoded.equals(team.getPassword())) {
+
+        if (!checkPassword(password, team)) {
             throw new BadCredentialsException("아이디 또는 비밀번호가 잘못됨");
         }
-
         return jwtProvider.createAccessToken(team.getId());
 
     }
 
-
-
-
+    private boolean checkPassword(String password, Team team) {
+        String encoded = passwordEncoder.encode(password);
+        return encoded.equals(team.getPassword());
+    }
 
 
 }

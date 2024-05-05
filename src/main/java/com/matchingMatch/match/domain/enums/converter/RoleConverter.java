@@ -25,8 +25,9 @@ public class RoleConverter implements AttributeConverter<Role, String> {
     public Role convertToEntityAttribute(String s) {
 
         return Stream.of(Role.values())
-                .filter(g -> g.getName().equals(s))
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                     .filter(g -> g.getName()
+                                   .equals(s))
+                     .findFirst()
+                     .orElseThrow(IllegalArgumentException::new);
     }
 }

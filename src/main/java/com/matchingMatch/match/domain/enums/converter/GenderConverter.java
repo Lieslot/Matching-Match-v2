@@ -23,8 +23,9 @@ public class GenderConverter implements AttributeConverter<Gender, String> {
     @Override
     public Gender convertToEntityAttribute(String s) {
         return Stream.of(Gender.values())
-                .filter(g -> g.getValue().equals(s))
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                     .filter(g -> g.getValue()
+                                   .equals(s))
+                     .findFirst()
+                     .orElseThrow(IllegalArgumentException::new);
     }
 }

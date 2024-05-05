@@ -24,6 +24,7 @@ public class Match extends BaseEntity {
     public Match() {
 
     }
+
     @Builder
     public Match(Team hostId, Team participantId, LocalDateTime startTime, LocalDateTime endTime, Gender gender,
                  int stadiumCost, String etc) {
@@ -62,7 +63,6 @@ public class Match extends BaseEntity {
     private int stadiumCost;
 
     private String etc;
-
 
 
 }

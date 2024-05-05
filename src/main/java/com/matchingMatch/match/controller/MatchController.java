@@ -1,14 +1,17 @@
 package com.matchingMatch.match.controller;
 
 
+import com.matchingMatch.auth.AuthenticatedUser;
+import com.matchingMatch.auth.Authentication;
+import com.matchingMatch.auth.dto.UserAuth;
 import com.matchingMatch.match.domain.Match;
 import com.matchingMatch.match.dto.MatchPostRequest;
 import com.matchingMatch.match.dto.MatchPostResponse;
 import com.matchingMatch.match.service.MatchService;
 import jakarta.validation.Valid;
 import java.net.URI;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,63 +29,91 @@ public class MatchController {
 
     private final MatchService matchService;
 
+    @AuthenticatedUser
     @PostMapping(value = "/create")
-    public ResponseEntity<String> createNewMatchPost(@Valid @RequestBody MatchPostRequest matchPostRequest) {
+    public ResponseEntity<String> createNewMatchPost(
+            @Valid @RequestBody MatchPostRequest matchPostRequest,
+            @Authentication UserAuth userAuth) {
 
         Match newMatch = matchPostRequest.toEntity();
 
-        Long id = matchService.save(newMatch);
+        try {
+            Long postId = matchService.save(newMatch, userAuth.getId());
 
-        URI redirectUri = URI.create(String.format("/match/post/%d", id));
-        return ResponseEntity.created(redirectUri).build();
+            URI redirectUri = URI.create(String.format("/match/post/%d", postId));
+            return ResponseEntity.created(redirectUri)
+                                 .build();
+
+        } catch (IllegalArgumentException e) {
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                 .build();
+
+        }
+
 
     }
 
-    @GetMapping(value = "/{id}")
-    public MatchPostResponse getMatchPost(@PathVariable Long id) {
+    @GetMapping(value = "/{postId}")
+    public MatchPostResponse getMatchPost(@PathVariable Long postId) {
 
-        Match matchPost = matchService.getMatchPostBy(id);
+        Match matchPost = matchService.getMatchPostBy(postId);
 
         return MatchPostResponse.builder()
-                .hostId(matchPost.getHostId())
-                .participantId(matchPost.getParticipantId())
-                .stadiumCost(matchPost.getStadiumCost())
-                .startTime(matchPost.getStartTime())
-                .endTime(matchPost.getEndTime())
-                .gender(matchPost.getGender())
-                .etc(matchPost.getEtc())
-                .build();
+                                .hostId(matchPost.getHostId())
+                                .participantId(matchPost.getParticipantId())
+                                .stadiumCost(matchPost.getStadiumCost())
+                                .startTime(matchPost.getStartTime())
+                                .endTime(matchPost.getEndTime())
+                                .gender(matchPost.getGender())
+                                .etc(matchPost.getEtc())
+                                .build();
 
     }
 
+    @AuthenticatedUser
+    @DeleteMapping(value = "/delete/{postId}")
+    public ResponseEntity<Void> deleteMatchPost(
+            @PathVariable Long postId,
+            @Authentication UserAuth userAuth) {
 
-    @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<Void> deleteMatchPost(@PathVariable Long id) {
+        try {
+            matchService.deleteMatchPostBy(postId, userAuth.getId());
+        } catch (IllegalArgumentException e) {
 
-        Match matchPost = matchService.getMatchPostBy(id);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                 .build();
 
-        matchService.deleteMatchPostBy(id);
+        }
 
-        return ResponseEntity.noContent().build();
-
-    }
-
-
-    @PutMapping(value = "/update/{id}")
-    public ResponseEntity<Void> updateMatchPost(@PathVariable Long id,
-                                             @Valid @RequestBody MatchPostRequest matchPostRequest) {
-
-        Match updatedMatchPost = matchPostRequest.toEntity();
-        matchService.updateMatchPostBy(updatedMatchPost);
-
-        URI redirectUri = URI.create(String.format("/match/post/%d", id));
-
-        return ResponseEntity.created(redirectUri).build();
+        return ResponseEntity.noContent()
+                             .build();
 
     }
 
+    @AuthenticatedUser
+    @PutMapping(value = "/update/{postId}")
+    public ResponseEntity<Void> updateMatchPost(
+            @PathVariable Long postId,
+            @Valid @RequestBody MatchPostRequest matchPostRequest,
+            @Authentication UserAuth userAuth) {
+
+        try {
+            Match updatedMatchPost = matchPostRequest.toEntity();
+            matchService.updateMatch(updatedMatchPost, userAuth.getId());
+
+            URI redirectUri = URI.create(String.format("/match/post/%d", postId));
+            return ResponseEntity.created(redirectUri)
+                                 .build();
+        } catch (IllegalArgumentException e) {
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                 .build();
+
+        }
 
 
+    }
 
 
 }

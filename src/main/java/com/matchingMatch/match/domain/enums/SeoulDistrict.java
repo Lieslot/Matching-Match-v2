@@ -38,9 +38,9 @@ public enum SeoulDistrict {
 
     public static SeoulDistrict of(String name) {
         return Stream.of(SeoulDistrict.values())
-                .filter(district -> district.name.equals(name))
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                     .filter(district -> district.name.equals(name))
+                     .findFirst()
+                     .orElseThrow(IllegalArgumentException::new);
 
     }
 

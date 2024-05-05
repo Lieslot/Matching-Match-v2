@@ -19,5 +19,4 @@ public class LoginResolverConfig implements WebMvcConfigurer {
     }
 
 
-
 }

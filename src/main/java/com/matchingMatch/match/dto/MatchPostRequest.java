@@ -1,15 +1,8 @@
 package com.matchingMatch.match.dto;
 
 import com.matchingMatch.match.domain.Match;
-import com.matchingMatch.match.domain.MatchRequest;
 import com.matchingMatch.match.domain.Team;
 import com.matchingMatch.match.domain.enums.Gender;
-import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import lombok.Builder;
@@ -38,13 +31,13 @@ public class MatchPostRequest {
 
     public Match toEntity() {
         return Match.builder()
-                .hostId(hostId)
-                .startTime(startTime)
-                .endTime(endTime)
-                .gender(gender)
-                .stadiumCost(stadiumCost)
-                .etc(etc)
-                .build();
+                    .hostId(hostId)
+                    .startTime(startTime)
+                    .endTime(endTime)
+                    .gender(gender)
+                    .stadiumCost(stadiumCost)
+                    .etc(etc)
+                    .build();
     }
 
 

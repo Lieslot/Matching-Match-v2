@@ -1,6 +1,5 @@
 package com.matchingMatch.match.dto;
 
-import com.matchingMatch.match.domain.Match;
 import com.matchingMatch.match.domain.Team;
 import com.matchingMatch.match.domain.enums.Gender;
 import jakarta.validation.constraints.NotNull;
@@ -29,7 +28,6 @@ public class MatchPostResponse {
     private int stadiumCost;
 
     private String etc;
-
 
 
 }

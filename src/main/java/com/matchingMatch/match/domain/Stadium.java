@@ -15,6 +15,7 @@ public class Stadium {
     public Stadium() {
 
     }
+
     @Builder
     public Stadium(String name, SeoulDistrict district, String isParkPossible, String address) {
         this.name = name;
@@ -34,7 +35,6 @@ public class Stadium {
     private String isParkPossible;
 
     private String address;
-
 
 
 }
