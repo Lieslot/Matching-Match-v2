@@ -60,8 +60,8 @@ public class MatchController {
         Match matchPost = matchService.getMatchPostBy(postId);
 
         return MatchPostResponse.builder()
-                                .hostId(matchPost.getHostId())
-                                .participantId(matchPost.getParticipantId())
+                                .hostId(matchPost.getHost())
+                                .participantId(matchPost.getParticipant())
                                 .stadiumCost(matchPost.getStadiumCost())
                                 .startTime(matchPost.getStartTime())
                                 .endTime(matchPost.getEndTime())

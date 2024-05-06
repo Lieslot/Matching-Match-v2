@@ -1,7 +1,10 @@
 package com.matchingMatch.match.domain;
 
 
+import static jakarta.persistence.CascadeType.*;
+
 import com.matchingMatch.match.domain.enums.Gender;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,7 +13,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,10 +32,10 @@ public class Match extends BaseEntity {
     }
 
     @Builder
-    public Match(Team hostId, Team participantId, LocalDateTime startTime, LocalDateTime endTime, Gender gender,
+    public Match(Team host, Team participant, LocalDateTime startTime, LocalDateTime endTime, Gender gender,
                  int stadiumCost, String etc) {
-        this.hostId = hostId;
-        this.participantId = participantId;
+        this.host = host;
+        this.participant = participant;
         this.startTime = startTime;
         this.endTime = endTime;
         this.gender = gender;
@@ -41,13 +47,16 @@ public class Match extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "host_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    private Team hostId;
+    private Team host;
 
+    @JoinColumn(name = "participant_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private Team participantId;
+    private Team participant;
 
+    @OneToMany(mappedBy = "match", fetch = FetchType.LAZY, cascade = {MERGE, REMOVE, PERSIST})
+    private Set<MatchRequest> matchRequests;
 
     @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd:hh:mm:ss")
@@ -64,5 +73,28 @@ public class Match extends BaseEntity {
 
     private String etc;
 
+
+    public void addRequestTeam(MatchRequest matchRequest) {
+
+        if (matchRequests.contains(matchRequest)) {
+            throw new IllegalArgumentException("이미 신청한 매치입니다.");
+        }
+
+        matchRequests.add(matchRequest);
+    }
+
+    public void deleteRequestTeam(MatchRequest matchRequest) {
+        if (!matchRequests.contains(matchRequest)) {
+            throw new IllegalArgumentException("신청하지 않았던 매치입니다.");
+        }
+
+        matchRequests.remove(matchRequest);
+    }
+
+    public void confirmParticipant(Team participant) {
+
+        this.participant = participant;
+
+    }
 
 }

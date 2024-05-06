@@ -2,21 +2,23 @@ package com.matchingMatch.match.service;
 
 
 import com.matchingMatch.match.domain.Match;
+import com.matchingMatch.match.domain.MatchRequest;
 import com.matchingMatch.match.domain.Team;
 import com.matchingMatch.match.domain.repository.MatchRepository;
 import com.matchingMatch.match.domain.repository.TeamRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.web.access.WebInvocationPrivilegeEvaluator;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class MatchService {
 
+    private static final String INVALID_AUTHORITY = "권한이 없는 접근입니다.";
     private final MatchRepository matchRepository;
     private final TeamRepository teamRepository;
-
-    private static final String INVALID_AUTHORITY = "권한이 없는 접근입니다.";
+    private final WebInvocationPrivilegeEvaluator privilegeEvaluator;
 
     public Long save(Match match, Long userId) {
 
@@ -28,7 +30,7 @@ public class MatchService {
 
         Team host = result.get();
 
-        match.setHostId(host);
+        match.setHost(host);
         Match newMatch = matchRepository.save(match);
 
         return newMatch.getId();
@@ -44,10 +46,7 @@ public class MatchService {
     public void deleteMatchPostBy(Long matchId, Long userId) {
         Match matchPost = getMatchPostBy(matchId);
 
-        if (!checkHostUser(matchPost.getHostId(), userId)) {
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
-        }
-
+        checkHostUser(matchPost.getHost(), userId);
 
         matchRepository.deleteById(matchId);
 
@@ -55,10 +54,7 @@ public class MatchService {
 
     public void updateMatch(Match updatedMatchPost, Long userId) {
 
-
-        if (!checkHostUser(updatedMatchPost.getHostId(), userId)) {
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
-        }
+        checkHostUser(updatedMatchPost.getHost(), userId);
 
         boolean isExists = matchRepository.existsById(updatedMatchPost.getId());
 
@@ -70,10 +66,64 @@ public class MatchService {
 
     }
 
-    private boolean checkHostUser(Team hostTeam, Long currentUserId) {
-        return currentUserId.equals(hostTeam.getId());
+    private void checkHostUser(Team hostTeam, Long currentUserId) {
+        if (!currentUserId.equals(hostTeam.getId())) {
+            throw new IllegalArgumentException(INVALID_AUTHORITY);
+        }
     }
 
+    // TODO 매치 신청 로직 추가
+    public void addMatchRequest(Long matchId, Long requestTeamId) {
+
+        Optional<Match> matchResult = matchRepository.findById(matchId);
+        Optional<Team> teamResult = teamRepository.findById(requestTeamId);
+
+        if (teamResult.isEmpty() || matchResult.isEmpty()) {
+            throw new IllegalArgumentException(INVALID_AUTHORITY);
+        }
+        Team team = teamResult.get();
+        Match match = matchResult.get();
+
+        MatchRequest matchRequest = new MatchRequest(team, match);
+        match.addRequestTeam(matchRequest);
+
+
+    }
+
+    // TODO 매치 신청 취소 로직 추가
+    public void cancelMatchRequest(Long matchId, Long teamId) {
+
+        Optional<Match> matchResult = matchRepository.findById(matchId);
+        Optional<Team> teamResult = teamRepository.findById(teamId);
+
+        if (teamResult.isEmpty() || matchResult.isEmpty()) {
+            throw new IllegalArgumentException(INVALID_AUTHORITY);
+        }
+        Team team = teamResult.get();
+        Match match = matchResult.get();
+
+        MatchRequest matchRequest = new MatchRequest(team, match);
+        match.deleteRequestTeam(matchRequest);
+    }
+    
+    
+    // TODO 매치 신청 확정 로직
+    public void confirmMatchRequest(Long matchId, Long currentUserId, Long confirmedTeamId) {
+
+        Optional<Match> matchResult = matchRepository.findById(matchId);
+        Optional<Team> teamResult = teamRepository.findById(confirmedTeamId);
+
+        if (teamResult.isEmpty() || matchResult.isEmpty()) {
+            throw new IllegalArgumentException(INVALID_AUTHORITY);
+        }
+
+        Team participantTeam = teamResult.get();
+        Match match = matchResult.get();
+
+        checkHostUser(match.getHost(), currentUserId);
+
+        match.confirmParticipant(participantTeam);
+    }
 
 
 }

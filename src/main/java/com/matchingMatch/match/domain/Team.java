@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.List;
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -52,10 +53,10 @@ public class Team extends BaseEntity {
     @Column
     private Role role;
 
-    @OneToMany(mappedBy = "hostId")
+    @OneToMany(mappedBy = "host")
     private List<Match> hostedMatches;
 
-    @OneToMany(mappedBy = "participantId")
+    @OneToMany(mappedBy = "participant")
     private List<Match> participatedMatches;
 
     @Builder
@@ -79,5 +80,22 @@ public class Team extends BaseEntity {
 
     public Team() {
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Team team = (Team) o;
+        return Objects.equals(id, team.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
