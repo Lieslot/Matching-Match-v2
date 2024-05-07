@@ -31,7 +31,7 @@ public class MatchPostRequest {
 
     public Match toEntity() {
         return Match.builder()
-                    .hostId(hostId)
+                    .host(hostId)
                     .startTime(startTime)
                     .endTime(endTime)
                     .gender(gender)

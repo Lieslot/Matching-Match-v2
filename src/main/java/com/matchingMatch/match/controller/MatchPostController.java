@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/match/post")
 @RequiredArgsConstructor
-public class MatchController {
+public class MatchPostController {
 
     private final MatchService matchService;
 
@@ -42,12 +42,12 @@ public class MatchController {
 
             URI redirectUri = URI.create(String.format("/match/post/%d", postId));
             return ResponseEntity.created(redirectUri)
-                                 .build();
+                    .build();
 
         } catch (IllegalArgumentException e) {
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                                 .build();
+                    .build();
 
         }
 
@@ -60,14 +60,14 @@ public class MatchController {
         Match matchPost = matchService.getMatchPostBy(postId);
 
         return MatchPostResponse.builder()
-                                .hostId(matchPost.getHost())
-                                .participantId(matchPost.getParticipant())
-                                .stadiumCost(matchPost.getStadiumCost())
-                                .startTime(matchPost.getStartTime())
-                                .endTime(matchPost.getEndTime())
-                                .gender(matchPost.getGender())
-                                .etc(matchPost.getEtc())
-                                .build();
+                .hostId(matchPost.getHost())
+                .participantId(matchPost.getParticipant())
+                .stadiumCost(matchPost.getStadiumCost())
+                .startTime(matchPost.getStartTime())
+                .endTime(matchPost.getEndTime())
+                .gender(matchPost.getGender())
+                .etc(matchPost.getEtc())
+                .build();
 
     }
 
@@ -82,12 +82,12 @@ public class MatchController {
         } catch (IllegalArgumentException e) {
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                                 .build();
+                    .build();
 
         }
 
         return ResponseEntity.noContent()
-                             .build();
+                .build();
 
     }
 
@@ -104,14 +104,13 @@ public class MatchController {
 
             URI redirectUri = URI.create(String.format("/match/post/%d", postId));
             return ResponseEntity.created(redirectUri)
-                                 .build();
+                    .build();
         } catch (IllegalArgumentException e) {
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                                 .build();
+                    .build();
 
         }
-
 
     }
 

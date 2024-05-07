@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import lombok.Builder;
@@ -54,10 +55,10 @@ public class Team extends BaseEntity {
     private Role role;
 
     @OneToMany(mappedBy = "host")
-    private List<Match> hostedMatches;
+    private List<Match> hostedMatches = new ArrayList<>();
 
     @OneToMany(mappedBy = "participant")
-    private List<Match> participatedMatches;
+    private List<Match> participatedMatches = new ArrayList<>();
 
     @Builder
     public Team(String account, String password, String teamName, String teamDescription, String teamLogoUrl,

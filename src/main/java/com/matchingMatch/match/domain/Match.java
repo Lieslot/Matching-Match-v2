@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import lombok.Builder;
@@ -55,8 +56,9 @@ public class Match extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Team participant;
 
-    @OneToMany(mappedBy = "match", fetch = FetchType.LAZY, cascade = {MERGE, REMOVE, PERSIST})
-    private Set<MatchRequest> matchRequests;
+    @OneToMany(mappedBy = "targetMatch", fetch = FetchType.LAZY,
+            cascade = {REMOVE, PERSIST}, orphanRemoval = true)
+    private Set<MatchRequest> matchRequests = new HashSet<>();
 
     @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd:hh:mm:ss")
@@ -97,4 +99,9 @@ public class Match extends BaseEntity {
 
     }
 
+    public void cancelParticipant() {
+
+        this.participant = null;
+
+    }
 }

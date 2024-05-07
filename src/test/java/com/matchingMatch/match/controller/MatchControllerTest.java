@@ -31,7 +31,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(MatchController.class)
+@WebMvcTest(MatchPostController.class)
 public class MatchControllerTest {
 
     @MockBean

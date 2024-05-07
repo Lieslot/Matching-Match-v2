@@ -6,6 +6,7 @@ import com.matchingMatch.match.domain.MatchRequest;
 import com.matchingMatch.match.domain.Team;
 import com.matchingMatch.match.domain.repository.MatchRepository;
 import com.matchingMatch.match.domain.repository.TeamRepository;
+import jakarta.transaction.Transactional;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.web.access.WebInvocationPrivilegeEvaluator;
@@ -72,7 +73,7 @@ public class MatchService {
         }
     }
 
-    // TODO 매치 신청 로직 추가
+    @Transactional
     public void addMatchRequest(Long matchId, Long requestTeamId) {
 
         Optional<Match> matchResult = matchRepository.findById(matchId);
@@ -90,7 +91,7 @@ public class MatchService {
 
     }
 
-    // TODO 매치 신청 취소 로직 추가
+    @Transactional
     public void cancelMatchRequest(Long matchId, Long teamId) {
 
         Optional<Match> matchResult = matchRepository.findById(matchId);
@@ -105,9 +106,8 @@ public class MatchService {
         MatchRequest matchRequest = new MatchRequest(team, match);
         match.deleteRequestTeam(matchRequest);
     }
-    
-    
-    // TODO 매치 신청 확정 로직
+
+    @Transactional
     public void confirmMatchRequest(Long matchId, Long currentUserId, Long confirmedTeamId) {
 
         Optional<Match> matchResult = matchRepository.findById(matchId);
@@ -125,5 +125,23 @@ public class MatchService {
         match.confirmParticipant(participantTeam);
     }
 
+    @Transactional
+    public void cancelConfirmedMatch(Long matchId, Long currentUserId) {
 
+        Optional<Match> matchResult = matchRepository.findById(matchId);
+        Optional<Team> teamResult = teamRepository.findById(currentUserId);
+
+        if (teamResult.isEmpty() || matchResult.isEmpty()) {
+            throw new IllegalArgumentException(INVALID_AUTHORITY);
+        }
+
+        Match match = matchResult.get();
+        Team team = teamResult.get();
+
+        if (!match.getParticipant().equals(team) && !match.getHost().equals(team)) {
+            throw new IllegalArgumentException(INVALID_AUTHORITY);
+        }
+
+        match.cancelParticipant();
+    }
 }
