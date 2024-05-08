@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cglib.core.Local;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -59,8 +60,8 @@ public class MatchingServiceTest {
         match = Match.builder()
                 .host(hostTeam)
                 .startTime(
-                        LocalDateTime.of(2024, Month.MAY, 15, 20, 15))
-                .endTime(LocalDateTime.of(2024, Month.MAY, 15, 20, 55))
+                        LocalDateTime.now())
+                .endTime(LocalDateTime.now().plusSeconds(1))
                 .stadiumCost(15000)
                 .gender(Gender.FEMALE)
                 .build();
@@ -136,6 +137,31 @@ public class MatchingServiceTest {
         Assertions.assertThat(match.getParticipant()).isNull();
     }
 
+    @Transactional
+    @Test
+    void 매치_이후_주최자측_매너평가_테스트() throws InterruptedException {
+
+        matchService.addMatchRequest(match.getId(), otherTeam.getId());
+        matchService.confirmMatchRequest(match.getId(), hostTeam.getId(), otherTeam.getId());
+        matchService.rateMannerPoint(match.getId(), hostTeam.getId(), 10L);
+
+        Assertions.assertThat(otherTeam.getMannerPointSum()).isEqualTo(10L);
+        Assertions.assertThat(otherTeam.getMatchCount()).isEqualTo(1L);
+
+    }
+
+    @Transactional
+    @Test
+    void 매치_이후_참가자측_매너평가_테스트() throws InterruptedException {
+
+        matchService.addMatchRequest(match.getId(), otherTeam.getId());
+        matchService.confirmMatchRequest(match.getId(), hostTeam.getId(), otherTeam.getId());
+        matchService.rateMannerPoint(match.getId(), otherTeam.getId(), 10L);
+
+        Assertions.assertThat(hostTeam.getMannerPointSum()).isEqualTo(10L);
+        Assertions.assertThat(hostTeam.getMatchCount()).isEqualTo(1L);
+
+    }
 
 
 
