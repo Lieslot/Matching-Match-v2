@@ -4,13 +4,12 @@ package com.matchingMatch.match.controller;
 import com.matchingMatch.auth.AuthenticatedUser;
 import com.matchingMatch.auth.Authentication;
 import com.matchingMatch.auth.dto.UserAuth;
-import com.matchingMatch.match.domain.Match;
+import com.matchingMatch.match.dto.MannerRateRequest;
 import com.matchingMatch.match.dto.MatchCancelRequest;
 import com.matchingMatch.match.dto.MatchConfirmRequest;
 import com.matchingMatch.match.service.MatchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +27,6 @@ public class MatchingController {
     private final MatchService matchService;
 
 
-
     @AuthenticatedUser
     @PostMapping("/{matchPostId}")
     public ResponseEntity<Void> sendMatchRequest(
@@ -38,11 +36,12 @@ public class MatchingController {
         try {
             matchService.addMatchRequest(matchPostId, userAuth.getId());
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                 .build();
         }
 
-
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok()
+                             .build();
 
     }
 
@@ -59,14 +58,14 @@ public class MatchingController {
 
         try {
             matchService.confirmMatchRequest(matchPostId, hostId, confirmedTeamId);
-        }  catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                 .build();
         }
 
-
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok()
+                             .build();
     }
-
 
 
     @AuthenticatedUser
@@ -79,11 +78,12 @@ public class MatchingController {
         try {
             matchService.cancelMatchRequest(matchPostId, userAuth.getId());
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                 .build();
         }
 
-
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.accepted()
+                             .build();
     }
 
 
@@ -98,11 +98,28 @@ public class MatchingController {
         try {
             matchService.cancelConfirmedMatch(matchPostId, userAuth.getId());
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                 .build();
         }
 
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.accepted()
+                             .build();
     }
 
+
+    @PostMapping("/rate")
+    @AuthenticatedUser
+    public ResponseEntity<Void> rateMannerPoint
+            (@RequestBody MannerRateRequest mannerRateRequest,
+             @Authentication UserAuth userAuth) {
+        Long mannerPoint = mannerRateRequest.getMannerRate();
+        Long matchId = mannerRateRequest.getMatchId();
+        Long currentUserId = userAuth.getId();
+
+        matchService.rateMannerPoint(matchId, currentUserId, mannerPoint);
+
+        return ResponseEntity.ok()
+                             .build();
+    }
 
 }

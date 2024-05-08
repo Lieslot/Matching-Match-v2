@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -75,6 +76,11 @@ public class Match extends BaseEntity {
 
     private String etc;
 
+    @OneToOne(mappedBy = "matchId", fetch = FetchType.LAZY,
+            cascade = {PERSIST, MERGE, REMOVE},
+            orphanRemoval = true)
+    private MatchRateCheck matchRateCheck = new MatchRateCheck();
+
 
     public void addRequestTeam(MatchRequest matchRequest) {
 
@@ -104,4 +110,5 @@ public class Match extends BaseEntity {
         this.participant = null;
 
     }
+
 }

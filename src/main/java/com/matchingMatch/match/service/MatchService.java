@@ -19,7 +19,6 @@ public class MatchService {
     private static final String INVALID_AUTHORITY = "권한이 없는 접근입니다.";
     private final MatchRepository matchRepository;
     private final TeamRepository teamRepository;
-    private final WebInvocationPrivilegeEvaluator privilegeEvaluator;
 
     public Long save(Match match, Long userId) {
 
@@ -138,10 +137,41 @@ public class MatchService {
         Match match = matchResult.get();
         Team team = teamResult.get();
 
-        if (!match.getParticipant().equals(team) && !match.getHost().equals(team)) {
+        if (!match.getParticipant()
+                  .equals(team) && !match.getHost()
+                                         .equals(team)) {
             throw new IllegalArgumentException(INVALID_AUTHORITY);
         }
 
         match.cancelParticipant();
+    }
+
+    // TODO 매너 포인트 체크 로직 추가
+    public void rateMannerPoint(Long matchId, Long currentUserId, Long mannerPoint) {
+
+        Optional<Match> matchResult = matchRepository.findById(matchId);
+        Optional<Team> teamResult = teamRepository.findById(currentUserId);
+
+        if (matchResult.isEmpty() || teamResult.isEmpty()) {
+            throw new IllegalArgumentException(INVALID_AUTHORITY);
+        }
+
+        Match match = matchResult.get();
+        Team team = teamResult.get();
+
+
+        // TODO host인지 participant인지 체크
+
+        if (match.getParticipant().equals(team)) {
+            match.getMatchRateCheck().checkHost();
+            match.getHost().isRatedAfterMatch(mannerPoint);
+        } else if (match.getHost().equals(team)) {
+            match.getMatchRateCheck().checkParticipant();
+            match.getParticipant().isRatedAfterMatch(mannerPoint);
+        } else {
+            throw new IllegalArgumentException(INVALID_AUTHORITY);
+        }
+
+
     }
 }

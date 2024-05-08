@@ -4,12 +4,15 @@ package com.matchingMatch.match.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.matchingMatch.match.domain.enums.Gender;
 import com.matchingMatch.match.domain.enums.Role;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -41,9 +44,9 @@ public class Team extends BaseEntity {
 
     private String teamLogoUrl;
 
-    private Long mannerPointSum;
+    private Long mannerPointSum = 0L;
 
-    private Long matchCount;
+    private Long matchCount = 0L;
 
     @Column(nullable = false)
     private String region;
@@ -60,6 +63,8 @@ public class Team extends BaseEntity {
     @OneToMany(mappedBy = "participant")
     private List<Match> participatedMatches = new ArrayList<>();
 
+
+
     @Builder
     public Team(String account, String password, String teamName, String teamDescription, String teamLogoUrl,
                 Long mannerPointSum, Long matchCount, String region, Gender gender, Role role,
@@ -70,8 +75,6 @@ public class Team extends BaseEntity {
         this.teamName = teamName;
         this.teamDescription = teamDescription;
         this.teamLogoUrl = teamLogoUrl;
-        this.mannerPointSum = mannerPointSum;
-        this.matchCount = matchCount;
         this.region = region;
         this.gender = gender;
         this.role = role;
@@ -98,5 +101,12 @@ public class Team extends BaseEntity {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+
+    // TODO 상대팀을 평가하는 로직
+    public void isRatedAfterMatch(Long mannerPoint) {
+        mannerPointSum += mannerPoint;
+        matchCount++;
     }
 }
