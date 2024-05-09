@@ -159,7 +159,6 @@ public class MatchService {
         Match match = matchResult.get();
         Team team = teamResult.get();
 
-
         // TODO host인지 participant인지 체크
 
         if (match.getParticipant().equals(team)) {

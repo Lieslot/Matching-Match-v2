@@ -29,6 +29,8 @@ public class MatchPostController {
 
     private final MatchService matchService;
 
+    // TODO 페이징 형식으로 리스트 보여주기
+
     @AuthenticatedUser
     @PostMapping(value = "/create")
     public ResponseEntity<String> createNewMatchPost(
