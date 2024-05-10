@@ -4,7 +4,6 @@ package com.matchingMatch.match.domain;
 import static jakarta.persistence.CascadeType.*;
 
 import com.matchingMatch.match.domain.enums.Gender;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,7 +16,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
@@ -79,7 +77,7 @@ public class Match extends BaseEntity {
     @OneToOne(mappedBy = "matchId", fetch = FetchType.LAZY,
             cascade = {PERSIST, MERGE, REMOVE},
             orphanRemoval = true)
-    private MatchRateCheck matchRateCheck = new MatchRateCheck();
+    private MannerRateCheck matchRateCheck = new MannerRateCheck();
 
 
     public void addRequestTeam(MatchRequest matchRequest) {
@@ -97,18 +95,6 @@ public class Match extends BaseEntity {
         }
 
         matchRequests.remove(matchRequest);
-    }
-
-    public void confirmParticipant(Team participant) {
-
-        this.participant = participant;
-
-    }
-
-    public void cancelParticipant() {
-
-        this.participant = null;
-
     }
 
 }

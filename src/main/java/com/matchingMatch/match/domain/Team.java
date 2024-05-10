@@ -1,18 +1,19 @@
 package com.matchingMatch.match.domain;
 
 
+import static jakarta.persistence.CascadeType.*;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.matchingMatch.match.domain.enums.Gender;
 import com.matchingMatch.match.domain.enums.Role;
+import com.matchingMatch.notification.domain.Notification;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -60,16 +61,15 @@ public class Team extends BaseEntity {
     @OneToMany(mappedBy = "host")
     private List<Match> hostedMatches = new ArrayList<>();
 
-    @OneToMany(mappedBy = "participant")
+    @OneToMany(mappedBy = "participant", cascade = {PERSIST}, orphanRemoval = true)
     private List<Match> participatedMatches = new ArrayList<>();
 
-
+    @OneToMany(mappedBy = "targetTeam", cascade = {PERSIST, REMOVE})
+    private List<Notification> notifications = new ArrayList<>();
 
     @Builder
     public Team(String account, String password, String teamName, String teamDescription, String teamLogoUrl,
-                Long mannerPointSum, Long matchCount, String region, Gender gender, Role role,
-                List<Match> hostedMatches,
-                List<Match> participatedMatches) {
+                String region, Gender gender, Role role) {
         this.account = account;
         this.password = password;
         this.teamName = teamName;
@@ -78,8 +78,7 @@ public class Team extends BaseEntity {
         this.region = region;
         this.gender = gender;
         this.role = role;
-        this.hostedMatches = hostedMatches;
-        this.participatedMatches = participatedMatches;
+
     }
 
     public Team() {
@@ -104,9 +103,26 @@ public class Team extends BaseEntity {
     }
 
 
-    // TODO 상대팀을 평가하는 로직
+    // TODO 이미 평가한 경우 무시하도록 예외처리
     public void isRatedAfterMatch(Long mannerPoint) {
         mannerPointSum += mannerPoint;
         matchCount++;
     }
+
+    public void addNotification(Notification notification) {
+        this.notifications.add(notification);
+    }
+
+    public void confirmParticipant(Match match) {
+
+        participatedMatches.add(match);
+
+    }
+
+    public void cancelParticipant(Match match) {
+
+        participatedMatches.add(match);
+
+    }
+
 }

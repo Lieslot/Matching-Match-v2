@@ -1,6 +1,7 @@
 package com.matchingMatch.match.service;
 
 
+import com.matchingMatch.match.domain.MannerRateCheck;
 import com.matchingMatch.match.domain.Match;
 import com.matchingMatch.match.domain.MatchRequest;
 import com.matchingMatch.match.domain.Team;
@@ -121,7 +122,7 @@ public class MatchService {
 
         checkHostUser(match.getHost(), currentUserId);
 
-        match.confirmParticipant(participantTeam);
+        participantTeam.confirmParticipant(match);
     }
 
     @Transactional
@@ -143,10 +144,10 @@ public class MatchService {
             throw new IllegalArgumentException(INVALID_AUTHORITY);
         }
 
-        match.cancelParticipant();
+        team.cancelParticipant(match);
     }
 
-    // TODO 매너 포인트 체크 로직 추가
+
     public void rateMannerPoint(Long matchId, Long currentUserId, Long mannerPoint) {
 
         Optional<Match> matchResult = matchRepository.findById(matchId);
@@ -159,8 +160,7 @@ public class MatchService {
         Match match = matchResult.get();
         Team team = teamResult.get();
 
-
-        // TODO host인지 participant인지 체크
+        // TODO 중복 로직 제거
 
         if (match.getParticipant().equals(team)) {
             match.getMatchRateCheck().checkHost();
