@@ -18,6 +18,7 @@ public class MannerRateCheck {
 
     @OneToOne(fetch = FetchType.LAZY)
     private Match match;
+
     private Boolean isHostCheck = false;
 
     private Boolean isParticipantCheck = false;

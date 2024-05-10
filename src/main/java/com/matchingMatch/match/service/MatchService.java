@@ -148,6 +148,7 @@ public class MatchService {
     }
 
 
+    // TODO 매너 포인트 체크 로직 추가
     public void rateMannerPoint(Long matchId, Long currentUserId, Long mannerPoint) {
 
         Optional<Match> matchResult = matchRepository.findById(matchId);
@@ -160,7 +161,7 @@ public class MatchService {
         Match match = matchResult.get();
         Team team = teamResult.get();
 
-        // TODO 중복 로직 제거
+        // TODO host인지 participant인지 체크
 
         if (match.getParticipant().equals(team)) {
             match.getMatchRateCheck().checkHost();
