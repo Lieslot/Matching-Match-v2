@@ -17,7 +17,7 @@ public class MannerRateCheck {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    private Match match;
+    private Match matchId;
 
     private Boolean isHostCheck = false;
 

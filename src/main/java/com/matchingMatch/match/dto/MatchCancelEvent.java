@@ -5,12 +5,12 @@ import com.matchingMatch.match.domain.Team;
 import lombok.Getter;
 
 @Getter
-public class MatchConfirmEvent {
+public class MatchCancelEvent {
 
     private Team team;
     private Match match;
 
-    public MatchConfirmEvent(Team team, Match match) {
+    public MatchCancelEvent(Team team, Match match) {
         this.team = team;
         this.match = match;
     }

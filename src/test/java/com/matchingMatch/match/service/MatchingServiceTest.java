@@ -163,6 +163,14 @@ public class MatchingServiceTest {
 
     }
 
+    @Transactional
+    @Test
+    void 매치확정_이후_publish_여부_테스트() {
+
+
+
+
+    }
 
 
 }

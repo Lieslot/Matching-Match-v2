@@ -1,9 +1,11 @@
 package com.matchingMatch.match.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -14,8 +16,12 @@ import lombok.NoArgsConstructor;
 public class MatchRateCheck {
 
     @Id
-    @OneToOne(targetEntity = Match.class)
-    private Long matchId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @JoinColumn(name = "match_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    private Match matchId;
 
     private Boolean isHostCheck;
 

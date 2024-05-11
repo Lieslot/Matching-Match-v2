@@ -14,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -64,7 +65,7 @@ public class Team extends BaseEntity {
     @OneToMany(mappedBy = "participant", cascade = {PERSIST}, orphanRemoval = true)
     private List<Match> participatedMatches = new ArrayList<>();
 
-    @OneToMany(mappedBy = "targetTeam", cascade = {PERSIST, REMOVE})
+    @OneToMany(mappedBy = "targetTeam", cascade = {PERSIST, REMOVE, MERGE}, orphanRemoval = true)
     private List<Notification> notifications = new ArrayList<>();
 
     @Builder

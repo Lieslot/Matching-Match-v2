@@ -1,16 +1,17 @@
 package com.matchingMatch.match.service;
 
 
-import com.matchingMatch.match.domain.MannerRateCheck;
 import com.matchingMatch.match.domain.Match;
 import com.matchingMatch.match.domain.MatchRequest;
 import com.matchingMatch.match.domain.Team;
 import com.matchingMatch.match.domain.repository.MatchRepository;
 import com.matchingMatch.match.domain.repository.TeamRepository;
+import com.matchingMatch.match.dto.MatchCancelEvent;
+import com.matchingMatch.match.dto.MatchConfirmEvent;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.web.access.WebInvocationPrivilegeEvaluator;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,6 +21,7 @@ public class MatchService {
     private static final String INVALID_AUTHORITY = "권한이 없는 접근입니다.";
     private final MatchRepository matchRepository;
     private final TeamRepository teamRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public Long save(Match match, Long userId) {
 
@@ -89,6 +91,7 @@ public class MatchService {
         match.addRequestTeam(matchRequest);
 
 
+
     }
 
     @Transactional
@@ -105,6 +108,7 @@ public class MatchService {
 
         MatchRequest matchRequest = new MatchRequest(team, match);
         match.deleteRequestTeam(matchRequest);
+
     }
 
     @Transactional
@@ -121,6 +125,10 @@ public class MatchService {
         Match match = matchResult.get();
 
         checkHostUser(match.getHost(), currentUserId);
+
+        eventPublisher.publishEvent(new MatchConfirmEvent(participantTeam, match));
+
+        match.setParticipant(participantTeam);
 
         participantTeam.confirmParticipant(match);
     }
@@ -144,11 +152,12 @@ public class MatchService {
             throw new IllegalArgumentException(INVALID_AUTHORITY);
         }
 
+        eventPublisher.publishEvent(new MatchCancelEvent(team, match));
+        match.setParticipant(null);
         team.cancelParticipant(match);
     }
 
 
-    // TODO 매너 포인트 체크 로직 추가
     public void rateMannerPoint(Long matchId, Long currentUserId, Long mannerPoint) {
 
         Optional<Match> matchResult = matchRepository.findById(matchId);
@@ -161,7 +170,7 @@ public class MatchService {
         Match match = matchResult.get();
         Team team = teamResult.get();
 
-        // TODO host인지 participant인지 체크
+
 
         if (match.getParticipant().equals(team)) {
             match.getMatchRateCheck().checkHost();
