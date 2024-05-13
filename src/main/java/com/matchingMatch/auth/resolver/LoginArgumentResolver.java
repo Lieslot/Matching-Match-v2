@@ -4,6 +4,8 @@ import com.matchingMatch.auth.Authentication;
 import com.matchingMatch.auth.JwtProvider;
 import com.matchingMatch.auth.dto.UserAuth;
 import com.matchingMatch.match.domain.repository.TeamRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
@@ -21,7 +23,9 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final String TEAM_ID = "TEAM_ID";
 
-    private final TeamRepository teamRepository;
+    private static final String REFRESH_TOKEN_KEY = "refresh_token";
+
+    private static final String ACCESS_TOKEN_KEY = "Authorization";
 
     private final JwtProvider jwtProvider;
 
@@ -38,14 +42,38 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
     public UserAuth resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                     NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 
-        String jwtToken = webRequest.getHeader("Authorization");
+        String accessToken = webRequest.getHeader(ACCESS_TOKEN_KEY);
+        HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
 
-        jwtProvider.validateToken(jwtToken);
-        log.info("raw jwt : {}", jwtToken);
+        if (request != null) {
 
-        Long subject = Long.parseLong(jwtProvider.getSubject(jwtToken));
+            throw new IllegalArgumentException();
+        }
 
-        return UserAuth.team(subject);
+        try {
+            String refreshToken = parseRefreshToken(request);
+
+            jwtProvider.validateToken(accessToken, refreshToken);
+            log.info("raw jwt : {}", accessToken);
+
+            Long subject = Long.parseLong(jwtProvider.getSubject(accessToken));
+
+            return UserAuth.team(subject);
+
+        } catch (RuntimeException e) {
+            return UserAuth.guest();
+
+        }
+
+    }
+
+    private String parseRefreshToken(HttpServletRequest request) {
+        return Arrays.stream(request.getCookies())
+                     .filter(cookie -> cookie.getName()
+                                             .equals(REFRESH_TOKEN_KEY))
+                     .findFirst()
+                     .orElseThrow(IllegalArgumentException::new)
+                     .getValue();
     }
 
 

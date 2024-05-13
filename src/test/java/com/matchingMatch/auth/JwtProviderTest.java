@@ -18,7 +18,7 @@ public class JwtProviderTest {
 
 
     @Test
-    void JWT토큰_생성_테스트() {
+    void 엑세스토큰_생성_테스트() {
 
         String accessToken = jwtProvider.createAccessToken(1L);
         String subject = jwtProvider.getSubject(accessToken);
@@ -26,6 +26,8 @@ public class JwtProviderTest {
         Assertions.assertThat(accessToken).isNotNull();
         Assertions.assertThat(String.valueOf(1L)).isEqualTo(subject);
     }
+
+    // TODO 토큰 검증 테스트
 
 
 }

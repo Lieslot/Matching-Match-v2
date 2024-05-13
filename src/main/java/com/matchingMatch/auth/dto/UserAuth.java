@@ -5,6 +5,7 @@ import com.matchingMatch.match.domain.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.catalina.User;
 
 @Getter
 @NoArgsConstructor
@@ -17,6 +18,10 @@ public class UserAuth {
     public static UserAuth team(Long id) {
 
         return new UserAuth(id, Role.USER);
+    }
+
+    public static UserAuth guest() {
+        return new UserAuth(-1L, Role.Guest);
     }
 
 

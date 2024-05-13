@@ -43,13 +43,12 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 
 
-// TODO 비동기 이벤트에서도 한 번에 모든 테스트가 성공하도록 만들어보기
 
 //@SpringBootTest
 @DataJpaTest
 @ExtendWith({SpringExtension.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestExecutionListeners(value = {AcceptanceTestExecutionListener.class}, mergeMode = MergeMode.MERGE_WITH_DEFAULTS)
+//@TestExecutionListeners(value = {AcceptanceTestExecutionListener.class}, mergeMode = MergeMode.MERGE_WITH_DEFAULTS)
 public class NotificationEventListenerTest {
 
     private static final Logger log = LoggerFactory.getLogger(NotificationEventListenerTest.class);
@@ -138,10 +137,13 @@ public class NotificationEventListenerTest {
 
                 return null;
             });
+
             countDownLatch.countDown();
         });
 
         countDownLatch.await();
+
+
 
         Assertions.assertThat(otherTeam.getNotifications())
                   .isEmpty();
@@ -170,11 +172,14 @@ public class NotificationEventListenerTest {
 
                 return null;
             });
+
+
             countDownLatch.countDown();
         });
 
         countDownLatch.await();
-
+//
+//        Thread.sleep(2000);
 
         Assertions.assertThat(otherTeam.getNotifications())
                   .isNotEmpty();
@@ -202,14 +207,22 @@ public class NotificationEventListenerTest {
 
                 return null;
             });
+
             countDownLatch.countDown();
         });
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         countDownLatch.await();
 
 
         Assertions.assertThat(otherTeam.getNotifications())
                   .isNotEmpty();
+        verify(testNotificationEventListener).publishConfirmedMatchCancelNotification(any(MatchCancelEvent.class));
 
 
     }
