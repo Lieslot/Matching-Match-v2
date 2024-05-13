@@ -178,8 +178,8 @@ public class NotificationEventListenerTest {
         });
 
         countDownLatch.await();
-//
-//        Thread.sleep(2000);
+
+        Thread.sleep(1000);
 
         Assertions.assertThat(otherTeam.getNotifications())
                   .isNotEmpty();
@@ -212,7 +212,7 @@ public class NotificationEventListenerTest {
         });
 
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

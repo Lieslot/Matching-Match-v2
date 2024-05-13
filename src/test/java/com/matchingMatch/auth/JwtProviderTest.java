@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @SpringBootTest
@@ -17,6 +18,7 @@ public class JwtProviderTest {
     private JwtProvider jwtProvider;
 
 
+    @Transactional
     @Test
     void 엑세스토큰_생성_테스트() {
 
@@ -26,8 +28,5 @@ public class JwtProviderTest {
         Assertions.assertThat(accessToken).isNotNull();
         Assertions.assertThat(String.valueOf(1L)).isEqualTo(subject);
     }
-
-    // TODO 토큰 검증 테스트
-
 
 }

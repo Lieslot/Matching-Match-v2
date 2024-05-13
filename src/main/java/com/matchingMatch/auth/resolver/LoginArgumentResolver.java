@@ -69,11 +69,11 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
 
     private String parseRefreshToken(HttpServletRequest request) {
         return Arrays.stream(request.getCookies())
-                     .filter(cookie -> cookie.getName()
-                                             .equals(REFRESH_TOKEN_KEY))
-                     .findFirst()
-                     .orElseThrow(IllegalArgumentException::new)
-                     .getValue();
+                .filter(cookie -> cookie.getName()
+                        .equals(REFRESH_TOKEN_KEY))
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new)
+                .getValue();
     }
 
 

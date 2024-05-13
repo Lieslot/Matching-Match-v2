@@ -28,6 +28,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @AutoConfigureMockMvc(addFilters = false)
@@ -60,8 +61,9 @@ public class MatchControllerTest {
     }
 
     @Test
+    @Transactional
     void 매치를_등록하면_매치_포스트_페이지로_리다이렉트된다() throws Exception {
-        // WithMockUser를 이용해서 Team을 대체할 방법은 없나?
+        // TODO Controller 분리 테스트 방법 생각해보기
 
         MatchPostRequest matchPostRequest = MatchPostRequest.builder()
                                                             .hostId(team)

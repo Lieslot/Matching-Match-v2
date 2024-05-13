@@ -31,8 +31,11 @@ public class JwtProvider {
 
     private SecretKey refreshTokenPrivateKey;
 
-    @Value("${jwt.expiredMill}")
-    private Long expiredMill;
+    @Value("${jwt.accessTokenExpiredMill}")
+    private Long accessTokenExpiredMill;
+
+    @Value("${jwt.refreshTokenExpiredMill}")
+    private Long refreshTokenExpiredMill;
 
     @Autowired
     public JwtProvider(
@@ -47,7 +50,7 @@ public class JwtProvider {
 
     public String createAccessToken(Long id) {
         Date now = new Date();
-        Date expiredDate = new Date(now.getTime() + expiredMill);
+        Date expiredDate = new Date(now.getTime() + accessTokenExpiredMill);
 
         String token = Jwts.builder()
                            .issuer(iss)
@@ -64,7 +67,7 @@ public class JwtProvider {
 
     public String createRefreshToken(Long id) {
         Date now = new Date();
-        Date expiredDate = new Date(now.getTime() + expiredMill);
+        Date expiredDate = new Date(now.getTime() + refreshTokenExpiredMill);
 
         String token = Jwts.builder()
                            .issuer(iss)

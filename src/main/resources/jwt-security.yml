@@ -1,5 +1,5 @@
-jwt.accessToken.secretKeys: izu~9tMvMt}5}6M
-jwt.refreshToken.secretKey: zSGM-m}v]m]}v]m]
+jwt.accessToken.secretKeys: secretKeyTestgklfdgkldfkgldfkgret12312312312312331234
+jwt.refreshToken.secretKey: secretKeyTestrldsfldsfllrwer3123123123121231231231132
 jwt.accessTokenExpiredMill: 3000000
 jwt.refreshTokenExpiredMill: 987654321
 

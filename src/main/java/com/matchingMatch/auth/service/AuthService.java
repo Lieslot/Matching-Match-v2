@@ -54,8 +54,8 @@ public class AuthService {
     }
 
     private boolean checkPassword(String password, Team team) {
-        String encoded = passwordEncoder.encode(password);
-        return encoded.equals(team.getPassword());
+
+        return passwordEncoder.matches(password, team.getPassword());
     }
 
 

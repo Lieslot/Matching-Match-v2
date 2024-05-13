@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Set;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +70,13 @@ public class MatchingServiceTest {
         matchRepository.save(match);
 
     }
+
+    @AfterEach
+    void clear() {
+        teamRepository.deleteAll();
+    }
+
+
 
     @Transactional
     @Test
@@ -163,14 +171,6 @@ public class MatchingServiceTest {
 
     }
 
-    @Transactional
-    @Test
-    void 매치확정_이후_publish_여부_테스트() {
-
-
-
-
-    }
 
 
 }
