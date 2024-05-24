@@ -20,6 +20,7 @@ public class BaseEntity {
     private LocalDateTime created_at;
 
 
+
     @LastModifiedDate
     private LocalDateTime updated_at;
 

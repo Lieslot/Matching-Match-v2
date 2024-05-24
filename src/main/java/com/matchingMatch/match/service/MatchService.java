@@ -8,10 +8,14 @@ import com.matchingMatch.match.domain.repository.MatchRepository;
 import com.matchingMatch.match.domain.repository.TeamRepository;
 import com.matchingMatch.match.dto.MatchCancelEvent;
 import com.matchingMatch.match.dto.MatchConfirmEvent;
+import com.matchingMatch.match.dto.MatchPostsResponse;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.query.Page;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,6 +23,8 @@ import org.springframework.stereotype.Service;
 public class MatchService {
 
     private static final String INVALID_AUTHORITY = "권한이 없는 접근입니다.";
+    private static final Integer PAGE_SIZE = 20;
+
     private final MatchRepository matchRepository;
     private final TeamRepository teamRepository;
     private final ApplicationEventPublisher eventPublisher;
@@ -184,4 +190,11 @@ public class MatchService {
 
 
     }
+
+    public List<Match> getPagedMatchPostsByNoOffset(Long lastMatchId, Integer pageSize) {
+
+        return matchRepository.findPagesById(lastMatchId,
+                PageRequest.of(0, pageSize));
+    }
+
 }

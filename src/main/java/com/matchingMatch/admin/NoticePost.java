@@ -12,11 +12,13 @@ import lombok.Getter;
 @Entity
 public class NoticePost extends BaseEntity {
 
+
     @Builder
-    public NoticePost(String title, String content, Long hits) {
+    public NoticePost(Long id, String title, String content) {
+        this.id = id;
+
         this.title = title;
         this.content = content;
-        this.hits = hits;
     }
 
     @Id
@@ -28,6 +30,11 @@ public class NoticePost extends BaseEntity {
     private String content;
 
     private Long hits;
+
+    public void updatePost(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 
 
     public NoticePost() {

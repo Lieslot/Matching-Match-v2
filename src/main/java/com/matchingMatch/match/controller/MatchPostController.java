@@ -7,10 +7,16 @@ import com.matchingMatch.auth.dto.UserAuth;
 import com.matchingMatch.match.domain.Match;
 import com.matchingMatch.match.dto.MatchPostRequest;
 import com.matchingMatch.match.dto.MatchPostResponse;
+import com.matchingMatch.match.dto.MatchPostsResponse;
 import com.matchingMatch.match.service.MatchService;
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.relational.core.sql.In;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,8 +35,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class MatchPostController {
 
     private final MatchService matchService;
-
     // TODO 페이징 형식으로 리스트 보여주기
+
+
+    @GetMapping("/no-offset")
+    public MatchPostsResponse getMatchPosts(
+            @RequestParam(value = "LastMatchId", required = false, defaultValue = "0") String matchLastId,
+            @RequestParam(value = "LastMatchId", required = false, defaultValue = "20") String pageSize) {
+
+        List<Match> matchPosts = matchService.getPagedMatchPostsByNoOffset(Long.valueOf(matchLastId),
+                Integer.valueOf(pageSize));
+        new MatchPostsResponse(matchPosts);
+
+        return new MatchPostsResponse(matchPosts);
+    }
+
+
+
 
     @AuthenticatedUser
     @PostMapping(value = "/create")
@@ -74,7 +96,7 @@ public class MatchPostController {
     }
 
     @AuthenticatedUser
-    @DeleteMapping(value = "/delete/{postId}")
+    @DeleteMapping(value = "/{postId}")
     public ResponseEntity<Void> deleteMatchPost(
             @PathVariable Long postId,
             @Authentication UserAuth userAuth) {
@@ -94,7 +116,7 @@ public class MatchPostController {
     }
 
     @AuthenticatedUser
-    @PutMapping(value = "/update/{postId}")
+    @PutMapping(value = "/{postId}")
     public ResponseEntity<Void> updateMatchPost(
             @PathVariable Long postId,
             @Valid @RequestBody MatchPostRequest matchPostRequest,

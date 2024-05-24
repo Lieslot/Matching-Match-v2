@@ -16,16 +16,27 @@ public class UserAuthVerifier {
 
     // TODO ADMIN인지 체크하기
 
+    @Before("@annotation(com.matchingMatch.auth.AuthenticatedAdmin)")
+    public void verifyAdmin(final JoinPoint joinPoint) {
+        Stream.of(joinPoint.getArgs())
+                .filter(UserAuth.class::isInstance) // Object 클래스에 대해 UserAuth로 캐스트 가능한지 체크
+                .map(UserAuth.class::cast) // UserAuth 클래스로 캐스트
+                .filter(userAuth -> userAuth.getRole() == Role.ADMIN)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(INVALID_AUTHORITY));
+
+    }
+
 
     @Before("@annotation(com.matchingMatch.auth.AuthenticatedUser)")
     public void verifyUser(JoinPoint joinPoint) {
-        Stream.of(joinPoint.getArgs())
-              .filter(UserAuth.class::isInstance) // Object 클래스에 대해 UserAuth로 캐스트 가능한지 체크
-              .map(UserAuth.class::cast) // UserAuth 클래스로 캐스트
-              .filter(userAuth -> userAuth.getRole() == Role.USER)
-              .findFirst()
-              .orElseThrow(() -> new IllegalArgumentException(INVALID_AUTHORITY));
 
+        Stream.of(joinPoint.getArgs())
+                .filter(UserAuth.class::isInstance) // Object 클래스에 대해 UserAuth로 캐스트 가능한지 체크
+                .map(UserAuth.class::cast) // UserAuth 클래스로 캐스트
+                .filter(userAuth -> userAuth.getRole() == Role.USER)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(INVALID_AUTHORITY));
     }
 
 
