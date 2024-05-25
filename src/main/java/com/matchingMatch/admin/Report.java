@@ -9,30 +9,35 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Report extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    //
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Team reporter;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Team team;
+    private Team target;
 
     private String title;
 
     private String content;
 
-    private Long hits;
-
     @Builder
-    public Report(Team team, String title, String content, Long hits) {
-        this.team = team;
+    public Report(Team reporter, String title, String content, Team target) {
+        this.reporter = reporter;
         this.title = title;
         this.content = content;
-        this.hits = hits;
+        this.target = target;
     }
 }
