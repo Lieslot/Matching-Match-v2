@@ -1,23 +1,25 @@
 package com.matchingMatch.match.domain;
 
 
-import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.MERGE;
+import static jakarta.persistence.CascadeType.PERSIST;
+import static jakarta.persistence.CascadeType.REMOVE;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.matchingMatch.match.domain.enums.Gender;
 import com.matchingMatch.match.domain.enums.Role;
 import com.matchingMatch.notification.domain.Notification;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import java.lang.reflect.Member;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -67,6 +69,10 @@ public class Team extends BaseEntity {
 
     @OneToMany(mappedBy = "targetTeam", cascade = {PERSIST, REMOVE, MERGE}, orphanRemoval = true)
     private List<Notification> notifications = new ArrayList<>();
+
+    @OneToMany(mappedBy = "team", cascade = {PERSIST, REMOVE, MERGE}, orphanRemoval = true)
+    private Set<MatchBookmark> matchBookmarks = new HashSet<>();
+
 
     @Builder
     public Team(String account, String password, String teamName, String teamDescription, String teamLogoUrl,
@@ -126,4 +132,15 @@ public class Team extends BaseEntity {
 
     }
 
+    public void addMatchBookMark(MatchBookmark matchBookMark) {
+        matchBookmarks.add(matchBookMark);
+    }
+
+    public void removeMatchBookmark(Long matchBookmarkId) {
+        matchBookmarks.removeIf(matchBookmark -> matchBookmark.getId().equals(matchBookmarkId));
+    }
+
+    public float calculateMannerPoint() {
+        return (float) this.mannerPointSum / this.matchCount;
+    }
 }

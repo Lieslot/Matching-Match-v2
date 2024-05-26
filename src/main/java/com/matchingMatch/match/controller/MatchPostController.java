@@ -13,10 +13,6 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.relational.core.sql.In;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,8 +31,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class MatchPostController {
 
     private final MatchService matchService;
-    // TODO 페이징 형식으로 리스트 보여주기
-
 
     @GetMapping("/no-offset")
     public MatchPostsResponse getMatchPosts(
@@ -49,8 +43,6 @@ public class MatchPostController {
 
         return new MatchPostsResponse(matchPosts);
     }
-
-
 
 
     @AuthenticatedUser
