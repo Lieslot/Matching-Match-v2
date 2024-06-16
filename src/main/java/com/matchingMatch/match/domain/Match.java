@@ -27,6 +27,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Setter
 public class Match extends BaseEntity {
 
+    private static final String INVALID_AUTHORITY = "권한이 없는 접근입니다.";
+
     public Match() {
 
     }
@@ -56,7 +58,7 @@ public class Match extends BaseEntity {
     private Team participant;
 
     @OneToMany(mappedBy = "targetMatch", fetch = FetchType.LAZY,
-            cascade = {REMOVE, PERSIST}, orphanRemoval = true)
+            cascade = {REMOVE, PERSIST, MERGE}, orphanRemoval = true)
     private Set<MatchRequest> matchRequests = new HashSet<>();
 
     @Column(nullable = false)
@@ -89,7 +91,7 @@ public class Match extends BaseEntity {
         matchRequests.add(matchRequest);
     }
 
-    public void deleteRequestTeam(MatchRequest matchRequest) {
+    public void removeMatchRequest(MatchRequest matchRequest) {
         if (!matchRequests.contains(matchRequest)) {
             throw new IllegalArgumentException("신청하지 않았던 매치입니다.");
         }
@@ -97,4 +99,44 @@ public class Match extends BaseEntity {
         matchRequests.remove(matchRequest);
     }
 
+    public void checkHostEqualTo(Long target) {
+
+        if (!host.getId().equals(target)) {
+            throw new IllegalArgumentException(INVALID_AUTHORITY);
+        }
+
+    }
+
+    public void checkParticipantEqualTo(Long target) {
+
+        if (!participant.getId().equals(target)) {
+            throw new IllegalArgumentException(INVALID_AUTHORITY);
+        }
+
+    }
+
+    public void checkInvolvedInMatch(Long target) {
+        if (!host.getId().equals(target) && !participant.getId().equals(target)) {
+
+            throw new IllegalArgumentException(INVALID_AUTHORITY);
+        }
+    }
+
+    public void rateMannerPoint(Long userId, Long mannerPoint) {
+
+        if (host.getId().equals(userId)) {
+            matchRateCheck.checkParticipant();
+            participant.isRatedAfterMatch(mannerPoint);
+        }
+
+        else if (participant.getId().equals(userId)) {
+            matchRateCheck.checkHost();
+            host.isRatedAfterMatch(mannerPoint);
+        }
+
+        else {
+            throw new IllegalArgumentException(INVALID_AUTHORITY);
+        }
+
+    }
 }

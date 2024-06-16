@@ -34,7 +34,7 @@ public class MatchingController {
             @Authentication UserAuth userAuth) {
 
         try {
-            matchService.addMatchRequest(matchPostId, userAuth.getId());
+            matchService.sendMatchRequest(matchPostId, userAuth.getId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                                  .build();

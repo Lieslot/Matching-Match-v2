@@ -8,7 +8,6 @@ import com.matchingMatch.match.domain.enums.Role;
 import com.matchingMatch.match.domain.repository.MatchRepository;
 import com.matchingMatch.match.domain.repository.TeamRepository;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cglib.core.Local;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -35,6 +33,7 @@ public class MatchingServiceTest {
     Match match;
     Team hostTeam;
     Team otherTeam;
+
     @BeforeEach
     void setUp() {
         hostTeam = Team.builder()
@@ -77,12 +76,11 @@ public class MatchingServiceTest {
     }
 
 
-
     @Transactional
     @Test
     void 매치_요청_저장_테스트() {
-        
-        matchService.addMatchRequest(match.getId(), otherTeam.getId());
+
+        matchService.sendMatchRequest(match.getId(), otherTeam.getId());
 
         Set<MatchRequest> matchRequests = match.getMatchRequests();
 
@@ -94,7 +92,7 @@ public class MatchingServiceTest {
     @Test
     void 매치_요청_취소_테스트() {
 
-        matchService.addMatchRequest(match.getId(), otherTeam.getId());
+        matchService.sendMatchRequest(match.getId(), otherTeam.getId());
         Set<MatchRequest> matchRequests = match.getMatchRequests();
         Assertions.assertThat(matchRequests).contains(new MatchRequest(otherTeam, match));
 
@@ -106,7 +104,7 @@ public class MatchingServiceTest {
     @Transactional
     @Test
     void 매치_확정_테스트() {
-        matchService.addMatchRequest(match.getId(), otherTeam.getId());
+        matchService.sendMatchRequest(match.getId(), otherTeam.getId());
         matchService.confirmMatchRequest(match.getId(), hostTeam.getId(), otherTeam.getId());
 
         Team participant = match.getParticipant();
@@ -118,7 +116,7 @@ public class MatchingServiceTest {
     @Transactional
     @Test
     void 참가자의_매치_확정_취소_테스트() {
-        matchService.addMatchRequest(match.getId(), otherTeam.getId());
+        matchService.sendMatchRequest(match.getId(), otherTeam.getId());
         matchService.confirmMatchRequest(match.getId(), hostTeam.getId(), otherTeam.getId());
 
         Team participant = match.getParticipant();
@@ -133,7 +131,7 @@ public class MatchingServiceTest {
     @Transactional
     @Test
     void 주최자의_매치_확정_취소_테스트() {
-        matchService.addMatchRequest(match.getId(), otherTeam.getId());
+        matchService.sendMatchRequest(match.getId(), otherTeam.getId());
         matchService.confirmMatchRequest(match.getId(), hostTeam.getId(), otherTeam.getId());
 
         Team participant = match.getParticipant();
@@ -149,7 +147,7 @@ public class MatchingServiceTest {
     @Test
     void 매치_이후_주최자측_매너평가_테스트() throws InterruptedException {
 
-        matchService.addMatchRequest(match.getId(), otherTeam.getId());
+        matchService.sendMatchRequest(match.getId(), otherTeam.getId());
         matchService.confirmMatchRequest(match.getId(), hostTeam.getId(), otherTeam.getId());
         matchService.rateMannerPoint(match.getId(), hostTeam.getId(), 10L);
 
@@ -162,7 +160,7 @@ public class MatchingServiceTest {
     @Test
     void 매치_이후_참가자측_매너평가_테스트() throws InterruptedException {
 
-        matchService.addMatchRequest(match.getId(), otherTeam.getId());
+        matchService.sendMatchRequest(match.getId(), otherTeam.getId());
         matchService.confirmMatchRequest(match.getId(), hostTeam.getId(), otherTeam.getId());
         matchService.rateMannerPoint(match.getId(), otherTeam.getId(), 10L);
 
@@ -170,7 +168,6 @@ public class MatchingServiceTest {
         Assertions.assertThat(hostTeam.getMatchCount()).isEqualTo(1L);
 
     }
-
 
 
 }

@@ -8,16 +8,14 @@ import com.matchingMatch.match.domain.repository.MatchRepository;
 import com.matchingMatch.match.domain.repository.TeamRepository;
 import com.matchingMatch.match.dto.MatchCancelEvent;
 import com.matchingMatch.match.dto.MatchConfirmEvent;
-import com.matchingMatch.match.dto.MatchPostsResponse;
+import com.matchingMatch.match.exception.MatchNotFoundException;
+import com.matchingMatch.match.exception.UnauthorizedAccessException;
 import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.query.Page;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
 @Service
 @RequiredArgsConstructor
 public class MatchService {
@@ -29,15 +27,9 @@ public class MatchService {
     private final TeamRepository teamRepository;
     private final ApplicationEventPublisher eventPublisher;
 
-    public Long save(Match match, Long userId) {
-
-        Optional<Team> result = teamRepository.findById(userId);
-
-        if (result.isEmpty()) {
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
-        }
-
-        Team host = result.get();
+    public Long postNewMatch(Match match, Long userId) {
+        Team host = teamRepository.findById(userId)
+                .orElseThrow(() -> new UnauthorizedAccessException());
 
         match.setHost(host);
         Match newMatch = matchRepository.save(match);
@@ -46,155 +38,86 @@ public class MatchService {
     }
 
     public Match getMatchPostBy(Long matchId) {
-
-        Optional<Match> result = matchRepository.findById(matchId);
-        return result.orElse(null);
-
+        return matchRepository.findById(matchId).orElse(null);
     }
 
-    public void deleteMatchPostBy(Long matchId, Long userId) {
+    public void cancelMatch(Long matchId, Long userId) {
         Match matchPost = getMatchPostBy(matchId);
-
-        checkHostUser(matchPost.getHost(), userId);
-
+        matchPost.checkHostEqualTo(userId);
         matchRepository.deleteById(matchId);
-
     }
 
     public void updateMatch(Match updatedMatchPost, Long userId) {
+        updatedMatchPost.checkHostEqualTo(userId);
+        boolean isMatchExists = matchRepository.existsById(updatedMatchPost.getId());
 
-        checkHostUser(updatedMatchPost.getHost(), userId);
-
-        boolean isExists = matchRepository.existsById(updatedMatchPost.getId());
-
-        if (!isExists) {
-            throw new IllegalArgumentException();
+        if (!isMatchExists) {
+            throw new MatchNotFoundException();
         }
 
         matchRepository.save(updatedMatchPost);
-
-    }
-
-    private void checkHostUser(Team hostTeam, Long currentUserId) {
-        if (!currentUserId.equals(hostTeam.getId())) {
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
-        }
     }
 
     @Transactional
-    public void addMatchRequest(Long matchId, Long requestTeamId) {
-
-        Optional<Match> matchResult = matchRepository.findById(matchId);
-        Optional<Team> teamResult = teamRepository.findById(requestTeamId);
-
-        if (teamResult.isEmpty() || matchResult.isEmpty()) {
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
-        }
-        Team team = teamResult.get();
-        Match match = matchResult.get();
+    public void sendMatchRequest(Long matchId, Long requestTeamId) {
+        Match match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new MatchNotFoundException());
+        Team team = teamRepository.findById(requestTeamId)
+                .orElseThrow(() -> new UnauthorizedAccessException());
 
         MatchRequest matchRequest = new MatchRequest(team, match);
         match.addRequestTeam(matchRequest);
-
-
-
+        matchRepository.save(match);
     }
 
     @Transactional
     public void cancelMatchRequest(Long matchId, Long teamId) {
-
-        Optional<Match> matchResult = matchRepository.findById(matchId);
-        Optional<Team> teamResult = teamRepository.findById(teamId);
-
-        if (teamResult.isEmpty() || matchResult.isEmpty()) {
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
-        }
-        Team team = teamResult.get();
-        Match match = matchResult.get();
+        Match match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new MatchNotFoundException());
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new UnauthorizedAccessException());
 
         MatchRequest matchRequest = new MatchRequest(team, match);
-        match.deleteRequestTeam(matchRequest);
-
+        match.removeMatchRequest(matchRequest);
     }
 
     @Transactional
     public void confirmMatchRequest(Long matchId, Long currentUserId, Long confirmedTeamId) {
+        Match match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new MatchNotFoundException());
+        Team participantTeam = teamRepository.findById(confirmedTeamId)
+                .orElseThrow(() -> new UnauthorizedAccessException());
 
-        Optional<Match> matchResult = matchRepository.findById(matchId);
-        Optional<Team> teamResult = teamRepository.findById(confirmedTeamId);
-
-        if (teamResult.isEmpty() || matchResult.isEmpty()) {
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
-        }
-
-        Team participantTeam = teamResult.get();
-        Match match = matchResult.get();
-
-        checkHostUser(match.getHost(), currentUserId);
+        match.checkHostEqualTo(currentUserId);
 
         eventPublisher.publishEvent(new MatchConfirmEvent(participantTeam, match));
-
         match.setParticipant(participantTeam);
-
         participantTeam.confirmParticipant(match);
     }
 
     @Transactional
     public void cancelConfirmedMatch(Long matchId, Long currentUserId) {
+        Match match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new MatchNotFoundException());
+        Team team = teamRepository.findById(currentUserId)
+                .orElseThrow(() -> new UnauthorizedAccessException());
 
-        Optional<Match> matchResult = matchRepository.findById(matchId);
-        Optional<Team> teamResult = teamRepository.findById(currentUserId);
-
-        if (teamResult.isEmpty() || matchResult.isEmpty()) {
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
-        }
-
-        Match match = matchResult.get();
-        Team team = teamResult.get();
-
-        if (!match.getParticipant()
-                  .equals(team) && !match.getHost()
-                                         .equals(team)) {
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
-        }
+        match.checkInvolvedInMatch(currentUserId);
 
         eventPublisher.publishEvent(new MatchCancelEvent(team, match));
         match.setParticipant(null);
         team.cancelParticipant(match);
     }
 
-
     public void rateMannerPoint(Long matchId, Long currentUserId, Long mannerPoint) {
+        Match match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new MatchNotFoundException());
 
-        Optional<Match> matchResult = matchRepository.findById(matchId);
-        Optional<Team> teamResult = teamRepository.findById(currentUserId);
-
-        if (matchResult.isEmpty() || teamResult.isEmpty()) {
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
-        }
-
-        Match match = matchResult.get();
-        Team team = teamResult.get();
-
-
-
-        if (match.getParticipant().equals(team)) {
-            match.getMatchRateCheck().checkHost();
-            match.getHost().isRatedAfterMatch(mannerPoint);
-        } else if (match.getHost().equals(team)) {
-            match.getMatchRateCheck().checkParticipant();
-            match.getParticipant().isRatedAfterMatch(mannerPoint);
-        } else {
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
-        }
-
-
+        match.rateMannerPoint(currentUserId, mannerPoint);
     }
 
     public List<Match> getPagedMatchPostsByNoOffset(Long lastMatchId, Integer pageSize) {
-
         return matchRepository.findPagesById(lastMatchId,
                 PageRequest.of(0, pageSize));
     }
-
 }

@@ -8,13 +8,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import java.util.Objects;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,12 +24,13 @@ public class MatchRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Include
+
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
     private Team requestingTeam;
 
-    @Include
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "match_id")
     private Match targetMatch;
 
     @Builder
@@ -53,7 +50,7 @@ public class MatchRequest {
         }
         MatchRequest other = (MatchRequest) obj;
 
-        return other.requestingTeam.equals(requestingTeam);
+        return other.requestingTeam.equals(requestingTeam) && other.targetMatch.equals(targetMatch);
     }
 
     @Override

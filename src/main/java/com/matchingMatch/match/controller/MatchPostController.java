@@ -54,7 +54,7 @@ public class MatchPostController {
         Match newMatch = matchPostRequest.toEntity();
 
         try {
-            Long postId = matchService.save(newMatch, userAuth.getId());
+            Long postId = matchService.postNewMatch(newMatch, userAuth.getId());
 
             URI redirectUri = URI.create(String.format("/match/post/%d", postId));
             return ResponseEntity.created(redirectUri)
@@ -94,7 +94,7 @@ public class MatchPostController {
             @Authentication UserAuth userAuth) {
 
         try {
-            matchService.deleteMatchPostBy(postId, userAuth.getId());
+            matchService.cancelMatch(postId, userAuth.getId());
         } catch (IllegalArgumentException e) {
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

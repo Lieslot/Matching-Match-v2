@@ -74,7 +74,7 @@ public class MatchControllerTest {
                                                             .build();
 
         String matchPostRequestJson = objectMapper.writeValueAsString(matchPostRequest);
-        when(matchService.save(any(Match.class), any(Long.class))).thenReturn(1L);
+        when(matchService.postNewMatch(any(Match.class), any(Long.class))).thenReturn(1L);
 
         mockMvc.perform(post("/match/post/create")
                        .with(csrf()) // post이므로 csrf 추가 안하면 403 반환
@@ -85,7 +85,7 @@ public class MatchControllerTest {
                        header().string(LOCATION, "/match/post/1") // redirect 요소 테스트
                );
 
-        verify(matchService).save(any(Match.class), any(Long.class));
+        verify(matchService).postNewMatch(any(Match.class), any(Long.class));
 
     }
 

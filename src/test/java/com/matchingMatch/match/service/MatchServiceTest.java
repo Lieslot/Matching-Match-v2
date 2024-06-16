@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 public class MatchServiceTest {
 
-
     @Autowired
     private MatchService matchService;
 
@@ -32,7 +31,9 @@ public class MatchServiceTest {
     private TeamRepository teamRepository;
 
     private Team team;
+
     Match match;
+
     @BeforeEach
     void setUp() {
         team = Team.builder()
@@ -62,17 +63,15 @@ public class MatchServiceTest {
         teamRepository.deleteAll();
     }
 
-
-
     @Transactional
     @Test
     void 매치의_호스트와_삭제_요청을_보낸_유저가_다르면_예외가_발생한다() {
         Long anotherUserId = 0L;
 
-        matchService.save(match, team.getId());
+        matchService.postNewMatch(match, team.getId());
 
         Assertions.assertThrows(IllegalArgumentException.class,
-                () -> matchService.deleteMatchPostBy(match.getId(), anotherUserId));
+                () -> matchService.cancelMatch(match.getId(), anotherUserId));
 
     }
 
@@ -82,13 +81,10 @@ public class MatchServiceTest {
 
         Long anotherUserId = 0L;
 
-        matchService.save(match, team.getId());
+        matchService.postNewMatch(match, team.getId());
 
         Assertions.assertThrows(IllegalArgumentException.class,
                 () -> matchService.updateMatch(match, anotherUserId));
     }
-
-
-
 
 }
