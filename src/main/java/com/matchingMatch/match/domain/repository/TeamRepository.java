@@ -1,6 +1,6 @@
 package com.matchingMatch.match.domain.repository;
 
-import com.matchingMatch.match.domain.Team;
+import com.matchingMatch.team.domain.Team;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

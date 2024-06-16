@@ -1,4 +1,4 @@
-package com.matchingMatch.match.controller;
+package com.matchingMatch.team.controller;
 
 
 import com.matchingMatch.auth.AuthenticatedUser;
@@ -9,7 +9,7 @@ import com.matchingMatch.match.dto.MatchBookmarkRequest;
 import com.matchingMatch.match.dto.TeamProfileResponse;
 import com.matchingMatch.match.dto.TeamProfileUpdateRequest;
 import com.matchingMatch.match.service.MatchBookmarkService;
-import com.matchingMatch.match.service.TeamService;
+import com.matchingMatch.team.service.TeamService;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

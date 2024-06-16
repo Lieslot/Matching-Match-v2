@@ -1,8 +1,5 @@
 package com.matchingMatch.admin.dto;
 
-import com.matchingMatch.match.domain.Team;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 

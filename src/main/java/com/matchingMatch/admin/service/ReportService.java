@@ -1,17 +1,13 @@
 package com.matchingMatch.admin.service;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 import com.matchingMatch.admin.Report;
 import com.matchingMatch.admin.domain.ReportRepository;
 import com.matchingMatch.admin.dto.ReportRequest;
-import com.matchingMatch.match.domain.Team;
+import com.matchingMatch.team.domain.Team;
 import com.matchingMatch.match.domain.repository.TeamRepository;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

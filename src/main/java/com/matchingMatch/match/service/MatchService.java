@@ -3,7 +3,7 @@ package com.matchingMatch.match.service;
 
 import com.matchingMatch.match.domain.Match;
 import com.matchingMatch.match.domain.MatchRequest;
-import com.matchingMatch.match.domain.Team;
+import com.matchingMatch.team.domain.Team;
 import com.matchingMatch.match.domain.repository.MatchRepository;
 import com.matchingMatch.match.domain.repository.TeamRepository;
 import com.matchingMatch.match.dto.MatchCancelEvent;

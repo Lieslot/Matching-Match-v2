@@ -1,6 +1,7 @@
 package com.matchingMatch.match.domain;
 
 
+import com.matchingMatch.team.domain.Team;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

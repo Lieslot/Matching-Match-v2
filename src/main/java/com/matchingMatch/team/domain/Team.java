@@ -1,4 +1,4 @@
-package com.matchingMatch.match.domain;
+package com.matchingMatch.team.domain;
 
 
 import static jakarta.persistence.CascadeType.MERGE;
@@ -6,6 +6,8 @@ import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.CascadeType.REMOVE;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.matchingMatch.match.domain.BaseEntity;
+import com.matchingMatch.match.domain.Match;
 import com.matchingMatch.match.domain.enums.Gender;
 import com.matchingMatch.match.domain.enums.Role;
 import com.matchingMatch.notification.domain.Notification;

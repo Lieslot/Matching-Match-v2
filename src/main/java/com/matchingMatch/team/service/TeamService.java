@@ -1,7 +1,7 @@
-package com.matchingMatch.match.service;
+package com.matchingMatch.team.service;
 
 
-import com.matchingMatch.match.domain.Team;
+import com.matchingMatch.team.domain.Team;
 import com.matchingMatch.match.domain.repository.TeamRepository;
 import com.matchingMatch.match.dto.TeamProfileResponse;
 import com.matchingMatch.match.dto.TeamProfileUpdateRequest;

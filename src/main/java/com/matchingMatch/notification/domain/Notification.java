@@ -1,7 +1,7 @@
 package com.matchingMatch.notification.domain;
 
 import com.matchingMatch.match.domain.Match;
-import com.matchingMatch.match.domain.Team;
+import com.matchingMatch.team.domain.Team;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

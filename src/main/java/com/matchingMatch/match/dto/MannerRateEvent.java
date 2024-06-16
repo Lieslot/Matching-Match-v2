@@ -1,8 +1,7 @@
 package com.matchingMatch.match.dto;
 
 import com.matchingMatch.match.domain.Match;
-import com.matchingMatch.match.domain.Team;
-import com.mysql.cj.protocol.x.XProtocolRowInputStream;
+import com.matchingMatch.team.domain.Team;
 import lombok.Getter;
 
 @Getter

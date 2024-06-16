@@ -4,6 +4,7 @@ package com.matchingMatch.match.domain;
 import static jakarta.persistence.CascadeType.*;
 
 import com.matchingMatch.match.domain.enums.Gender;
+import com.matchingMatch.team.domain.Team;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

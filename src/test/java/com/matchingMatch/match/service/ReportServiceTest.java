@@ -8,7 +8,7 @@ import com.matchingMatch.admin.Report;
 import com.matchingMatch.admin.domain.ReportRepository;
 import com.matchingMatch.admin.dto.ReportRequest;
 import com.matchingMatch.admin.service.ReportService;
-import com.matchingMatch.match.domain.Team;
+import com.matchingMatch.team.domain.Team;
 import com.matchingMatch.match.domain.enums.Gender;
 import com.matchingMatch.match.domain.enums.Role;
 import com.matchingMatch.match.domain.repository.TeamRepository;
@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 
 @DataJpaTest

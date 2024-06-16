@@ -2,7 +2,7 @@ package com.matchingMatch.admin;
 
 
 import com.matchingMatch.match.domain.BaseEntity;
-import com.matchingMatch.match.domain.Team;
+import com.matchingMatch.team.domain.Team;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

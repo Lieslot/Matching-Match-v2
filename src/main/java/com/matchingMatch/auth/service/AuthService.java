@@ -4,7 +4,7 @@ import com.matchingMatch.auth.AuthToken;
 import com.matchingMatch.auth.JwtProvider;
 import com.matchingMatch.auth.domain.RefreshToken;
 import com.matchingMatch.auth.domain.RefreshTokenRepository;
-import com.matchingMatch.match.domain.Team;
+import com.matchingMatch.team.domain.Team;
 import com.matchingMatch.match.domain.repository.TeamRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

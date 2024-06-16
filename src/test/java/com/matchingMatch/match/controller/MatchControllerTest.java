@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.matchingMatch.match.domain.Match;
-import com.matchingMatch.match.domain.Team;
+import com.matchingMatch.team.domain.Team;
 import com.matchingMatch.match.domain.enums.Gender;
 import com.matchingMatch.match.domain.enums.Role;
 import com.matchingMatch.match.dto.MatchPostRequest;

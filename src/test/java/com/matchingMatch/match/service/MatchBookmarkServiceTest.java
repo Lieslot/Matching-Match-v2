@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.matchingMatch.match.domain.Match;
-import com.matchingMatch.match.domain.MatchBookmark;
-import com.matchingMatch.match.domain.Team;
+import com.matchingMatch.team.domain.MatchBookmark;
+import com.matchingMatch.team.domain.Team;
 import com.matchingMatch.match.domain.enums.Gender;
 import com.matchingMatch.match.domain.enums.Role;
 import com.matchingMatch.match.domain.repository.MatchRepository;

@@ -1,7 +1,7 @@
 package com.matchingMatch.match.service;
 
-import com.matchingMatch.match.domain.MatchBookmark;
-import com.matchingMatch.match.domain.Team;
+import com.matchingMatch.team.domain.MatchBookmark;
+import com.matchingMatch.team.domain.Team;
 import com.matchingMatch.match.domain.repository.MatchRepository;
 import com.matchingMatch.match.domain.repository.TeamRepository;
 import java.util.Optional;

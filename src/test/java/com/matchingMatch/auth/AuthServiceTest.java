@@ -1,31 +1,20 @@
 package com.matchingMatch.auth;
 
 
-import static org.mockito.ArgumentMatchers.any;
-
-import com.matchingMatch.auth.config.SecurityConfig;
 import com.matchingMatch.auth.domain.RefreshToken;
 import com.matchingMatch.auth.domain.RefreshTokenRepository;
 import com.matchingMatch.auth.service.AuthService;
-import com.matchingMatch.match.domain.Team;
 import com.matchingMatch.match.domain.enums.Gender;
 import com.matchingMatch.match.domain.enums.Role;
 import com.matchingMatch.match.domain.repository.TeamRepository;
-import org.aspectj.lang.annotation.After;
+import com.matchingMatch.team.domain.Team;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 
