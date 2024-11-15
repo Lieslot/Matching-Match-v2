@@ -2,6 +2,8 @@ package com.matchingMatch.match.domain.repository;
 
 import com.matchingMatch.match.domain.entity.MatchEntity;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,4 +16,6 @@ public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
             + "where :matchId < m.id "
             + "order by m.id asc")
     List<MatchEntity> findPagesById(@Param("matchId") Long matchId, Pageable pageable);
+
+    Optional<MatchEntity> findByHostId(Long hostId);
 }

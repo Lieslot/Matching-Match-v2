@@ -25,14 +25,17 @@ public class MatchRequestEntity extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    private Long teamId;
+    private Long sendTeamId;
     @Column(nullable = false)
     private Long matchId;
+    @Column(nullable = false)
+    private Long targetTeamId;
 
     @Builder
-    public MatchRequestEntity(Long teamId, Long matchId) {
-        this.teamId = teamId;
+    public MatchRequestEntity(Long teamId, Long matchId, Long targetTeamId) {
+        this.sendTeamId = teamId;
         this.matchId = matchId;
+        this.targetTeamId = targetTeamId;
     }
 
     @Override
@@ -45,12 +48,12 @@ public class MatchRequestEntity extends BaseEntity {
         }
         MatchRequestEntity other = (MatchRequestEntity) obj;
 
-        return other.teamId.equals(teamId) && other.matchId.equals(matchId);
+        return other.sendTeamId.equals(sendTeamId) && other.matchId.equals(matchId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(teamId, matchId);
+        return Objects.hash(sendTeamId, matchId);
     }
 
 }

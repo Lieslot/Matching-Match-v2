@@ -71,21 +71,43 @@ public class MatchService {
         matchRepository.save(matchEntity);
     }
 
+    public List<Match> getMyMatches (Long teamId) {
+        // matchRequestEntity에서 userId와 같은 teamId matchId를 가져온다.
+
+        List<MatchRequestEntity> myMatchRequests = matchRequestRepository.findBySendTeamId(teamId);
+
+        return myMatchRequests.stream()
+                .map(matchRequest -> matchAdapter.getMatchBy(matchRequest.getMatchId()))
+                .toList();
+    }
+
+    public List<Match> getOtherMatches (Long teamId) {
+        // matchRequestEntity에서 userId와 같은 teamId matchId를 가져온다.
+
+        List<MatchRequestEntity> otherMatchRequests = matchRequestRepository.findByTargetTeamId(teamId);
+
+        return otherMatchRequests.stream()
+                .map(matchRequest -> matchAdapter.getMatchBy(matchRequest.getMatchId()))
+                .toList();
+    }
+
     @Transactional
     public void sendMatchRequest(Long matchId, Long requestTeamId) {
 
-        boolean matchExists = matchRepository.existsById(matchId);
-        if (!matchExists) {
-            throw new MatchNotFoundException();
-        }
+        MatchEntity match = matchRepository.findById(matchId).orElseThrow(() -> new MatchNotFoundException());
+
         boolean teamExists = teamRepository.existsById(requestTeamId);
         if (!teamExists) {
-            throw new UnauthorizedAccessException();
+            throw new IllegalArgumentException();
         }
 
-        MatchRequestEntity matchRequest = new MatchRequestEntity(requestTeamId, matchId);
-        matchRequestRepository.save(matchRequest);
+        MatchRequestEntity matchRequest = MatchRequestEntity.builder()
+                .teamId(requestTeamId)
+                .matchId(matchId)
+                .targetTeamId(match.getHostId())
+                .build();
 
+        matchRequestRepository.save(matchRequest);
         // TODO: 알림 보내기
     }
 

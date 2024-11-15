@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -86,15 +87,25 @@ public class MatchPostController {
     // TODO 내가 요청한 매치 리스트
     @GetMapping("/requests")
     @AuthenticatedUser
-    public MatchPostsResponse getMyMatchList(@Authentication UserAuth userAuth) {
-           
+    public MatchPostsResponse getMyMatchList(@Authentication UserAuth userAuth, @RequestParam("teamId") Long teamId) {
+        List<Match> matches = matchService.getMyMatches(teamId);
+        List<MatchPostListElementResponse> posts = matches.stream()
+                .map(Match::toMatchPostResponse)
+                .toList();
+
+        return new MatchPostsResponse(posts);
     }
 
     // TODO 다른 팀이 요청한 매치 리스트
     @GetMapping("/requests/other")
     @AuthenticatedUser
     public MatchPostsResponse getOtherMatchList(@Authentication UserAuth userAuth) {
+        List<Match> matches = matchService.getOtherMatches(userAuth.getId());
+        List<MatchPostListElementResponse> posts = matches.stream()
+                .map(Match::toMatchPostResponse)
+                .toList();
 
+        return new MatchPostsResponse(posts);
     }
 
 }

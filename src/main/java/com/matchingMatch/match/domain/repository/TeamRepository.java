@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface TeamRepository extends JpaRepository<TeamEntity, Long> {
 
     Optional<TeamEntity> findByAccount(String account);
+
 }
