@@ -27,18 +27,21 @@ public class UserDetail {
     @Column(nullable = false)
     private String username;
     @Column(nullable = false)
+    private String nickname;
+    @Column(nullable = false)
     private Role role;
 
     // TODO: 기본값 정하기
     private LocalDate banDeadLine;
 
     @Builder
-    public UserDetail(Long id, String password, String username, Role role, LocalDate banDeadLine) {
+    public UserDetail(Long id, String password, String username, Role role, LocalDate banDeadLine, String nickname) {
         this.id = id;
         this.password = password;
         this.username = username;
         this.role = role;
         this.banDeadLine = banDeadLine;
+        this.nickname = nickname;
     }
 
 

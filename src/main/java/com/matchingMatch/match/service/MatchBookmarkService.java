@@ -1,10 +1,7 @@
 package com.matchingMatch.match.service;
 
-import com.matchingMatch.team.domain.MatchBookmark;
-import com.matchingMatch.team.domain.Team;
 import com.matchingMatch.match.domain.repository.MatchRepository;
 import com.matchingMatch.match.domain.repository.TeamRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

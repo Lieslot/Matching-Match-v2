@@ -1,7 +1,7 @@
 package com.matchingMatch.match.domain.repository;
 
-import com.matchingMatch.match.domain.Stadium;
+import com.matchingMatch.match.domain.entity.StadiumEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface StadiumRepository extends JpaRepository<Stadium, Long> {
+public interface StadiumRepository extends JpaRepository<StadiumEntity, Long> {
 }

@@ -1,11 +1,14 @@
 package com.matchingMatch.match.service;
 
 
+import com.matchingMatch.match.dto.ModifyMatchPostRequest;
+import com.matchingMatch.match.MatchAdapter;
 import com.matchingMatch.match.domain.Match;
-import com.matchingMatch.match.domain.MatchRequest;
+import com.matchingMatch.match.domain.entity.MatchEntity;
+import com.matchingMatch.match.domain.entity.MatchRequestEntity;
 import com.matchingMatch.match.domain.repository.MatchRequestRepository;
 import com.matchingMatch.match.dto.PostMatchPostRequest;
-import com.matchingMatch.team.domain.Team;
+import com.matchingMatch.team.domain.entity.TeamEntity;
 import com.matchingMatch.match.domain.repository.MatchRepository;
 import com.matchingMatch.match.domain.repository.TeamRepository;
 import com.matchingMatch.match.exception.MatchNotFoundException;
@@ -24,13 +27,15 @@ public class MatchService {
 
     private final MatchRepository matchRepository;
     private final TeamRepository teamRepository;
+    private final MatchAdapter matchAdapter;
     private final ApplicationEventPublisher eventPublisher;
     private final MatchRequestRepository matchRequestRepository;
 
     public Long postNewMatch(PostMatchPostRequest match, Long userId) {
-        Team host = teamRepository.findById(userId)
+        TeamEntity host = teamRepository.findById(userId)
                 .orElseThrow(() -> new UnauthorizedAccessException());
-        Match matchPost = match.toEntity();
+
+        MatchEntity matchPost = match.toEntity();
 
         matchPost.setHost(host.getId());
         matchPost.setParticipant(host.getId());
@@ -40,27 +45,30 @@ public class MatchService {
         return newId;
     }
 
-    public Match getMatchPostBy(Long matchId) {
-        return matchRepository.findById(matchId).orElse(null);
+    public List<Match> getPosts() {
+        return matchAdapter.getMatches();
     }
 
-    public void cancelMatch(Long matchId, Long userId) {
-        Match matchPost = getMatchPostBy(matchId);
-        matchPost.checkHostEqualTo(userId);
+    public Match getMatch(Long matchId) {
+        return matchAdapter.getMatchBy(matchId);
+    }
+
+    public void deleteMatchPost(Long matchId, Long userId) {
+        Match match = matchAdapter.getMatchBy(matchId);
+        match.checkHostEqualTo(userId);
         matchRepository.deleteById(matchId);
     }
 
-    public void updateMatch(PostMatchPostRequest updatedMatchPost , Long userId) {
-        boolean isMatchExists = matchRepository.existsById(updatedMatchPost.getPostId());
+    // TODO 추후에 일관성 고민해보기
+    @Transactional
+    public void updateMatch(ModifyMatchPostRequest updatedMatchPost , Long userId) {
+        MatchEntity matchEntity = matchRepository.findById(
+                updatedMatchPost.getPostId()
+        ).orElseThrow(() -> new MatchNotFoundException());
 
-        if (!isMatchExists) {
-            throw new MatchNotFoundException();
-        }
+        matchEntity.isHost(userId);
 
-        Match match = updatedMatchPost.toEntity();
-        match.isHost(userId);
-
-        matchRepository.save(match);
+        matchRepository.save(matchEntity);
     }
 
     @Transactional
@@ -75,7 +83,7 @@ public class MatchService {
             throw new UnauthorizedAccessException();
         }
 
-        MatchRequest matchRequest = new MatchRequest(requestTeamId, matchId);
+        MatchRequestEntity matchRequest = new MatchRequestEntity(requestTeamId, matchId);
         matchRequestRepository.save(matchRequest);
 
         // TODO: 알림 보내기
@@ -84,20 +92,16 @@ public class MatchService {
     @Transactional
     public void cancelMatchRequest(Long requestId, Long userId) {
 
-        MatchRequest matchRequest = matchRequestRepository.findById(requestId)
+        MatchRequestEntity matchRequest = matchRequestRepository.findById(requestId)
                 .orElseThrow(() -> new IllegalArgumentException());
 
-
         // TODO 알림 보내기
-
 
         matchRequestRepository.deleteById(requestId);
     }
 
     @Transactional
     public void confirmMatchRequest(Long matchId, Long currentUserId, Long confirmedTeamId) {
-
-
 
     }
 
@@ -110,7 +114,7 @@ public class MatchService {
 
     }
 
-    public List<Match> getPagedMatchPostsByNoOffset(Long lastMatchId, Integer pageSize) {
-
-    }
+//    public List<MatchEntity> getPagedMatchPostsByNoOffset(Long lastMatchId, Integer pageSize) {
+//
+//    }
 }

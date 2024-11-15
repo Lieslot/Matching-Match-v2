@@ -1,114 +1,67 @@
 package com.matchingMatch.match.domain;
 
-
-import static jakarta.persistence.CascadeType.*;
-
 import com.matchingMatch.match.domain.enums.Gender;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import java.time.LocalDateTime;
-
+import com.matchingMatch.match.dto.MatchPostListElementResponse;
+import com.matchingMatch.team.domain.entity.Team;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-@Entity
+import java.time.LocalDateTime;
+
 @Getter
-@Setter
-public class Match extends BaseEntity {
+public class Match {
 
-    private static final String INVALID_AUTHORITY = "권한이 없는 접근입니다.";
-
-    public Match() {
-
-    }
-
-    @Builder
-    public Match(Long hostId, Long participantId, LocalDateTime startTime, LocalDateTime endTime, Gender gender,
-                 int stadiumCost, String etc) {
-        this.hostId = hostId;
-        this.participantId = participantId;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.gender = gender;
-        this.stadiumCost = stadiumCost;
-        this.etc = etc;
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long hostId;
+    @NotNull
+    private Team host;
 
-    private Long participantId;
+    private Team participant;
 
-    @Column(nullable = false)
+    @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd:hh:mm:ss")
     private LocalDateTime startTime;
 
-    @Column(nullable = false)
+    @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd:hh:mm:ss")
     private LocalDateTime endTime;
 
-    @Column(nullable = false)
+    @NotNull
     private Gender gender;
 
-    private int stadiumCost;
+    private Stadium stadium;
 
     private String etc;
 
-
-
-    public void checkHostEqualTo(Long target) {
-
-        if (!hostId.equals(target)) {
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
-        }
-
+    @Builder
+    public Match(Long id, Team host, Team participant, LocalDateTime startTime, LocalDateTime endTime, Gender gender, int stadiumCost,
+                 String etc,
+                 Stadium stadium) {
+        this.id = id;
+        this.host = host;
+        this.participant = participant;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.stadium = stadium;
     }
 
-    public void setHost(Long target) {
-        this.hostId = target;
-    }
 
-    public void setParticipant(Long target) {
-        this.participantId = target;
-    }
-
-    public void isHost(Long target) {
-        if (!hostId.equals(target)) {
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
+    public void checkHostEqualTo(Long hostId) {
+        if (this.host.getId().equals(hostId)) {
+            throw new IllegalArgumentException();
         }
     }
 
-    public void isParticipant(Long target) {
-        if (!participantId.equals(target)) {
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
-        }
+    public MatchPostListElementResponse toMatchPostResponse() {
+        return MatchPostListElementResponse.builder()
+                .id(id)
+                .hostName(host.getName())
+                .participantName(participant.getName())
+                .startTime(startTime)
+                .endTime(endTime).build();
     }
 
-    public void checkParticipantEqualTo(Long target) {
 
-        if (!participantId.equals(target)) {
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
-        }
-
-    }
-
-    public void checkInvolvedInMatch(Long target) {
-        if (!hostId.equals(target) && !participantId.equals(target)) {
-
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
-        }
-
-    }
 }

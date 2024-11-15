@@ -1,4 +1,4 @@
-package com.matchingMatch.team.domain;
+package com.matchingMatch.team.domain.entity;
 
 
 import com.matchingMatch.match.domain.BaseEntity;
@@ -18,7 +18,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Team extends BaseEntity {
+public class TeamEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,8 +46,8 @@ public class Team extends BaseEntity {
 
 
     @Builder
-    public Team(String teamName, String teamDescription, String teamLogoUrl,
-                String region, Gender gender, Long leaderId) {
+    public TeamEntity(String teamName, String teamDescription, String teamLogoUrl,
+                      String region, Gender gender, Long leaderId) {
 
         this.name = teamName;
         this.teamDescription = teamDescription;
@@ -58,7 +58,7 @@ public class Team extends BaseEntity {
 
     }
 
-    public Team() {
+    public TeamEntity() {
 
     }
 
@@ -70,7 +70,7 @@ public class Team extends BaseEntity {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Team team = (Team) o;
+        TeamEntity team = (TeamEntity) o;
         return Objects.equals(id, team.id);
     }
 
@@ -112,5 +112,18 @@ public class Team extends BaseEntity {
 
     public float calculateMannerPoint() {
         return (float) this.mannerPointSum / this.matchCount;
+    }
+
+    public Team toDomain() {
+        return Team.builder()
+                .id(id)
+                .name(name)
+                .teamDescription(teamDescription)
+                .teamLogoUrl(teamLogoUrl)
+                .leaderId(leaderId)
+                .mannerPointSum(mannerPointSum)
+                .matchCount(matchCount)
+                .region(region)
+                .build();
     }
 }

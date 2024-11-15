@@ -1,20 +1,16 @@
 package com.matchingMatch.match.dto;
 
-import com.matchingMatch.team.domain.Team;
 import com.matchingMatch.match.domain.enums.Gender;
 import jakarta.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
-@Builder
-public class GetMatchPostResponse {
+public class ModifyMatchPostRequest {
 
-    @NotNull(message = "잘못된 접근입니다.")
-    private Team hostId;
-
-    private Team participantId;
+    @NotNull
+    private Long postId;
 
     @NotNull(message = "시작 시간을 선택해주세요")
     private LocalDateTime startTime;
@@ -28,6 +24,5 @@ public class GetMatchPostResponse {
     private int stadiumCost;
 
     private String etc;
-
 
 }

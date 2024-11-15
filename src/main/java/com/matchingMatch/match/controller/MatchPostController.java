@@ -1,19 +1,19 @@
 package com.matchingMatch.match.controller;
 
 
-import com.matchingMatch.admin.dto.ModifyMatchPostRequest;
-import com.matchingMatch.admin.dto.ModifyMatchPostResponse;
-import com.matchingMatch.admin.dto.PostMatchPostResponse;
+import com.matchingMatch.match.dto.ModifyMatchPostRequest;
+import com.matchingMatch.match.dto.ModifyMatchPostResponse;
 import com.matchingMatch.auth.AuthenticatedUser;
 import com.matchingMatch.auth.Authentication;
 import com.matchingMatch.auth.dto.UserAuth;
+import com.matchingMatch.match.domain.Match;
+import com.matchingMatch.match.dto.MatchPostListElementResponse;
 import com.matchingMatch.match.dto.PostMatchPostRequest;
-import com.matchingMatch.match.dto.GetMatchPostResponse;
 import com.matchingMatch.match.dto.MatchPostsResponse;
 import com.matchingMatch.match.service.MatchService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,26 +33,35 @@ public class MatchPostController {
 
     private final MatchService matchService;
 
-    @GetMapping
-    public MatchPostsResponse getMatchPosts(
-            @RequestParam(value = "LastMatchId", required = false, defaultValue = "0") String matchLastId,
-            @RequestParam(value = "LastMatchId", required = false, defaultValue = "20") String pageSize) {
 
+    @GetMapping("/posts")
+    @ResponseStatus(HttpStatus.OK)
+    public MatchPostsResponse getMatchPosts() {
+
+        List<Match> matches = matchService.getPosts();
+        List<MatchPostListElementResponse> posts = matches.stream()
+                .map(Match::toMatchPostResponse)
+                .toList();
+
+        return new MatchPostsResponse(posts);
     }
 
 
     @AuthenticatedUser
     @PostMapping
-    public PostMatchPostResponse createNewMatchPost(
+    @ResponseStatus(HttpStatus.CREATED)
+    public Long createNewMatchPost(
             @Valid @RequestBody PostMatchPostRequest matchPostRequest,
             @Authentication UserAuth userAuth) {
 
+        return matchService.postNewMatch(matchPostRequest, userAuth.getId());
     }
 
 
     @GetMapping("/{postId}")
-    public GetMatchPostResponse getMatchPost(@PathVariable Long postId) {
+    public Match getMatchPost(@PathVariable Long postId) {
 
+        return matchService.getMatch(postId);
     }
 
     @AuthenticatedUser
@@ -59,27 +70,28 @@ public class MatchPostController {
             @PathVariable Long postId,
             @Authentication UserAuth userAuth) {
 
-
+        matchService.deleteMatchPost(postId, userAuth.getId());
     }
 
     @AuthenticatedUser
     @PutMapping("/{postId}")
-    public ModifyMatchPostResponse updateMatchPost(
+    public void updateMatchPost(
             @PathVariable Long postId,
             @Valid @RequestBody ModifyMatchPostRequest matchPostRequest,
             @Authentication UserAuth userAuth) {
 
+        matchService.updateMatch(matchPostRequest, userAuth.getId());
     }
 
     // TODO 내가 요청한 매치 리스트
-    @GetMapping("/request")
+    @GetMapping("/requests")
     @AuthenticatedUser
     public MatchPostsResponse getMyMatchList(@Authentication UserAuth userAuth) {
            
     }
 
     // TODO 다른 팀이 요청한 매치 리스트
-    @GetMapping("/request/other")
+    @GetMapping("/requests/other")
     @AuthenticatedUser
     public MatchPostsResponse getOtherMatchList(@Authentication UserAuth userAuth) {
 

@@ -5,7 +5,7 @@ import com.matchingMatch.auth.domain.RefreshToken;
 import com.matchingMatch.auth.domain.RefreshTokenRepository;
 import com.matchingMatch.auth.service.AuthService;
 import com.matchingMatch.match.domain.enums.Role;
-import com.matchingMatch.team.domain.Team;
+import com.matchingMatch.team.domain.entity.TeamEntity;
 import com.matchingMatch.user.domain.UserDetail;
 import com.matchingMatch.user.domain.repository.UserRepository;
 import org.assertj.core.api.Assertions;
@@ -35,7 +35,7 @@ public class AuthServiceTest {
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
 
-    private Team team;
+    private TeamEntity team;
 
     @Autowired
     private JwtProvider jwtProvider;

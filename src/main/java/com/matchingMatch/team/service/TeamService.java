@@ -1,7 +1,7 @@
 package com.matchingMatch.team.service;
 
 
-import com.matchingMatch.team.domain.Team;
+import com.matchingMatch.team.domain.entity.TeamEntity;
 import com.matchingMatch.match.domain.repository.TeamRepository;
 import com.matchingMatch.match.dto.TeamProfileResponse;
 import com.matchingMatch.match.dto.TeamProfileUpdateRequest;
@@ -19,12 +19,12 @@ public class TeamService {
 
     @Transactional
     public TeamProfileResponse getTeamProfile(Long teamId) {
-        Optional<Team> result = teamRepository.findById(teamId);
+        Optional<TeamEntity> result = teamRepository.findById(teamId);
         if (result.isEmpty()) {
             throw new IllegalArgumentException();
         }
 
-        Team team = result.get();
+        TeamEntity team = result.get();
         return TeamProfileResponse.builder()
                 .teamName(team.getName())
                 .teamLogoUrl(team.getTeamLogoUrl())
@@ -38,11 +38,11 @@ public class TeamService {
     @Transactional
     public void updateTeamProfile(Long teamId,
                                   TeamProfileUpdateRequest teamProfileUpdateRequest) {
-        Optional<Team> result = teamRepository.findById(teamId);
+        Optional<TeamEntity> result = teamRepository.findById(teamId);
         if (result.isEmpty()) {
             throw new IllegalArgumentException();
         }
-        Team team = result.get();
+        TeamEntity team = result.get();
 
         team.setTeamDescription(teamProfileUpdateRequest.getTeamDescription());
         team.setName(teamProfileUpdateRequest.getTeamName());

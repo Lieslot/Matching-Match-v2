@@ -1,7 +1,7 @@
 package com.matchingMatch.match.domain.repository;
 
-import com.matchingMatch.match.domain.MannerRateCheck;
+import com.matchingMatch.match.domain.entity.MannerRateCheckEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MannerRateCheckRepository extends JpaRepository<MannerRateCheck, Long> {
+public interface MannerRateCheckRepository extends JpaRepository<MannerRateCheckEntity, Long> {
 }

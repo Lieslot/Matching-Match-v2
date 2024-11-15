@@ -1,14 +1,10 @@
 package com.matchingMatch.listener;
 
 
-import com.matchingMatch.match.domain.Match;
-import com.matchingMatch.team.domain.Team;
 import com.matchingMatch.match.domain.repository.TeamRepository;
 import com.matchingMatch.match.dto.MatchCancelEvent;
 import com.matchingMatch.match.dto.MannerRateEvent;
 import com.matchingMatch.match.dto.MatchConfirmEvent;
-import com.matchingMatch.notification.domain.Notification;
-import com.matchingMatch.notification.domain.NotificationType;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

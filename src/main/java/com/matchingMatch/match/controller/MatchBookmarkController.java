@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class MatchBookmarkController {
 
 
-    // TODO 유저 북마크 한 매치 목록
-    @GetMapping
-    @AuthenticatedUser
-    public MatchPostsResponse getMatchBookMarkList(@Authentication UserAuth userAuth) {
-
-    }
+//    // TODO 유저 북마크 한 매치 목록
+//    @GetMapping
+//    @AuthenticatedUser
+//    public MatchPostsResponse getMatchBookMarkList(@Authentication UserAuth userAuth) {
+//
+//    }
 
     // TODO 매치 북마크 추가
 

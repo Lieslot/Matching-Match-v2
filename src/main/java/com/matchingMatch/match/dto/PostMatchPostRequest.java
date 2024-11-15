@@ -1,6 +1,6 @@
 package com.matchingMatch.match.dto;
 
-import com.matchingMatch.match.domain.Match;
+import com.matchingMatch.match.domain.entity.MatchEntity;
 import com.matchingMatch.match.domain.enums.Gender;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -31,8 +31,8 @@ public class PostMatchPostRequest {
     private String etc;
 
 
-    public Match toEntity() {
-        return Match.builder()
+    public MatchEntity toEntity() {
+        return MatchEntity.builder()
                     .hostId(hostId)
                     .startTime(startTime)
                     .endTime(endTime)

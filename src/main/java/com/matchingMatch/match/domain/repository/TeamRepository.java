@@ -1,10 +1,10 @@
 package com.matchingMatch.match.domain.repository;
 
-import com.matchingMatch.team.domain.Team;
+import com.matchingMatch.team.domain.entity.TeamEntity;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TeamRepository extends JpaRepository<Team, Long> {
+public interface TeamRepository extends JpaRepository<TeamEntity, Long> {
 
-    Optional<Team> findByAccount(String account);
+    Optional<TeamEntity> findByAccount(String account);
 }

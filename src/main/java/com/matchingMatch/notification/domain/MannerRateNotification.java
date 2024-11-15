@@ -2,7 +2,7 @@
 //
 //
 //import com.matchingMatch.match.domain.Match;
-//import com.matchingMatch.team.domain.Team;
+//import com.matchingMatch.team.domain.entity.Team;
 //import jakarta.persistence.Entity;
 //import jakarta.persistence.FetchType;
 //import jakarta.persistence.GeneratedValue;
