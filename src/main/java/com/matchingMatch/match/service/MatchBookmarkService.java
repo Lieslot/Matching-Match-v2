@@ -19,24 +19,7 @@ public class MatchBookmarkService {
     @Transactional
     public void addMatchBookmark(Long teamId, Long matchId) {
 
-        Optional<Team> teamSearchResult = teamRepository.findById(teamId);
-        boolean checkMatchExists = matchRepository.existsById(matchId);
 
-        if (teamSearchResult.isEmpty() || !checkMatchExists) {
-
-            throw new IllegalArgumentException();
-
-        }
-        Team team = teamSearchResult.get();
-
-
-        MatchBookmark matchBookMark = MatchBookmark.builder()
-                .team(team)
-                .storedMatchId(matchId)
-                .build();
-
-        team.addMatchBookMark(matchBookMark);
-        teamRepository.save(team); // matchBookmark의 영속화를 위해 필요함.
 
     }
 
@@ -44,14 +27,7 @@ public class MatchBookmarkService {
     @Transactional
     public void removeMatchBookmark(Long matchBookmarkId, Long teamId) {
 
-        Optional<Team> teamSearchResult = teamRepository.findById(teamId);
 
-        if (teamSearchResult.isEmpty()) {
-            throw new IllegalArgumentException();
-        }
-        Team team = teamSearchResult.get();
-
-        team.removeMatchBookmark(matchBookmarkId);
     }
 
 }

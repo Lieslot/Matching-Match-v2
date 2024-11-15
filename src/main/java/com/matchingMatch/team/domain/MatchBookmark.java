@@ -1,6 +1,7 @@
 package com.matchingMatch.team.domain;
 
 import com.matchingMatch.match.domain.BaseEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -22,14 +23,15 @@ public class MatchBookmark extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long storedMatchId;
+    @Column(nullable = false)
+    private Long matchId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Team team;
+    @Column(nullable = false)
+    private Long teamId;
 
     @Builder
-    public MatchBookmark(Long storedMatchId, Team team) {
-        this.storedMatchId = storedMatchId;
-        this.team = team;
+    public MatchBookmark(Long storedMatchId, Long teamId) {
+        this.matchId = storedMatchId;
+        this.teamId = teamId;
     }
 }

@@ -1,6 +1,7 @@
 package com.matchingMatch.match.domain;
 
 import com.matchingMatch.match.domain.enums.SeoulDistrict;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,13 +28,13 @@ public class Stadium {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(nullable = false)
     private String name;
-
+    @Column(nullable = false)
     private SeoulDistrict district;
-
+    @Column(nullable = false)
     private String isParkPossible;
-
+    @Column(nullable = false)
     private String address;
 
 

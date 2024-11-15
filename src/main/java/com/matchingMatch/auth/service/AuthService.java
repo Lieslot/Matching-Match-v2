@@ -7,6 +7,9 @@ import com.matchingMatch.auth.domain.RefreshTokenRepository;
 import com.matchingMatch.team.domain.Team;
 import com.matchingMatch.match.domain.repository.TeamRepository;
 import java.util.Optional;
+
+import com.matchingMatch.user.domain.UserDetail;
+import com.matchingMatch.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
-    private final TeamRepository teamRepository;
+    private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtProvider jwtProvider;
 
@@ -26,24 +29,19 @@ public class AuthService {
     @Transactional
     public AuthToken login(String username, String password) {
 
-        Optional<Team> result = teamRepository.findByAccount(username);
+        UserDetail user = userRepository.findByUsername(username).orElseThrow(() -> new BadCredentialsException("아이디 또는 비밀번호가 잘못됨"));
 
-        if (result.isEmpty()) {
-            throw new BadCredentialsException("아이디 또는 비밀번호가 잘못됨");
-        }
-        Team team = result.get();
-
-        if (!checkPassword(password, team)) {
+        if (!checkPassword(password, user)) {
             throw new BadCredentialsException("아이디 또는 비밀번호가 잘못됨");
         }
 
-        String accessToken = jwtProvider.createAccessToken(team.getId());
-        String refreshTokenContent = jwtProvider.createRefreshToken(team.getId());
+        String accessToken = jwtProvider.createAccessToken(user.getId());
+        String refreshTokenContent = jwtProvider.createRefreshToken(user.getId());
 
-        Optional<RefreshToken> tokenSearchResult = refreshTokenRepository.findById(team.getId());
+        Optional<RefreshToken> tokenSearchResult = refreshTokenRepository.findById(user.getId());
 
         if (tokenSearchResult.isEmpty()) {
-            refreshTokenRepository.save(new RefreshToken(team.getId(), refreshTokenContent));
+            refreshTokenRepository.save(new RefreshToken(user.getId(), refreshTokenContent));
         } else {
             RefreshToken refreshToken = tokenSearchResult.get();
             refreshToken.setContent(refreshTokenContent);
@@ -53,9 +51,9 @@ public class AuthService {
 
     }
 
-    private boolean checkPassword(String password, Team team) {
+    private boolean checkPassword(String password, UserDetail userDetail) {
 
-        return passwordEncoder.matches(password, team.getPassword());
+        return passwordEncoder.matches(password, userDetail.getPassword());
     }
 
 

@@ -1,27 +1,16 @@
 package com.matchingMatch.team.domain;
 
 
-import static jakarta.persistence.CascadeType.MERGE;
-import static jakarta.persistence.CascadeType.PERSIST;
-import static jakarta.persistence.CascadeType.REMOVE;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.matchingMatch.match.domain.BaseEntity;
-import com.matchingMatch.match.domain.Match;
 import com.matchingMatch.match.domain.enums.Gender;
-import com.matchingMatch.match.domain.enums.Role;
-import com.matchingMatch.notification.domain.Notification;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+
 import java.util.Objects;
-import java.util.Set;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,20 +24,14 @@ public class Team extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonIgnore
     @Column(unique = true, nullable = false)
-    private String account;
-
-    @JsonIgnore
-    @Column(nullable = false)
-    private String password;
-
-    @Column(unique = true)
-    private String teamName;
+    private String name;
 
     private String teamDescription;
 
     private String teamLogoUrl;
+    @Column(nullable = false)
+    private Long leaderId;
 
     private Long mannerPointSum = 0L;
 
@@ -60,33 +43,18 @@ public class Team extends BaseEntity {
     @Column(nullable = false)
     private Gender gender;
 
-    @Column
-    private Role role;
-
-    @OneToMany(mappedBy = "host")
-    private List<Match> hostedMatches = new ArrayList<>();
-
-    @OneToMany(mappedBy = "participant", cascade = {PERSIST}, orphanRemoval = true)
-    private List<Match> participatedMatches = new ArrayList<>();
-
-    @OneToMany(mappedBy = "targetTeam", cascade = {PERSIST, REMOVE, MERGE}, orphanRemoval = true)
-    private List<Notification> notifications = new ArrayList<>();
-
-    @OneToMany(mappedBy = "team", cascade = {PERSIST, REMOVE, MERGE}, orphanRemoval = true)
-    private Set<MatchBookmark> matchBookmarks = new HashSet<>();
 
 
     @Builder
-    public Team(String account, String password, String teamName, String teamDescription, String teamLogoUrl,
-                String region, Gender gender, Role role) {
-        this.account = account;
-        this.password = password;
-        this.teamName = teamName;
+    public Team(String teamName, String teamDescription, String teamLogoUrl,
+                String region, Gender gender, Long leaderId) {
+
+        this.name = teamName;
         this.teamDescription = teamDescription;
         this.teamLogoUrl = teamLogoUrl;
         this.region = region;
         this.gender = gender;
-        this.role = role;
+        this.leaderId = leaderId;
 
     }
 
@@ -113,34 +81,34 @@ public class Team extends BaseEntity {
 
 
     // TODO 이미 평가한 경우 무시하도록 예외처리
-    public void isRatedAfterMatch(Long mannerPoint) {
+    public void rate(Long mannerPoint) {
         mannerPointSum += mannerPoint;
         matchCount++;
     }
 
-    public void addNotification(Notification notification) {
-        this.notifications.add(notification);
-    }
+//    public void addNotification(Notification notification) {
+//        this.notifications.add(notification);
+//    }
 
-    public void confirmParticipant(Match match) {
-
-        participatedMatches.add(match);
-
-    }
-
-    public void cancelParticipant(Match match) {
-
-        participatedMatches.add(match);
-
-    }
-
-    public void addMatchBookMark(MatchBookmark matchBookMark) {
-        matchBookmarks.add(matchBookMark);
-    }
-
-    public void removeMatchBookmark(Long matchBookmarkId) {
-        matchBookmarks.removeIf(matchBookmark -> matchBookmark.getId().equals(matchBookmarkId));
-    }
+//    public void confirmParticipant(Match match) {
+//
+//        participatedMatches.add(match);
+//
+//    }
+//
+//    public void cancelParticipant(Match match) {
+//
+//        participatedMatches.add(match);
+//
+//    }
+//
+//    public void addMatchBookMark(MatchBookmark matchBookMark) {
+//        matchBookmarks.add(matchBookMark);
+//    }
+//
+//    public void removeMatchBookmark(Long matchBookmarkId) {
+//        matchBookmarks.removeIf(matchBookmark -> matchBookmark.getId().equals(matchBookmarkId));
+//    }
 
     public float calculateMannerPoint() {
         return (float) this.mannerPointSum / this.matchCount;

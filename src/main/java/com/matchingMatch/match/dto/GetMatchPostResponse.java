@@ -9,7 +9,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class MatchPostResponse {
+public class GetMatchPostResponse {
 
     @NotNull(message = "잘못된 접근입니다.")
     private Team hostId;

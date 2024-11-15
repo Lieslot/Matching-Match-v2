@@ -2,6 +2,7 @@ package com.matchingMatch.match.domain;
 
 
 import com.matchingMatch.team.domain.Team;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -19,27 +20,22 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MatchRequest {
+public class MatchRequest extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
-    private Team requestingTeam;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "match_id")
-    private Match targetMatch;
+    @Column(nullable = false)
+    private Long teamId;
+    @Column(nullable = false)
+    private Long matchId;
 
     @Builder
-    public MatchRequest(Team requestingTeam, Match targetMatch) {
-        this.requestingTeam = requestingTeam;
-        this.targetMatch = targetMatch;
+    public MatchRequest(Long teamId, Long matchId) {
+        this.teamId = teamId;
+        this.matchId = matchId;
     }
-
 
     @Override
     public boolean equals(Object obj) {
@@ -51,11 +47,12 @@ public class MatchRequest {
         }
         MatchRequest other = (MatchRequest) obj;
 
-        return other.requestingTeam.equals(requestingTeam) && other.targetMatch.equals(targetMatch);
+        return other.teamId.equals(teamId) && other.matchId.equals(matchId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(requestingTeam, targetMatch);
+        return Objects.hash(teamId, matchId);
     }
+
 }

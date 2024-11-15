@@ -2,7 +2,7 @@ package com.matchingMatch.admin.service;
 
 import com.matchingMatch.admin.Report;
 import com.matchingMatch.admin.domain.ReportRepository;
-import com.matchingMatch.admin.dto.ReportRequest;
+import com.matchingMatch.admin.dto.PostReportRequest;
 import com.matchingMatch.team.domain.Team;
 import com.matchingMatch.match.domain.repository.TeamRepository;
 import java.util.Optional;
@@ -31,26 +31,26 @@ public class ReportService {
     }
 
     @Transactional
-    public void createReport(ReportRequest reportRequest) {
+    public void createReport(PostReportRequest reportRequest) {
 
-        Long reporterId = reportRequest.getReporterId();
-        Long targetId = reportRequest.getTargetId();
-
-        Optional<Team> reporterSearchResult = teamRepository.findById(reporterId);
-        Optional<Team> targetSearchResult = teamRepository.findById(targetId);
-
-        if (reporterSearchResult.isEmpty() || targetSearchResult.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 유저 or 권한이 없음");
-        }
-
-        Report newReport = Report.builder()
-                .content(reportRequest.getContent())
-                .reporter(reporterSearchResult.get())
-                .target(targetSearchResult.get())
-                .title(reportRequest.getTitle())
-                .build();
-
-        reportRepository.save(newReport);
+//        Long reporterId = reportRequest.getReporterId();
+//        Long targetId = reportRequest.getTargetId();
+//
+//        Optional<Team> reporterSearchResult = teamRepository.findById(reporterId);
+//        Optional<Team> targetSearchResult = teamRepository.findById(targetId);
+//
+//        if (reporterSearchResult.isEmpty() || targetSearchResult.isEmpty()) {
+//            throw new IllegalArgumentException("존재하지 않는 유저 or 권한이 없음");
+//        }
+//
+//        Report newReport = Report.builder()
+//                .content(reportRequest.getContent())
+//                .reporter(reporterSearchResult.get())
+//                .target(targetSearchResult.get())
+//                .title(reportRequest.getTitle())
+//                .build();
+//
+//        reportRepository.save(newReport);
 
     }
 }

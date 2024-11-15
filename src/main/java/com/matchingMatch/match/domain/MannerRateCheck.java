@@ -6,28 +6,35 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-public class MannerRateCheck {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class MannerRateCheck extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private Match matchId;
+    private Long matchId;
 
-    private Boolean isHostCheck = false;
+    private Long teaId;
 
-    private Boolean isParticipantCheck = false;
+    private Boolean isCheck;
 
-    public void checkHost() {
-        isHostCheck = true;
+    public void check() {
+        isCheck = true;
     }
-    public void checkParticipant() {
-        isParticipantCheck = true;
+
+    @Builder
+    public MannerRateCheck(Long matchId, Long teaId) {
+        this.matchId = matchId;
+        this.teaId = teaId;
+        this.isCheck = false;
     }
 
 }

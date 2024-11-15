@@ -1,40 +1,45 @@
-package com.matchingMatch.admin;
+package com.matchingMatch.user.domain;
 
-
-import com.matchingMatch.match.domain.BaseEntity;
-import com.matchingMatch.team.domain.Team;
+import com.matchingMatch.match.domain.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Report extends BaseEntity {
+public class UserDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
-    private Long authorId;
-    @Column(nullable = false)
-    private String title;
-    @Column(nullable = false)
-    private String content;
 
+    @Column(nullable = false)
+    private String password;
+    @Column(nullable = false)
+    private String username;
+    @Column(nullable = false)
+    private Role role;
+
+    // TODO: 기본값 정하기
+    private LocalDate banDeadLine;
 
     @Builder
-    public Report(Long authorId, String title, String content, Team target) {
-        this.authorId = authorId;
-        this.title = title;
-        this.content = content;
+    public UserDetail(Long id, String password, String username, Role role, LocalDate banDeadLine) {
+        this.id = id;
+        this.password = password;
+        this.username = username;
+        this.role = role;
+        this.banDeadLine = banDeadLine;
     }
+
+
 }

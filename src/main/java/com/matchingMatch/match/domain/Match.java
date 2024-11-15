@@ -4,20 +4,16 @@ package com.matchingMatch.match.domain;
 import static jakarta.persistence.CascadeType.*;
 
 import com.matchingMatch.match.domain.enums.Gender;
-import com.matchingMatch.team.domain.Team;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,10 +31,10 @@ public class Match extends BaseEntity {
     }
 
     @Builder
-    public Match(Team host, Team participant, LocalDateTime startTime, LocalDateTime endTime, Gender gender,
+    public Match(Long hostId, Long participantId, LocalDateTime startTime, LocalDateTime endTime, Gender gender,
                  int stadiumCost, String etc) {
-        this.host = host;
-        this.participant = participant;
+        this.hostId = hostId;
+        this.participantId = participantId;
         this.startTime = startTime;
         this.endTime = endTime;
         this.gender = gender;
@@ -50,17 +46,10 @@ public class Match extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "host_id", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Team host;
+    @Column(nullable = false)
+    private Long hostId;
 
-    @JoinColumn(name = "participant_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Team participant;
-
-    @OneToMany(mappedBy = "targetMatch", fetch = FetchType.LAZY,
-            cascade = {REMOVE, PERSIST, MERGE}, orphanRemoval = true)
-    private Set<MatchRequest> matchRequests = new HashSet<>();
+    private Long participantId;
 
     @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd:hh:mm:ss")
@@ -77,65 +66,47 @@ public class Match extends BaseEntity {
 
     private String etc;
 
-    @OneToOne(mappedBy = "matchId", fetch = FetchType.LAZY,
-            cascade = {PERSIST, MERGE, REMOVE},
-            orphanRemoval = true)
-    private MannerRateCheck matchRateCheck = new MannerRateCheck();
 
-
-    public void addRequestTeam(MatchRequest matchRequest) {
-
-        if (matchRequests.contains(matchRequest)) {
-            throw new IllegalArgumentException("이미 신청한 매치입니다.");
-        }
-
-        matchRequests.add(matchRequest);
-    }
-
-    public void removeMatchRequest(MatchRequest matchRequest) {
-        if (!matchRequests.contains(matchRequest)) {
-            throw new IllegalArgumentException("신청하지 않았던 매치입니다.");
-        }
-
-        matchRequests.remove(matchRequest);
-    }
 
     public void checkHostEqualTo(Long target) {
 
-        if (!host.getId().equals(target)) {
+        if (!hostId.equals(target)) {
             throw new IllegalArgumentException(INVALID_AUTHORITY);
         }
 
     }
 
+    public void setHost(Long target) {
+        this.hostId = target;
+    }
+
+    public void setParticipant(Long target) {
+        this.participantId = target;
+    }
+
+    public void isHost(Long target) {
+        if (!hostId.equals(target)) {
+            throw new IllegalArgumentException(INVALID_AUTHORITY);
+        }
+    }
+
+    public void isParticipant(Long target) {
+        if (!participantId.equals(target)) {
+            throw new IllegalArgumentException(INVALID_AUTHORITY);
+        }
+    }
+
     public void checkParticipantEqualTo(Long target) {
 
-        if (!participant.getId().equals(target)) {
+        if (!participantId.equals(target)) {
             throw new IllegalArgumentException(INVALID_AUTHORITY);
         }
 
     }
 
     public void checkInvolvedInMatch(Long target) {
-        if (!host.getId().equals(target) && !participant.getId().equals(target)) {
+        if (!hostId.equals(target) && !participantId.equals(target)) {
 
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
-        }
-    }
-
-    public void rateMannerPoint(Long userId, Long mannerPoint) {
-
-        if (host.getId().equals(userId)) {
-            matchRateCheck.checkParticipant();
-            participant.isRatedAfterMatch(mannerPoint);
-        }
-
-        else if (participant.getId().equals(userId)) {
-            matchRateCheck.checkHost();
-            host.isRatedAfterMatch(mannerPoint);
-        }
-
-        else {
             throw new IllegalArgumentException(INVALID_AUTHORITY);
         }
 

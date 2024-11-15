@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ReportRequest {
+public class PostReportRequest {
 
     private Long reporterId;
 

@@ -2,7 +2,7 @@ package com.matchingMatch.admin.service;
 
 import com.matchingMatch.admin.NoticePost;
 import com.matchingMatch.admin.domain.NoticePostRepository;
-import com.matchingMatch.admin.dto.NoticePostRequest;
+import com.matchingMatch.admin.dto.PostNoticeRequest;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,7 @@ public class NoticePostService {
     }
 
     // TODO C
-    public Long createNoticePost(NoticePostRequest noticePostCreateRequest) {
+    public Long createNoticePost(PostNoticeRequest noticePostCreateRequest) {
         NoticePost noticePost = noticePostCreateRequest.toEntity();
         NoticePost savedPost = noticePostRepository.save(noticePost);
 
@@ -42,7 +42,7 @@ public class NoticePostService {
     }
 
     // TODO U
-    public void updateNoticePost(NoticePostRequest noticePostUpdateRequest) {
+    public void updateNoticePost(PostNoticeRequest noticePostUpdateRequest) {
         Optional<NoticePost> searchResult  = noticePostRepository.findById(noticePostUpdateRequest.getId());
 
         if (searchResult.isEmpty()) {

@@ -12,12 +12,15 @@ import com.matchingMatch.match.service.MatchBookmarkService;
 import com.matchingMatch.team.service.TeamService;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,27 +32,29 @@ public class TeamController {
     private final TeamService teamService;
     private final MatchBookmarkService matchBookmarkService;
 
+
     @AuthenticatedUser
-    @PostMapping("/bookmark")
-    public ResponseEntity<Void> storeMatchBookmark(
-            @RequestBody MatchBookmarkRequest matchBookmarkRequest,
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Void> registerTeam(
             @Authentication UserAuth userAuth) {
 
-        matchBookmarkService.addMatchBookmark(userAuth.getId(), matchBookmarkRequest.getMatchId());
-
-        return ResponseEntity.ok().build();
     }
 
     @AuthenticatedUser
-    @DeleteMapping("/bookmark")
-    public ResponseEntity<Void> removeMatchBookmark(
-            @RequestBody MatchBookMarkRemoveRequest matchBookmarkRemoveRequest,
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteTeam(
             @Authentication UserAuth userAuth) {
 
-        matchBookmarkService.removeMatchBookmark(matchBookmarkRemoveRequest.getMatchBookmarkId(),
-                userAuth.getId());
+    }
 
-        return ResponseEntity.ok().build();
+    @AuthenticatedUser
+    @PutMapping("leader")
+    @ResponseStatus(HttpStatus.OK)
+    public void changeLeader(
+            @Authentication UserAuth userAuth) {
+
     }
 
 
@@ -58,7 +63,6 @@ public class TeamController {
     public TeamProfileResponse getTeamProfile(
             @Authentication UserAuth userAuth) {
 
-        return teamService.getTeamProfile(userAuth.getId());
 
     }
 
@@ -68,9 +72,6 @@ public class TeamController {
             @Authentication UserAuth userAuth,
             @RequestBody TeamProfileUpdateRequest teamProfileUpdateRequest) {
 
-        teamService.updateTeamProfile(userAuth.getId(), teamProfileUpdateRequest);
-
-        return ResponseEntity.created(URI.create("/profile")).build();
     }
 
 

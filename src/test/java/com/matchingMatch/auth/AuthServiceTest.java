@@ -4,10 +4,10 @@ package com.matchingMatch.auth;
 import com.matchingMatch.auth.domain.RefreshToken;
 import com.matchingMatch.auth.domain.RefreshTokenRepository;
 import com.matchingMatch.auth.service.AuthService;
-import com.matchingMatch.match.domain.enums.Gender;
 import com.matchingMatch.match.domain.enums.Role;
-import com.matchingMatch.match.domain.repository.TeamRepository;
 import com.matchingMatch.team.domain.Team;
+import com.matchingMatch.user.domain.UserDetail;
+import com.matchingMatch.user.domain.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 
 
 @SpringBootTest
@@ -28,7 +30,7 @@ public class AuthServiceTest {
     private AuthService authService;
 
     @Autowired
-    private TeamRepository teamRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
@@ -45,23 +47,19 @@ public class AuthServiceTest {
 
     @BeforeEach
     void setUp() {
-        team = Team.builder()
-                .teamName("wkeldw FC")
-                .gender(Gender.FEMALE)
-                .teamDescription("ddd")
-                .account(ACCOUNT)
+        UserDetail user = UserDetail.builder()
+                .username(ACCOUNT)
                 .password(passwordEncoder.encode(PASSWORD))
                 .role(Role.USER)
-                .region("서울 관악구")
+                .banDeadLine(LocalDate.MIN)
                 .build();
-
-        teamRepository.save(team);
+        userRepository.save(user);
 
     }
 
     @AfterEach
     void clear() {
-        teamRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
 

@@ -30,18 +30,18 @@ public class NotificationEventListener {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @TransactionalEventListener
     public void publishMannerRateNotification(MannerRateEvent mannerRateEvent) {
-        Match match = mannerRateEvent.getMatch();
-        Team team = mannerRateEvent.getTeam();
-
-        Notification notification = Notification.builder()
-                .targetMatch(match)
-                .targetTeam(team)
-                .notificationType(NotificationType.MANNER_RATE)
-                .build();
-
-        team.addNotification(notification);
-
-        teamRepository.save(team);
+//        Match match = mannerRateEvent.getMatch();
+//        Team team = mannerRateEvent.getTeam();
+//
+//        Notification notification = Notification.builder()
+//                .targetMatch(match)
+//                .targetTeam(team)
+//                .notificationType(NotificationType.MANNER_RATE)
+//                .build();
+//
+//        team.addNotification(notification);
+//
+//        teamRepository.save(team);
 
     }
 
@@ -49,18 +49,18 @@ public class NotificationEventListener {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @TransactionalEventListener
     public void publishMatchConfirmNotification(MatchConfirmEvent matchConfirmEvent) {
-        Match match = matchConfirmEvent.getMatch();
-        Team team = matchConfirmEvent.getTeam();
-
-        Notification notification = Notification.builder()
-                .targetMatch(match)
-                .targetTeam(team)
-                .notificationType(NotificationType.MATCH_CONFIRM)
-                .build();
-
-        team.addNotification(notification);
-
-        teamRepository.save(team);
+//        Match match = matchConfirmEvent.getMatch();
+//        Team team = matchConfirmEvent.getTeam();
+//
+//        Notification notification = Notification.builder()
+//                .targetMatch(match)
+//                .targetTeam(team)
+//                .notificationType(NotificationType.MATCH_CONFIRM)
+//                .build();
+//
+//        team.addNotification(notification);
+//
+//        teamRepository.save(team);
 
     }
 
@@ -69,18 +69,18 @@ public class NotificationEventListener {
     @TransactionalEventListener
     public void publishConfirmedMatchCancelNotification(MatchCancelEvent confirmedMatchCancelEvent) {
 
-        Match match = confirmedMatchCancelEvent.getMatch();
-        Team team = confirmedMatchCancelEvent.getTeam();
-
-        Notification notification = Notification.builder()
-                .targetMatch(match)
-                .targetTeam(team)
-                .notificationType(NotificationType.MATCH_CONFIRM_CANCEL)
-                .build();
-
-        team.addNotification(notification);
-
-        teamRepository.save(team);
+//        Match match = confirmedMatchCancelEvent.getMatch();
+//        Team team = confirmedMatchCancelEvent.getTeam();
+//
+//        Notification notification = Notification.builder()
+//                .targetMatch(match)
+//                .targetTeam(team)
+//                .notificationType(NotificationType.MATCH_CONFIRM_CANCEL)
+//                .build();
+//
+//        team.addNotification(notification);
+//
+//        teamRepository.save(team);
     }
 
 

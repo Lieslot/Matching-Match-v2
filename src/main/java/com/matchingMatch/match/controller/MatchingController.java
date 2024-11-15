@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,98 +29,49 @@ public class MatchingController {
 
 
     @AuthenticatedUser
-    @PostMapping("/{matchPostId}")
-    public ResponseEntity<Void> sendMatchRequest(
-            @PathVariable Long matchPostId,
+    @PostMapping("/{postId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void sendMatchRequest(
+            @PathVariable Long postId,
             @Authentication UserAuth userAuth) {
-
-        try {
-            matchService.sendMatchRequest(matchPostId, userAuth.getId());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                                 .build();
-        }
-
-        return ResponseEntity.ok()
-                             .build();
 
     }
 
 
     @AuthenticatedUser
     @PostMapping
-    public ResponseEntity<Void> confirmMatchRequest(
+    @ResponseStatus(HttpStatus.OK)
+    public void confirmMatchRequest(
             @RequestBody MatchConfirmRequest matchConfirmRequest,
             @Authentication UserAuth userAuth) {
-
-        Long matchPostId = matchConfirmRequest.getMatchId();
-        Long confirmedTeamId = matchConfirmRequest.getRequestingTeamId();
-        Long hostId = userAuth.getId();
-
-        try {
-            matchService.confirmMatchRequest(matchPostId, hostId, confirmedTeamId);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                                 .build();
-        }
-
-        return ResponseEntity.ok()
-                             .build();
+        // 구현
     }
-
 
     @AuthenticatedUser
-    @DeleteMapping("/{matchPostId}")
-    public ResponseEntity<Void> cancelMatchRequest(
-            @PathVariable Long matchPostId,
-            @Authentication UserAuth userAuth
-    ) {
-
-        try {
-            matchService.cancelMatchRequest(matchPostId, userAuth.getId());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                                 .build();
-        }
-
-        return ResponseEntity.accepted()
-                             .build();
+    @DeleteMapping("/{matchRequestId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT) // 삭제 성공 시 204 No Content
+    public void cancelMatchRequest(
+            @PathVariable Long matchRequestId,
+            @Authentication UserAuth userAuth) {
+        // 구현
     }
-
 
     @AuthenticatedUser
     @DeleteMapping
-    public ResponseEntity<Void> cancelConfirmedMatchRequest(
+    @ResponseStatus(HttpStatus.NO_CONTENT) // 삭제 성공 시 204 No Content
+    public void cancelConfirmedMatchRequest(
             @Authentication UserAuth userAuth,
-            @RequestBody MatchCancelRequest matchCancelRequest
-    ) {
-        Long matchPostId = matchCancelRequest.getMatchId();
-
-        try {
-            matchService.cancelConfirmedMatch(matchPostId, userAuth.getId());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                                 .build();
-        }
-
-        return ResponseEntity.accepted()
-                             .build();
+            @RequestBody MatchCancelRequest matchCancelRequest) {
+        // 구현
     }
-
 
     @PostMapping("/rate")
     @AuthenticatedUser
-    public ResponseEntity<Void> rateMannerPoint
-            (@RequestBody MannerRateRequest mannerRateRequest,
-             @Authentication UserAuth userAuth) {
-        Long mannerPoint = mannerRateRequest.getMannerRate();
-        Long matchId = mannerRateRequest.getMatchId();
-        Long currentUserId = userAuth.getId();
-
-        matchService.rateMannerPoint(matchId, currentUserId, mannerPoint);
-
-        return ResponseEntity.ok()
-                             .build();
+    @ResponseStatus(HttpStatus.OK) // 요청 성공 시 200 OK
+    public void rateMannerPoint(
+            @RequestBody MannerRateRequest mannerRateRequest,
+            @Authentication UserAuth userAuth) {
+        // 구현
     }
 
 }

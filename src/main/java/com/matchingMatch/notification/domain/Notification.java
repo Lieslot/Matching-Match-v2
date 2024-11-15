@@ -1,7 +1,9 @@
 package com.matchingMatch.notification.domain;
 
+import com.matchingMatch.match.domain.BaseEntity;
 import com.matchingMatch.match.domain.Match;
 import com.matchingMatch.team.domain.Team;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -19,28 +21,26 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Notification {
+public class Notification extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "target_team_id")
-    private Team targetTeam;
+    @Column(nullable = false)
+    private Long targetTeamId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "target_match_id")
-    private Match targetMatch;
+    @Column(nullable = false)
+    private Long targetMatchId;
 
     @Enumerated(EnumType.STRING)
     private NotificationType notificationType;
 
 
     @Builder
-    public Notification(Team targetTeam, Match targetMatch, NotificationType notificationType) {
-        this.targetTeam = targetTeam;
-        this.targetMatch = targetMatch;
+    public Notification(Long targetTeamId, Long targetMatchId, NotificationType notificationType) {
+        this.targetTeamId = targetTeamId;
+        this.targetMatchId = targetMatchId;
         this.notificationType = notificationType;
     }
 }

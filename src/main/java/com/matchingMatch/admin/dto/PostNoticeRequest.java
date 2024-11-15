@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class NoticePostRequest {
+public class PostNoticeRequest {
 
     private Long id;
 
@@ -13,7 +13,7 @@ public class NoticePostRequest {
 
     private String content;
 
-    public NoticePostRequest(Long id, String title, String content) {
+    public PostNoticeRequest(Long id, String title, String content) {
         this.id = id;
         this.title = title;
         this.content = content;

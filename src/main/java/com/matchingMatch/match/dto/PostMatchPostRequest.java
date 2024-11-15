@@ -1,7 +1,6 @@
 package com.matchingMatch.match.dto;
 
 import com.matchingMatch.match.domain.Match;
-import com.matchingMatch.team.domain.Team;
 import com.matchingMatch.match.domain.enums.Gender;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -10,10 +9,13 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class MatchPostRequest {
+public class PostMatchPostRequest {
 
     @NotNull
-    private Team hostId;
+    private Long hostId;
+
+    @NotNull
+    private Long postId;
 
     @NotNull(message = "시작 시간을 선택해주세요")
     private LocalDateTime startTime;
@@ -31,7 +33,7 @@ public class MatchPostRequest {
 
     public Match toEntity() {
         return Match.builder()
-                    .host(hostId)
+                    .hostId(hostId)
                     .startTime(startTime)
                     .endTime(endTime)
                     .gender(gender)
