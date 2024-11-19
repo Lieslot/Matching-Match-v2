@@ -1,5 +1,6 @@
 package com.matchingMatch.match.dto;
 
+import com.matchingMatch.match.domain.Stadium;
 import com.matchingMatch.match.domain.entity.MatchEntity;
 import com.matchingMatch.match.domain.enums.Gender;
 import jakarta.validation.constraints.NotNull;
@@ -25,6 +26,10 @@ public class PostMatchPostRequest {
 
     @NotNull(message = "성별을 선택해주세요")
     private Gender gender;
+
+
+    @NotNull(message = "경기장을 선택해주세요")
+    private Stadium stadium;
 
     private int stadiumCost;
 

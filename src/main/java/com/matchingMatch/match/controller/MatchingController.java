@@ -35,6 +35,7 @@ public class MatchingController {
             @PathVariable Long postId,
             @Authentication UserAuth userAuth) {
 
+        matchService.sendMatchRequest(postId, userAuth.getId());
     }
 
 
@@ -44,30 +45,33 @@ public class MatchingController {
     public void confirmMatchRequest(
             @RequestBody MatchConfirmRequest matchConfirmRequest,
             @Authentication UserAuth userAuth) {
-        // 구현
+
+        matchService.confirmMatchRequest(matchConfirmRequest.getPostId(), userAuth.getId(), matchConfirmRequest.getRequestingTeamId());
     }
 
     @AuthenticatedUser
     @DeleteMapping("/{matchRequestId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT) // 삭제 성공 시 204 No Content
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cancelMatchRequest(
             @PathVariable Long matchRequestId,
             @Authentication UserAuth userAuth) {
-        // 구현
+
+        matchService.cancelMatchRequest(matchRequestId, userAuth.getId());
+
     }
 
     @AuthenticatedUser
     @DeleteMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT) // 삭제 성공 시 204 No Content
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cancelConfirmedMatchRequest(
             @Authentication UserAuth userAuth,
             @RequestBody MatchCancelRequest matchCancelRequest) {
-        // 구현
+        matchService.cancelConfirmedMatch(matchCancelRequest.getMatchId(), userAuth.getId());
     }
 
     @PostMapping("/rate")
     @AuthenticatedUser
-    @ResponseStatus(HttpStatus.OK) // 요청 성공 시 200 OK
+    @ResponseStatus(HttpStatus.OK)
     public void rateMannerPoint(
             @RequestBody MannerRateRequest mannerRateRequest,
             @Authentication UserAuth userAuth) {

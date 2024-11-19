@@ -2,6 +2,7 @@ package com.matchingMatch.match.domain.entity;
 
 
 import com.matchingMatch.match.domain.BaseEntity;
+import com.matchingMatch.match.domain.Match;
 import com.matchingMatch.match.domain.enums.Gender;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,9 +28,20 @@ public class MatchEntity extends BaseEntity {
 
     }
 
+    public static MatchEntity from(Match match) {
+        return MatchEntity.builder()
+                .hostId(match.getHost().getId())
+                .participantId(match.getParticipant().getId())
+                .startTime(match.getStartTime())
+                .endTime(match.getEndTime())
+                .stadiumCost(match.getStadiumCost())
+                .stadiumId(match.getStadium().getId())
+                .build();
+    }
+
     @Builder
     public MatchEntity(Long hostId, Long participantId, LocalDateTime startTime, LocalDateTime endTime, Gender gender,
-                       int stadiumCost, String etc) {
+                       int stadiumCost, Long stadiumId, String etc) {
         this.hostId = hostId;
         this.participantId = participantId;
         this.startTime = startTime;
@@ -37,6 +49,7 @@ public class MatchEntity extends BaseEntity {
         this.gender = gender;
         this.stadiumCost = stadiumCost;
         this.etc = etc;
+        this.stadiumId = stadiumId;
     }
 
     @Id
@@ -58,6 +71,8 @@ public class MatchEntity extends BaseEntity {
 
     @Column(nullable = false)
     private Gender gender;
+
+    private Long stadiumId;
 
     private int stadiumCost;
 

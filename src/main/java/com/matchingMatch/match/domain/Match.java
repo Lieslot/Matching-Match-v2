@@ -13,6 +13,9 @@ import java.time.LocalDateTime;
 @Getter
 public class Match {
 
+    private static final String INVALID_AUTHORITY = "권한이 없는 접근입니다.";
+
+
     private Long id;
 
     @NotNull
@@ -32,6 +35,8 @@ public class Match {
     private Gender gender;
 
     private Stadium stadium;
+
+    private int stadiumCost;
 
     private String etc;
 
@@ -63,5 +68,30 @@ public class Match {
                 .endTime(endTime).build();
     }
 
+    public void checkHost(Long leaderId) {
+        if (!host.getLeaderId().equals(leaderId)) {
+            throw new IllegalArgumentException(INVALID_AUTHORITY);
+        }
+    }
+
+    public void checkHostOrParticipant(Long userId) {
+        if (!host.getLeaderId().equals(userId) && !participant.getLeaderId().equals(userId)) {
+            throw new IllegalArgumentException(INVALID_AUTHORITY);
+        }
+    }
+
+    public void checkAlreadyConfirmed() {
+        if (participant != null) {
+            throw new IllegalArgumentException("이미 참가자가 확정된 매치입니다.");
+        }
+    }
+
+    public void confirmParticipant(Team team) {
+        this.participant = team;
+    }
+
+    public void cancelParticipant() {
+        this.participant = null;
+    }
 
 }

@@ -46,6 +46,9 @@ public class MatchAdapter {
                 .toList();
     }
 
-
+    public void updateMatch(Match match) {
+        MatchEntity from = MatchEntity.from(match);
+        matchRepository.save(from);
+    }
 
 }

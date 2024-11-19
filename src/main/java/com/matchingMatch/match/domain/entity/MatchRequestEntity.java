@@ -8,11 +8,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.cglib.core.Local;
 
 
 @Getter
@@ -54,6 +59,26 @@ public class MatchRequestEntity extends BaseEntity {
     @Override
     public int hashCode() {
         return Objects.hash(sendTeamId, matchId);
+    }
+
+    public Boolean hasTeam(Long teamId) {
+        return sendTeamId.equals(teamId) || targetTeamId.equals(teamId);
+    }
+
+    public Boolean hasSendTeam(Long teamId) {
+        return sendTeamId.equals(teamId);
+    }
+
+    public void checkCancelDeadline() {
+        LocalDateTime deadline = this.getCreatedAt().plusMinutes(10);
+        LocalDateTime now = LocalDateTime.now();
+
+        if (now.isBefore(deadline)) {
+            long minute = ChronoUnit.MINUTES.between(now, deadline);
+            long second = ChronoUnit.SECONDS.between(now, deadline);
+
+            throw new IllegalArgumentException(String.format("%d분 %초 후에 취소 가능합니다.", minute, second));
+        }
     }
 
 }

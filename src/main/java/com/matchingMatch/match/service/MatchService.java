@@ -33,12 +33,12 @@ public class MatchService {
 
     public Long postNewMatch(PostMatchPostRequest match, Long userId) {
         TeamEntity host = teamRepository.findById(userId)
-                .orElseThrow(() -> new UnauthorizedAccessException());
+                .orElseThrow(UnauthorizedAccessException::new);
 
         MatchEntity matchPost = match.toEntity();
 
         matchPost.setHost(host.getId());
-        matchPost.setParticipant(host.getId());
+        matchPost.setStadiumId(match.getStadium().getId());
 
         Long newId = matchRepository.save(matchPost).getId();
 
@@ -94,7 +94,11 @@ public class MatchService {
     @Transactional
     public void sendMatchRequest(Long matchId, Long requestTeamId) {
 
-        MatchEntity match = matchRepository.findById(matchId).orElseThrow(() -> new MatchNotFoundException());
+        // TODO 이미 확정된 매치가 일정이 겹치는 경우 예외처리 추가
+
+        Match match = matchAdapter.getMatchBy(matchId);
+
+        match.checkAlreadyConfirmed();
 
         boolean teamExists = teamRepository.existsById(requestTeamId);
         if (!teamExists) {
@@ -104,7 +108,7 @@ public class MatchService {
         MatchRequestEntity matchRequest = MatchRequestEntity.builder()
                 .teamId(requestTeamId)
                 .matchId(matchId)
-                .targetTeamId(match.getHostId())
+                .targetTeamId(match.getHost().getId())
                 .build();
 
         matchRequestRepository.save(matchRequest);
@@ -114,24 +118,51 @@ public class MatchService {
     @Transactional
     public void cancelMatchRequest(Long requestId, Long userId) {
 
-        MatchRequestEntity matchRequest = matchRequestRepository.findById(requestId)
-                .orElseThrow(() -> new IllegalArgumentException());
+        List<TeamEntity> userTeams = teamRepository.findAllByLeaderId(userId);
 
-        // TODO 알림 보내기
+        MatchRequestEntity matchRequest = matchRequestRepository.findById(requestId)
+                .orElseThrow(IllegalArgumentException::new);
+
+        matchRequest.checkCancelDeadline();
+
+        userTeams.stream()
+                .filter(team -> matchRequest.hasSendTeam(team.getId()))
+                .findFirst()
+                .orElseThrow(UnauthorizedAccessException::new);
 
         matchRequestRepository.deleteById(requestId);
     }
 
     @Transactional
-    public void confirmMatchRequest(Long matchId, Long currentUserId, Long confirmedTeamId) {
+    public void confirmMatchRequest(Long matchId, Long currentUserId, Long requestingTeamId) {
 
+        Match match = matchAdapter.getMatchBy(matchId);
+        match.checkHost(currentUserId);
+        match.checkAlreadyConfirmed();
+
+        TeamEntity teamEntity = teamRepository.findById(requestingTeamId).orElseThrow(IllegalArgumentException::new);
+
+        match.confirmParticipant(teamEntity.toDomain());
+
+        matchAdapter.updateMatch(match);
+        matchRequestRepository.deleteAllByMatchId(matchId);
+
+        // TODO 알림 보내기
     }
 
     @Transactional
     public void cancelConfirmedMatch(Long matchId, Long currentUserId) {
 
+        Match match = matchAdapter.getMatchBy(matchId);
+
+        match.checkHostOrParticipant(currentUserId);
+
+        match.cancelParticipant();
+
+        matchAdapter.updateMatch(match);
     }
 
+    @Transactional
     public void rateMannerPoint(Long matchId, Long currentUserId, Long mannerPoint) {
 
     }

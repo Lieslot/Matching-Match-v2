@@ -10,4 +10,5 @@ public interface MatchRequestRepository extends JpaRepository<MatchRequestEntity
 
     List<MatchRequestEntity> findBySendTeamId(Long teamId);
     List<MatchRequestEntity> findByTargetTeamId(Long teamId);
+    void deleteAllByMatchId(Long matchId);
 }

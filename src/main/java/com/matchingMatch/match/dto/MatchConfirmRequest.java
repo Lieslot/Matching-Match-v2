@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 public class MatchConfirmRequest {
 
-    private Long matchId;
+    private Long postId;
     private Long requestingTeamId;
 
 }
