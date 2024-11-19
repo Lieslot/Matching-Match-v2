@@ -20,6 +20,22 @@ import lombok.Setter;
 @Setter
 public class TeamEntity extends BaseEntity {
 
+
+    public static TeamEntity of(Team team) {
+
+        return TeamEntity.builder()
+                .id(team.getId())
+                .name(team.getName())
+                .description(team.getTeamDescription())
+                .logoUrl(team.getTeamLogoUrl())
+                .leaderId(team.getLeaderId())
+                .mannerPointSum(team.getMannerPointSum())
+                .matchCount(team.getMatchCount())
+                .region(team.getRegion())
+                .gender(team.getGender())
+                .build();
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,9 +43,9 @@ public class TeamEntity extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String name;
 
-    private String teamDescription;
+    private String description;
 
-    private String teamLogoUrl;
+    private String logoUrl;
     @Column(nullable = false)
     private Long leaderId;
 
@@ -46,12 +62,14 @@ public class TeamEntity extends BaseEntity {
 
 
     @Builder
-    public TeamEntity(String teamName, String teamDescription, String teamLogoUrl,
+    public TeamEntity(Long id, String name, String description, String logoUrl, Long mannerPointSum, Long matchCount,
                       String region, Gender gender, Long leaderId) {
-
-        this.name = teamName;
-        this.teamDescription = teamDescription;
-        this.teamLogoUrl = teamLogoUrl;
+        this.id = id;
+        this.name = name;
+        this.matchCount = matchCount;
+        this.mannerPointSum = mannerPointSum;
+        this.description = description;
+        this.logoUrl = logoUrl;
         this.region = region;
         this.gender = gender;
         this.leaderId = leaderId;
@@ -118,8 +136,8 @@ public class TeamEntity extends BaseEntity {
         return Team.builder()
                 .id(id)
                 .name(name)
-                .teamDescription(teamDescription)
-                .teamLogoUrl(teamLogoUrl)
+                .teamDescription(description)
+                .teamLogoUrl(logoUrl)
                 .leaderId(leaderId)
                 .mannerPointSum(mannerPointSum)
                 .matchCount(matchCount)

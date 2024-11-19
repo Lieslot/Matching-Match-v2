@@ -16,6 +16,7 @@ public class Match {
     private static final String INVALID_AUTHORITY = "권한이 없는 접근입니다.";
 
 
+
     private Long id;
 
     @NotNull
@@ -40,10 +41,14 @@ public class Match {
 
     private String etc;
 
+    private Boolean isParticipantRate;
+
+    private Boolean isHostRate;
+
     @Builder
     public Match(Long id, Team host, Team participant, LocalDateTime startTime, LocalDateTime endTime, Gender gender, int stadiumCost,
                  String etc,
-                 Stadium stadium) {
+                 Stadium stadium, Boolean isParticipantRate, Boolean isHostRate) {
         this.id = id;
         this.host = host;
         this.participant = participant;
@@ -52,12 +57,6 @@ public class Match {
         this.stadium = stadium;
     }
 
-
-    public void checkHostEqualTo(Long hostId) {
-        if (this.host.getId().equals(hostId)) {
-            throw new IllegalArgumentException();
-        }
-    }
 
     public MatchPostListElementResponse toMatchPostResponse() {
         return MatchPostListElementResponse.builder()
@@ -93,5 +92,37 @@ public class Match {
     public void cancelParticipant() {
         this.participant = null;
     }
+
+    public void rateMannerPoint(MannerRate mannerRate) {
+        if (mannerRate.isRater(host.getLeaderId())) {
+            rateHost();
+            host.rateMannerPoint(mannerRate.rate());
+        } else if (mannerRate.isRater(participant.getLeaderId())) {
+            rateParticipantRate();
+            participant.rateMannerPoint(mannerRate.rate());
+        } else {
+            throw new IllegalArgumentException(INVALID_AUTHORITY);
+        }
+
+
+    }
+
+    public void rateHost() {
+        isHostRate = true;
+    }
+
+    public void rateParticipantRate() {
+        isParticipantRate = true;
+    }
+
+    public void setParticipantRate(Boolean participantRate) {
+        isParticipantRate = participantRate;
+    }
+
+    public void setHostRate(Boolean hostRate) {
+        isHostRate = hostRate;
+    }
+
+
 
 }

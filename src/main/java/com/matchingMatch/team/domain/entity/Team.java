@@ -1,5 +1,6 @@
 package com.matchingMatch.team.domain.entity;
 
+import com.matchingMatch.match.domain.enums.Gender;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,11 +29,13 @@ public class Team {
     @NotNull
     private String region;
 
+    @NotNull
+    private Gender gender;
+
     private List<Long> confirmedMatchIds = new ArrayList<>();
 
     @Builder
-    public Team(Long id, String name, String teamDescription, String teamLogoUrl, Long leaderId, Long mannerPointSum, Long matchCount, String region, List<Long> confirmedMatchIds) {
-
+    public Team(Long id, Gender gender, String name, String teamDescription, String teamLogoUrl, Long leaderId, Long mannerPointSum, Long matchCount, String region, List<Long> confirmedMatchIds) {
         this.id = id;
         this.name = name;
         this.teamDescription = teamDescription;
@@ -42,6 +45,8 @@ public class Team {
         this.matchCount = matchCount;
         this.region = region;
         this.confirmedMatchIds = confirmedMatchIds;
+        this.gender = gender;
+
     }
 
 
@@ -53,7 +58,7 @@ public class Team {
         confirmedMatchIds.remove(matchId);
     }
 
-    public void mannerPointRated(Long point) {
+    public void rateMannerPoint(Long point) {
         mannerPointSum += point;
         matchCount++;
     }

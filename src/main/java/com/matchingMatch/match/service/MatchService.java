@@ -1,6 +1,7 @@
 package com.matchingMatch.match.service;
 
 
+import com.matchingMatch.match.domain.MannerRate;
 import com.matchingMatch.match.dto.ModifyMatchPostRequest;
 import com.matchingMatch.match.MatchAdapter;
 import com.matchingMatch.match.domain.Match;
@@ -55,7 +56,7 @@ public class MatchService {
 
     public void deleteMatchPost(Long matchId, Long userId) {
         Match match = matchAdapter.getMatchBy(matchId);
-        match.checkHostEqualTo(userId);
+        match.checkHost(userId);
         matchRepository.deleteById(matchId);
     }
 
@@ -64,7 +65,7 @@ public class MatchService {
     public void updateMatch(ModifyMatchPostRequest updatedMatchPost , Long userId) {
         MatchEntity matchEntity = matchRepository.findById(
                 updatedMatchPost.getPostId()
-        ).orElseThrow(() -> new MatchNotFoundException());
+        ).orElseThrow(MatchNotFoundException::new);
 
         matchEntity.isHost(userId);
 
@@ -137,6 +138,7 @@ public class MatchService {
     public void confirmMatchRequest(Long matchId, Long currentUserId, Long requestingTeamId) {
 
         Match match = matchAdapter.getMatchBy(matchId);
+
         match.checkHost(currentUserId);
         match.checkAlreadyConfirmed();
 
@@ -156,14 +158,20 @@ public class MatchService {
         Match match = matchAdapter.getMatchBy(matchId);
 
         match.checkHostOrParticipant(currentUserId);
-
         match.cancelParticipant();
 
         matchAdapter.updateMatch(match);
     }
 
     @Transactional
-    public void rateMannerPoint(Long matchId, Long currentUserId, Long mannerPoint) {
+    public void rateMannerPoint(Long matchId, MannerRate mannerRate) {
+
+        Match match = matchAdapter.getMatchWithRateCheck(matchId);
+
+        match.checkHostOrParticipant(mannerRate.userId());
+        match.rateMannerPoint(mannerRate);
+
+        matchAdapter.updateMatch(match);
 
     }
 

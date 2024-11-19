@@ -1,6 +1,7 @@
 package com.matchingMatch.match.domain.entity;
 
 import com.matchingMatch.match.domain.BaseEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,19 +22,29 @@ public class MannerRateCheckEntity extends BaseEntity {
 
     private Long matchId;
 
-    private Long teaId;
+    @Column(nullable = false)
+    private Boolean isParticipantRate;
 
-    private Boolean isCheck;
+    @Column(nullable = false)
+    private Boolean isHostRate;
 
-    public void check() {
-        isCheck = true;
+    public void rateHost() {
+        isHostRate = true;
+    }
+
+    public void rateParticipantRate() {
+        isParticipantRate = true;
+    }
+
+    public Boolean hasOver() {
+        return isHostRate && isParticipantRate;
     }
 
     @Builder
-    public MannerRateCheckEntity(Long matchId, Long teaId) {
+    public MannerRateCheckEntity(Long matchId) {
         this.matchId = matchId;
-        this.teaId = teaId;
-        this.isCheck = false;
+        this.isHostRate = false;
+        this.isParticipantRate = false;
     }
 
 }

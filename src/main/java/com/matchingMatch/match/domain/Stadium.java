@@ -1,5 +1,6 @@
 package com.matchingMatch.match.domain;
 
+import com.matchingMatch.match.domain.enums.SeoulDistrict;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -7,12 +8,12 @@ import lombok.Getter;
 public class Stadium {
     private Long id;
     private String name;
-    private String district;
+    private SeoulDistrict district;
     private String isParkPossible;
     private String address;
 
     @Builder
-    public Stadium(Long id, String name, String district, String isParkPossible, String address) {
+    public Stadium(Long id, String name, SeoulDistrict district, String isParkPossible, String address) {
         this.id = id;
         this.name = name;
         this.district = district;

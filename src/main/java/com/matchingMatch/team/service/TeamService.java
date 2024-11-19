@@ -27,11 +27,11 @@ public class TeamService {
         TeamEntity team = result.get();
         return TeamProfileResponse.builder()
                 .teamName(team.getName())
-                .teamLogoUrl(team.getTeamLogoUrl())
+                .teamLogoUrl(team.getLogoUrl())
                 .mannerPoint(team.calculateMannerPoint())
                 .region(team.getRegion())
                 .gender(team.getGender())
-                .teamDescription(team.getTeamDescription())
+                .teamDescription(team.getDescription())
                 .build();
     }
 
@@ -44,11 +44,11 @@ public class TeamService {
         }
         TeamEntity team = result.get();
 
-        team.setTeamDescription(teamProfileUpdateRequest.getTeamDescription());
+        team.setDescription(teamProfileUpdateRequest.getTeamDescription());
         team.setName(teamProfileUpdateRequest.getTeamName());
         team.setGender(teamProfileUpdateRequest.getGender());
         team.setRegion(teamProfileUpdateRequest.getRegion());
-        team.setTeamLogoUrl(teamProfileUpdateRequest.getTeamLogoUrl());
+        team.setLogoUrl(teamProfileUpdateRequest.getTeamLogoUrl());
     }
 
 }

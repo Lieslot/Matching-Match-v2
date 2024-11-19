@@ -6,5 +6,5 @@ import lombok.Getter;
 public class MannerRateRequest {
 
     private Long matchId;
-    private Long mannerRate;
+    private Long rate;
 }

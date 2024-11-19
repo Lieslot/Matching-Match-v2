@@ -1,5 +1,6 @@
 package com.matchingMatch.match.domain.entity;
 
+import com.matchingMatch.match.domain.Stadium;
 import com.matchingMatch.match.domain.enums.SeoulDistrict;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,5 +38,14 @@ public class StadiumEntity {
     @Column(nullable = false)
     private String address;
 
+
+    public Stadium toDomain() {
+        return Stadium.builder()
+                .name(name)
+                .district(district)
+                .isParkPossible(isParkPossible)
+                .address(address)
+                .build();
+    }
 
 }

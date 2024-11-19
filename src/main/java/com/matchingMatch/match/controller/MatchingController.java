@@ -4,6 +4,7 @@ package com.matchingMatch.match.controller;
 import com.matchingMatch.auth.AuthenticatedUser;
 import com.matchingMatch.auth.Authentication;
 import com.matchingMatch.auth.dto.UserAuth;
+import com.matchingMatch.match.domain.MannerRate;
 import com.matchingMatch.match.dto.MannerRateRequest;
 import com.matchingMatch.match.dto.MatchCancelRequest;
 import com.matchingMatch.match.dto.MatchConfirmRequest;
@@ -76,6 +77,8 @@ public class MatchingController {
             @RequestBody MannerRateRequest mannerRateRequest,
             @Authentication UserAuth userAuth) {
         // 구현
+        MannerRate mannerRate = new MannerRate(mannerRateRequest.getMatchId(), mannerRateRequest.getRate());
+        matchService.rateMannerPoint(mannerRateRequest.getMatchId(), mannerRate);
     }
 
 }
