@@ -6,12 +6,13 @@ import com.matchingMatch.auth.Authentication;
 import com.matchingMatch.auth.dto.UserAuth;
 import com.matchingMatch.match.domain.MannerRate;
 import com.matchingMatch.match.dto.MannerRateRequest;
+import com.matchingMatch.match.dto.MatchCancelConfirmedRequest;
 import com.matchingMatch.match.dto.MatchCancelRequest;
 import com.matchingMatch.match.dto.MatchConfirmRequest;
+import com.matchingMatch.match.dto.MatchRefuseRequest;
 import com.matchingMatch.match.service.MatchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,7 +42,7 @@ public class MatchingController {
 
 
     @AuthenticatedUser
-    @PostMapping
+    @PostMapping("/confirm")
     @ResponseStatus(HttpStatus.OK)
     public void confirmMatchRequest(
             @RequestBody MatchConfirmRequest matchConfirmRequest,
@@ -51,23 +52,32 @@ public class MatchingController {
     }
 
     @AuthenticatedUser
-    @DeleteMapping("/{matchRequestId}")
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cancelMatchRequest(
-            @PathVariable Long matchRequestId,
+            @RequestBody MatchCancelRequest matchCancelRequest,
             @Authentication UserAuth userAuth) {
 
-        matchService.cancelMatchRequest(matchRequestId, userAuth.getId());
+        matchService.cancelMatchRequest(matchCancelRequest.getMatchRequestId(), userAuth.getId());
 
     }
 
     @AuthenticatedUser
-    @DeleteMapping
+    @DeleteMapping("/confirm")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cancelConfirmedMatchRequest(
             @Authentication UserAuth userAuth,
-            @RequestBody MatchCancelRequest matchCancelRequest) {
-        matchService.cancelConfirmedMatch(matchCancelRequest.getMatchId(), userAuth.getId());
+            @RequestBody MatchCancelConfirmedRequest matchCancelConfirmedRequest) {
+        matchService.cancelConfirmedMatch(matchCancelConfirmedRequest.getMatchId(), userAuth.getId());
+    }
+
+    @AuthenticatedUser
+    @DeleteMapping("/refuse")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void refuseMatchRequest(
+            @RequestBody MatchRefuseRequest matchRefuseRequest,
+            @Authentication UserAuth userAuth) {
+
     }
 
     @PostMapping("/rate")

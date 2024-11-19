@@ -1,9 +1,6 @@
 package com.matchingMatch.match.dto;
 
-import lombok.Getter;
+public class MatchRefuseRequest {
 
-@Getter
-public class MatchCancelRequest {
     private Long matchRequestId;
-
 }

@@ -164,6 +164,19 @@ public class MatchService {
     }
 
     @Transactional
+    public void refuseMatchRequest(Long matchId, Long currentUserId, Long requestingTeamId) {
+
+        Match match = matchAdapter.getMatchBy(matchId);
+
+        match.checkHost(currentUserId);
+        match.checkAlreadyConfirmed();
+
+        matchRequestRepository.deleteByMatchIdAndSendTeamId(matchId, requestingTeamId);
+
+        // TODO 알림 보내기
+    }
+
+    @Transactional
     public void rateMannerPoint(Long matchId, MannerRate mannerRate) {
 
         Match match = matchAdapter.getMatchWithRateCheck(matchId);
