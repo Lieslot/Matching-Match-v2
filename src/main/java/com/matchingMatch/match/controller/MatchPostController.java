@@ -2,7 +2,6 @@ package com.matchingMatch.match.controller;
 
 
 import com.matchingMatch.match.dto.ModifyMatchPostRequest;
-import com.matchingMatch.match.dto.ModifyMatchPostResponse;
 import com.matchingMatch.auth.AuthenticatedUser;
 import com.matchingMatch.auth.Authentication;
 import com.matchingMatch.auth.dto.UserAuth;
