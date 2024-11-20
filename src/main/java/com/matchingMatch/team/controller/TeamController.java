@@ -36,7 +36,7 @@ public class TeamController {
     @AuthenticatedUser
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Void> registerTeam(
+    public void registerTeam(
             @Authentication UserAuth userAuth) {
 
     }
@@ -63,6 +63,7 @@ public class TeamController {
     public TeamProfileResponse getTeamProfile(
             @Authentication UserAuth userAuth) {
 
+        return null;
 
     }
 
@@ -72,6 +73,7 @@ public class TeamController {
             @Authentication UserAuth userAuth,
             @RequestBody TeamProfileUpdateRequest teamProfileUpdateRequest) {
 
+        return null;
     }
 
 

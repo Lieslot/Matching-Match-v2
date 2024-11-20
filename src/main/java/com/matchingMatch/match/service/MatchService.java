@@ -1,6 +1,7 @@
 package com.matchingMatch.match.service;
 
 
+import com.matchingMatch.match.TeamAdapter;
 import com.matchingMatch.match.domain.MannerRate;
 import com.matchingMatch.match.dto.ModifyMatchPostRequest;
 import com.matchingMatch.match.MatchAdapter;
@@ -9,39 +10,39 @@ import com.matchingMatch.match.domain.entity.MatchEntity;
 import com.matchingMatch.match.domain.entity.MatchRequestEntity;
 import com.matchingMatch.match.domain.repository.MatchRequestRepository;
 import com.matchingMatch.match.dto.PostMatchPostRequest;
+import com.matchingMatch.team.domain.entity.Team;
 import com.matchingMatch.team.domain.entity.TeamEntity;
 import com.matchingMatch.match.domain.repository.MatchRepository;
 import com.matchingMatch.match.domain.repository.TeamRepository;
-import com.matchingMatch.match.exception.MatchNotFoundException;
 import com.matchingMatch.match.exception.UnauthorizedAccessException;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
 @RequiredArgsConstructor
 public class MatchService {
 
-    private static final String INVALID_AUTHORITY = "권한이 없는 접근입니다.";
     private static final Integer PAGE_SIZE = 20;
 
-    private final MatchRepository matchRepository;
-    private final TeamRepository teamRepository;
     private final MatchAdapter matchAdapter;
-    private final ApplicationEventPublisher eventPublisher;
-    private final MatchRequestRepository matchRequestRepository;
+    private final MatchRequestAdapter matchRequestAdapter;
+//    private final ApplicationEventPublisher eventPublisher;
+
+    private final TeamAdapter teamAdapter;
 
     public Long postNewMatch(PostMatchPostRequest match, Long userId) {
-        TeamEntity host = teamRepository.findById(userId)
-                .orElseThrow(UnauthorizedAccessException::new);
+        TeamEntity host = teamAdapter.getTeamEntityBy(match.getHostId());
+
+        // TODO 유저가 team을 소유하는지 확인하는 예외처리
 
         MatchEntity matchPost = match.toEntity();
 
         matchPost.setHost(host.getId());
         matchPost.setStadiumId(match.getStadium().getId());
 
-        Long newId = matchRepository.save(matchPost).getId();
+        Long newId = matchAdapter.save(matchPost);
 
         return newId;
     }
@@ -57,39 +58,30 @@ public class MatchService {
     public void deleteMatchPost(Long matchId, Long userId) {
         Match match = matchAdapter.getMatchBy(matchId);
         match.checkHost(userId);
-        matchRepository.deleteById(matchId);
+        matchAdapter.deleteById(matchId);
     }
 
     // TODO 추후에 일관성 고민해보기
     @Transactional
     public void updateMatch(ModifyMatchPostRequest updatedMatchPost , Long userId) {
-        MatchEntity matchEntity = matchRepository.findById(
-                updatedMatchPost.getPostId()
-        ).orElseThrow(MatchNotFoundException::new);
 
-        matchEntity.isHost(userId);
+        Match match = matchAdapter.getMatchBy(updatedMatchPost.getPostId());
 
-        matchRepository.save(matchEntity);
+        match.checkHost(userId);
+        match.update(updatedMatchPost);
+
+        matchAdapter.saveMatch(match);
     }
+
 
     public List<Match> getMyMatches (Long teamId) {
         // matchRequestEntity에서 userId와 같은 teamId matchId를 가져온다.
-
-        List<MatchRequestEntity> myMatchRequests = matchRequestRepository.findBySendTeamId(teamId);
-
-        return myMatchRequests.stream()
-                .map(matchRequest -> matchAdapter.getMatchBy(matchRequest.getMatchId()))
-                .toList();
+        return matchAdapter.getMyMatches(teamId);
     }
 
     public List<Match> getOtherMatches (Long teamId) {
         // matchRequestEntity에서 userId와 같은 teamId matchId를 가져온다.
-
-        List<MatchRequestEntity> otherMatchRequests = matchRequestRepository.findByTargetTeamId(teamId);
-
-        return otherMatchRequests.stream()
-                .map(matchRequest -> matchAdapter.getMatchBy(matchRequest.getMatchId()))
-                .toList();
+        return matchAdapter.getOtherMatches(teamId);
     }
 
     @Transactional
@@ -101,7 +93,7 @@ public class MatchService {
 
         match.checkAlreadyConfirmed();
 
-        boolean teamExists = teamRepository.existsById(requestTeamId);
+        boolean teamExists = teamAdapter.existsById(requestTeamId);
         if (!teamExists) {
             throw new IllegalArgumentException();
         }
@@ -112,17 +104,16 @@ public class MatchService {
                 .targetTeamId(match.getHost().getId())
                 .build();
 
-        matchRequestRepository.save(matchRequest);
+        matchRequestAdapter.save(matchRequest);
         // TODO: 알림 보내기
     }
 
     @Transactional
     public void cancelMatchRequest(Long requestId, Long userId) {
 
-        List<TeamEntity> userTeams = teamRepository.findAllByLeaderId(userId);
+        List<Team> userTeams = teamAdapter.getUserTeams(userId);
 
-        MatchRequestEntity matchRequest = matchRequestRepository.findById(requestId)
-                .orElseThrow(IllegalArgumentException::new);
+        MatchRequestEntity matchRequest = matchRequestAdapter.findById(requestId);
 
         matchRequest.checkCancelDeadline();
 
@@ -131,7 +122,7 @@ public class MatchService {
                 .findFirst()
                 .orElseThrow(UnauthorizedAccessException::new);
 
-        matchRequestRepository.deleteById(requestId);
+        matchRequestAdapter.deleteById(requestId);
     }
 
     @Transactional
@@ -142,12 +133,12 @@ public class MatchService {
         match.checkHost(currentUserId);
         match.checkAlreadyConfirmed();
 
-        TeamEntity teamEntity = teamRepository.findById(requestingTeamId).orElseThrow(IllegalArgumentException::new);
+        Team teamEntity = teamAdapter.getTeamBy(requestingTeamId);
 
-        match.confirmParticipant(teamEntity.toDomain());
+        match.confirmMatch(teamEntity);
 
         matchAdapter.updateMatch(match);
-        matchRequestRepository.deleteAllByMatchId(matchId);
+        matchRequestAdapter.deleteAllByMatchId(matchId);
 
         // TODO 알림 보내기
     }
@@ -158,7 +149,7 @@ public class MatchService {
         Match match = matchAdapter.getMatchBy(matchId);
 
         match.checkHostOrParticipant(currentUserId);
-        match.cancelParticipant();
+        match.cancelMatch();
 
         matchAdapter.updateMatch(match);
     }
@@ -171,7 +162,7 @@ public class MatchService {
         match.checkHost(currentUserId);
         match.checkAlreadyConfirmed();
 
-        matchRequestRepository.deleteByMatchIdAndSendTeamId(matchId, requestingTeamId);
+        matchRequestAdapter.deleteByMatchIdAndSendTeamId(matchId, requestingTeamId);
 
         // TODO 알림 보내기
     }

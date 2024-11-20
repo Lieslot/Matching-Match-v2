@@ -3,11 +3,16 @@ package com.matchingMatch.match;
 
 import com.matchingMatch.match.domain.Match;
 import com.matchingMatch.match.domain.entity.MatchEntity;
+import com.matchingMatch.match.domain.entity.MatchRequestEntity;
 import com.matchingMatch.match.domain.entity.StadiumEntity;
 import com.matchingMatch.match.domain.repository.MannerRateCheckRepository;
 import com.matchingMatch.match.domain.repository.MatchRepository;
+import com.matchingMatch.match.domain.repository.MatchRequestRepository;
 import com.matchingMatch.match.domain.repository.StadiumRepository;
 import com.matchingMatch.match.domain.repository.TeamRepository;
+import com.matchingMatch.match.exception.HostNotFoundException;
+import com.matchingMatch.match.exception.MatchNotFoundException;
+import com.matchingMatch.match.exception.StadiumNotFound;
 import com.matchingMatch.team.domain.entity.Team;
 import com.matchingMatch.team.domain.entity.TeamEntity;
 import lombok.RequiredArgsConstructor;
@@ -23,18 +28,19 @@ public class MatchAdapter {
     private final MatchRepository matchRepository;
     private final MannerRateCheckRepository mannerRateCheckRepository;
     private final TeamRepository teamRepository;
+    private final MatchRequestRepository matchRequestRepository;
     private final StadiumRepository stadiumRepository;
 
     @Transactional(readOnly = true)
     public Match getMatchBy(Long matchId) {
         MatchEntity matchEntity = matchRepository.findById(matchId)
-                .orElseThrow(() -> new IllegalArgumentException("매치를 찾을 수 없습니다. id: " + matchId));
+                .orElseThrow(() -> new MatchNotFoundException(matchId));
         TeamEntity hostEntity = teamRepository.findById(matchEntity.getHostId())
-                .orElseThrow(() -> new IllegalArgumentException("주최팀을 찾을 수 없습니다. id: " + matchEntity.getHostId()));
+                .orElseThrow(() -> new HostNotFoundException(matchEntity.getHostId()));
         TeamEntity participantEntity = teamRepository.findById(matchEntity.getParticipantId()).orElse(null);
 
         StadiumEntity stadiumEntity = stadiumRepository.findById(matchEntity.getStadiumId())
-                .orElseThrow(() -> new IllegalArgumentException("경기장을 찾을 수 없습니다. id: " + matchEntity.getStadiumId()));
+                .orElseThrow(() -> new StadiumNotFound(matchEntity.getStadiumId()));
 
         Team host = hostEntity.toDomain();
         Team participant = participantEntity != null ? participantEntity.toDomain() : null;
@@ -75,6 +81,38 @@ public class MatchAdapter {
     public void updateMatch(Match match) {
         MatchEntity from = MatchEntity.from(match);
         matchRepository.save(from);
+    }
+
+    public Long saveMatch(Match match) {
+        MatchEntity from = MatchEntity.from(match);
+        return matchRepository.save(from).getId();
+    }
+
+    public Long save(MatchEntity matchEntity) {
+        return matchRepository.save(matchEntity).getId();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Match> getMyMatches(Long teamId) {
+        List<MatchRequestEntity> myMatchRequests = matchRequestRepository.findAllBySendTeamId(teamId);
+
+        return myMatchRequests.stream()
+                .map(matchRequest -> getMatchBy(matchRequest.getMatchId()))
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Match> getOtherMatches(Long teamId) {
+        List<MatchRequestEntity> myMatchRequests = matchRequestRepository.findAllByTargetTeamId(teamId);
+
+        return myMatchRequests.stream()
+                .map(matchRequest -> getMatchBy(matchRequest.getMatchId()))
+                .toList();
+    }
+
+    @Transactional
+    public void deleteById(Long matchId) {
+        matchRepository.deleteById(matchId);
     }
 
 }

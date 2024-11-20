@@ -35,24 +35,28 @@ public class NoticeController {
     @AuthenticatedUser
     @ResponseStatus(HttpStatus.OK)
     public List<GetNoticeResponse> getNoticePosts(Pageable pageable) {
+        return null;
     }
 
     @GetMapping("/{postId}")
     @AuthenticatedUser
     @ResponseStatus(HttpStatus.OK)
     public GetNoticeResponse getNoticePost(@PathVariable Long postId) {
+        return null;
     }
 
     @AuthenticatedAdmin
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PostNoticeResponse createNoticePost(PostNoticeRequest noticePostRequest) {
+        return null;
     }
 
     @AuthenticatedAdmin
     @PutMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
     public ModifyNoticeResponse updateNoticePost(@PathVariable Long postId, ModifyNoticeRequest noticePostRequest) {
+        return null;
     }
 
 

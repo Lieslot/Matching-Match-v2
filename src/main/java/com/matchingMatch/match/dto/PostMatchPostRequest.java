@@ -1,5 +1,6 @@
 package com.matchingMatch.match.dto;
 
+import com.matchingMatch.match.domain.Match;
 import com.matchingMatch.match.domain.Stadium;
 import com.matchingMatch.match.domain.entity.MatchEntity;
 import com.matchingMatch.match.domain.enums.Gender;
@@ -46,6 +47,8 @@ public class PostMatchPostRequest {
                     .etc(etc)
                     .build();
     }
+
+
 
 
 }

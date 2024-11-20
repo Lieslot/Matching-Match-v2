@@ -4,6 +4,7 @@ package com.matchingMatch.match.domain.entity;
 import com.matchingMatch.match.domain.BaseEntity;
 import com.matchingMatch.match.domain.Match;
 import com.matchingMatch.match.domain.enums.Gender;
+import com.matchingMatch.match.exception.UnauthorizedAccessException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,8 +22,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Getter
 @Setter
 public class MatchEntity extends BaseEntity {
-
-    private static final String INVALID_AUTHORITY = "권한이 없는 접근입니다.";
 
     public MatchEntity() {
 
@@ -79,48 +78,16 @@ public class MatchEntity extends BaseEntity {
     private String etc;
 
 
-
-    public void checkHostEqualTo(Long target) {
-
-        if (!hostId.equals(target)) {
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
-        }
-
-    }
-
     public void setHost(Long target) {
         this.hostId = target;
     }
 
-    public void setParticipant(Long target) {
-        this.participantId = target;
-    }
 
     public void isHost(Long target) {
         if (!hostId.equals(target)) {
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
+            throw new UnauthorizedAccessException();
         }
     }
 
-    public void isParticipant(Long target) {
-        if (!participantId.equals(target)) {
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
-        }
-    }
 
-    public void checkParticipantEqualTo(Long target) {
-
-        if (!participantId.equals(target)) {
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
-        }
-
-    }
-
-    public void checkInvolvedInMatch(Long target) {
-        if (!hostId.equals(target) && !participantId.equals(target)) {
-
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
-        }
-
-    }
 }

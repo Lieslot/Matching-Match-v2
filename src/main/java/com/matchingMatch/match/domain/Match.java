@@ -2,6 +2,8 @@ package com.matchingMatch.match.domain;
 
 import com.matchingMatch.match.domain.enums.Gender;
 import com.matchingMatch.match.dto.MatchPostListElementResponse;
+import com.matchingMatch.match.dto.ModifyMatchPostRequest;
+import com.matchingMatch.match.exception.MatchAlreadyConfirmedException;
 import com.matchingMatch.team.domain.entity.Team;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -81,15 +83,15 @@ public class Match {
 
     public void checkAlreadyConfirmed() {
         if (participant != null) {
-            throw new IllegalArgumentException("이미 참가자가 확정된 매치입니다.");
+            throw new MatchAlreadyConfirmedException(id);
         }
     }
 
-    public void confirmParticipant(Team team) {
+    public void confirmMatch(Team team) {
         this.participant = team;
     }
 
-    public void cancelParticipant() {
+    public void cancelMatch() {
         this.participant = null;
     }
 
@@ -121,6 +123,15 @@ public class Match {
 
     public void setHostRate(Boolean hostRate) {
         isHostRate = hostRate;
+    }
+
+    public void update(ModifyMatchPostRequest newDetail) {
+
+        this.startTime = newDetail.getStartTime();
+        this.endTime = newDetail.getEndTime();
+        this.stadiumCost = newDetail.getStadiumCost();
+        this.etc = newDetail.getEtc();
+        this.gender = newDetail.getGender();
     }
 
 

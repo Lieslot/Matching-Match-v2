@@ -40,7 +40,7 @@ public class ReportController {
     @AuthenticatedUser
     @ResponseStatus(HttpStatus.CREATED)
     public PostReportResponse createReport(@RequestBody PostReportRequest reportRequest) {
-
+        return null;
     }
 
     // TODO 작성한 문의 RUD 추가
@@ -52,7 +52,7 @@ public class ReportController {
     public GetReportResponse getReport(@RequestParam Long reportId) {
 
 
-
+        return null;
     }
 
 
@@ -62,7 +62,7 @@ public class ReportController {
     @ResponseStatus(HttpStatus.OK)
     public List<GetReportResponse> getUserReports(@Authentication UserAuth userAuth) {
 
-
+        return null;
 
     }
 
@@ -70,7 +70,7 @@ public class ReportController {
     @AuthenticatedAdmin
     @ResponseStatus(HttpStatus.OK)
     public List<GetReportResponse> getAdminReports(@Authentication UserAuth userAuth) {
-
+        return null;
     }
 
     @DeleteMapping("/{reportId}")
@@ -87,7 +87,7 @@ public class ReportController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ModifyReportResponse updateReport(@RequestParam Long reportId,
                                              @RequestBody ModifyReportRequest reportRequest) {
-
+        return null;
     }
 
 
@@ -96,7 +96,7 @@ public class ReportController {
     @ResponseStatus(HttpStatus.CREATED)
     public PostReportReplyResponse replyReport(@RequestParam Long reportId,
                                                @RequestBody PostReportReplyRequest reportRequest) {
-
+        return null;
 
     }
 
@@ -107,7 +107,7 @@ public class ReportController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ModifyReportReplyResponse updateReportReply(@RequestParam Long reportId,
                                                        @RequestBody ModifyReportReplyRequest reportRequest) {
-
+        return null;
     }
 
     @DeleteMapping("/{reportId}")

@@ -1,5 +1,6 @@
 package com.matchingMatch.common;
 
+import com.matchingMatch.match.exception.MatchAlreadyConfirmedException;
 import com.matchingMatch.match.exception.MatchNotFoundException;
 import com.matchingMatch.match.exception.UnauthorizedAccessException;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     protected ErrorResponse handleMatchNotFoundException(MatchNotFoundException e) {
         return new ErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND.value());
+    }
+
+    @ExceptionHandler(MatchAlreadyConfirmedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ErrorResponse handleMatchAlreadyConfirmedException(MatchAlreadyConfirmedException e) {
+        return new ErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
 
 }

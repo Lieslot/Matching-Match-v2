@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface MatchRequestRepository extends JpaRepository<MatchRequestEntity, Long> {
 
-    List<MatchRequestEntity> findBySendTeamId(Long teamId);
-    List<MatchRequestEntity> findByTargetTeamId(Long teamId);
+    List<MatchRequestEntity> findAllBySendTeamId(Long teamId);
+    List<MatchRequestEntity> findAllByTargetTeamId(Long teamId);
     void deleteAllByMatchId(Long matchId);
     void deleteByMatchIdAndSendTeamId(Long matchId, Long teamId);
 }

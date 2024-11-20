@@ -21,6 +21,7 @@ public class Team {
 
     private String teamDescription;
     private String teamLogoUrl;
+
     @NotNull
     private Long leaderId;
 
