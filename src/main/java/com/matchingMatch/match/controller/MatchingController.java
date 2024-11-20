@@ -87,7 +87,7 @@ public class MatchingController {
             @RequestBody MannerRateRequest mannerRateRequest,
             @Authentication UserAuth userAuth) {
         // 구현
-        MannerRate mannerRate = new MannerRate(mannerRateRequest.getMatchId(), mannerRateRequest.getRate());
+        MannerRate mannerRate = new MannerRate(userAuth.getId(), mannerRateRequest.getRate());
         matchService.rateMannerPoint(mannerRateRequest.getMatchId(), mannerRate);
     }
 

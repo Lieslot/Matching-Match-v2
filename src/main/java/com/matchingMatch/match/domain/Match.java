@@ -96,10 +96,10 @@ public class Match {
     }
 
     public void rateMannerPoint(MannerRate mannerRate) {
-        if (mannerRate.isRater(host.getLeaderId())) {
+        if (mannerRate.isRater(participant.getLeaderId())) {
             rateHost();
             host.rateMannerPoint(mannerRate.rate());
-        } else if (mannerRate.isRater(participant.getLeaderId())) {
+        } else if (mannerRate.isRater(host.getLeaderId())) {
             rateParticipantRate();
             participant.rateMannerPoint(mannerRate.rate());
         } else {
@@ -109,11 +109,11 @@ public class Match {
 
     }
 
-    public void rateHost() {
+    private void rateHost() {
         isHostRate = true;
     }
 
-    public void rateParticipantRate() {
+    private void rateParticipantRate() {
         isParticipantRate = true;
     }
 

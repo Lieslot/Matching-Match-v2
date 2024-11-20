@@ -70,7 +70,7 @@ public class MatchService {
         match.checkHost(userId);
         match.update(updatedMatchPost);
 
-        matchAdapter.saveMatch(match);
+        matchAdapter.updateMatch(match);
     }
 
 
@@ -133,9 +133,9 @@ public class MatchService {
         match.checkHost(currentUserId);
         match.checkAlreadyConfirmed();
 
-        Team teamEntity = teamAdapter.getTeamBy(requestingTeamId);
+        Team rqeustingTeam = teamAdapter.getTeamBy(requestingTeamId);
 
-        match.confirmMatch(teamEntity);
+        match.confirmMatch(rqeustingTeam);
 
         matchAdapter.updateMatch(match);
         matchRequestAdapter.deleteAllByMatchId(matchId);

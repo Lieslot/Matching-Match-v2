@@ -82,11 +82,11 @@ public class MatchAdapter {
         MatchEntity from = MatchEntity.from(match);
         matchRepository.save(from);
     }
-
-    public Long saveMatch(Match match) {
-        MatchEntity from = MatchEntity.from(match);
-        return matchRepository.save(from).getId();
-    }
+//
+//    public Long saveMatch(Match match) {
+//        MatchEntity from = MatchEntity.from(match);
+//        return matchRepository.save(from).getId();
+//    }
 
     public Long save(MatchEntity matchEntity) {
         return matchRepository.save(matchEntity).getId();
