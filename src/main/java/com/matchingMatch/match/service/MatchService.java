@@ -1,20 +1,17 @@
 package com.matchingMatch.match.service;
 
 
+import com.matchingMatch.match.MatchRequestAdapter;
 import com.matchingMatch.match.TeamAdapter;
 import com.matchingMatch.match.domain.MannerRate;
-import com.matchingMatch.match.dto.MatchRefuseRequest;
 import com.matchingMatch.match.dto.ModifyMatchPostRequest;
 import com.matchingMatch.match.MatchAdapter;
 import com.matchingMatch.match.domain.Match;
 import com.matchingMatch.match.domain.entity.MatchEntity;
 import com.matchingMatch.match.domain.entity.MatchRequestEntity;
-import com.matchingMatch.match.domain.repository.MatchRequestRepository;
 import com.matchingMatch.match.dto.PostMatchPostRequest;
 import com.matchingMatch.team.domain.entity.Team;
 import com.matchingMatch.team.domain.entity.TeamEntity;
-import com.matchingMatch.match.domain.repository.MatchRepository;
-import com.matchingMatch.match.domain.repository.TeamRepository;
 import com.matchingMatch.match.exception.UnauthorizedAccessException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +33,6 @@ public class MatchService {
     public Long postNewMatch(PostMatchPostRequest match, Long userId) {
         TeamEntity host = teamAdapter.getTeamEntityBy(match.getHostId());
 
-        // TODO 유저가 team을 소유하는지 확인하는 예외처리
-
         MatchEntity matchPost = match.toEntity();
 
         matchPost.setHost(host.getId());
@@ -58,17 +53,20 @@ public class MatchService {
 
     public void deleteMatchPost(Long matchId, Long userId) {
         Match match = matchAdapter.getMatchBy(matchId);
+
         match.checkHost(userId);
+
         matchAdapter.deleteById(matchId);
     }
 
     // TODO 추후에 일관성 고민해보기
     @Transactional
-    public void updateMatch(ModifyMatchPostRequest updatedMatchPost , Long userId) {
+    public void updateMatch(ModifyMatchPostRequest updatedMatchPost, Long userId) {
 
         Match match = matchAdapter.getMatchBy(updatedMatchPost.getPostId());
 
         match.checkHost(userId);
+
         match.update(updatedMatchPost);
 
         matchAdapter.updateMatch(match);
@@ -104,7 +102,6 @@ public class MatchService {
                 .matchId(matchId)
                 .targetTeamId(match.getHost().getId())
                 .build();
-
         matchRequestAdapter.save(matchRequest);
         // TODO: 알림 보내기
     }
@@ -112,16 +109,11 @@ public class MatchService {
     @Transactional
     public void cancelMatchRequest(Long requestId, Long userId) {
 
-        List<Team> userTeams = teamAdapter.getUserTeams(userId);
-
         MatchRequestEntity matchRequest = matchRequestAdapter.findById(requestId);
 
-        matchRequest.checkCancelDeadline();
+        Match match = matchAdapter.getMatchBy(matchRequest.getMatchId());
 
-        userTeams.stream()
-                .filter(team -> matchRequest.hasSendTeam(team.getId()))
-                .findFirst()
-                .orElseThrow(UnauthorizedAccessException::new);
+        match.checkHost(userId);
 
         matchRequestAdapter.deleteById(requestId);
     }
@@ -150,6 +142,8 @@ public class MatchService {
         Match match = matchAdapter.getMatchBy(matchId);
 
         match.checkHostOrParticipant(currentUserId);
+        match.checkCancelDeadline();
+
         match.cancelMatch();
 
         matchAdapter.updateMatch(match);
@@ -158,6 +152,7 @@ public class MatchService {
     @Transactional
     public void refuseMatchRequest(Long matchRequestId, Long currentUserId) {
         MatchRequestEntity request = matchRequestAdapter.findById(matchRequestId);
+
         Match match = matchAdapter.getMatchBy(request.getMatchId());
 
         match.checkHost(currentUserId);
@@ -173,6 +168,7 @@ public class MatchService {
         Match match = matchAdapter.getMatchWithRateCheck(matchId);
 
         match.checkHostOrParticipant(mannerRate.userId());
+
         match.rateMannerPoint(mannerRate);
 
         matchAdapter.updateMatch(match);

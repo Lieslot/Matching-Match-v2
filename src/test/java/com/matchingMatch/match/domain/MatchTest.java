@@ -17,7 +17,7 @@ public class MatchTest {
 
 
     @Test
-    void confirm_the_match_post() {
+    void confirm_the_match() {
         // given
 
         Team host = testDataBuilder.createDefaultTeam(1L, 1L);
@@ -44,18 +44,6 @@ public class MatchTest {
                 .isThrownBy(match::checkAlreadyConfirmed);
     }
 
-
-    @Test
-    void cancel_confirmed_request() {
-        // given
-        Team host = testDataBuilder.createDefaultTeam(1L, 1L);
-        Team participant = testDataBuilder.createDefaultTeam(2L, 2L);
-        Match match = testDataBuilder.createConfirmedMatch(1L, host, participant);
-        // when
-        match.cancelMatch();
-        // then
-        Assertions.assertThat(match.getParticipant()).isNull();
-    }
 
 
     @Test

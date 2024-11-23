@@ -61,28 +61,4 @@ public class MatchRequestEntity extends BaseEntity {
         return Objects.hash(sendTeamId, matchId);
     }
 
-    public Boolean hasTeam(Long teamId) {
-        return sendTeamId.equals(teamId) || targetTeamId.equals(teamId);
-    }
-
-    public Boolean hasSendTeam(Long teamId) {
-        return sendTeamId.equals(teamId);
-    }
-
-    public Boolean hasTargetTeam(Long teamId) {
-        return targetTeamId.equals(teamId);
-    }
-
-    public void checkCancelDeadline() {
-        LocalDateTime deadline = this.getCreatedAt().plusMinutes(10);
-        LocalDateTime now = LocalDateTime.now();
-
-        if (now.isBefore(deadline)) {
-            long minute = ChronoUnit.MINUTES.between(now, deadline);
-            long second = ChronoUnit.SECONDS.between(now, deadline);
-
-            throw new IllegalArgumentException(String.format("%d분 %초 후에 취소 가능합니다.", minute, second));
-        }
-    }
-
 }

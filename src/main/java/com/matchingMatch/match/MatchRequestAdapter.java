@@ -1,4 +1,4 @@
-package com.matchingMatch.match.service;
+package com.matchingMatch.match;
 
 import com.matchingMatch.match.domain.entity.MatchRequestEntity;
 import com.matchingMatch.match.domain.repository.MatchRequestRepository;

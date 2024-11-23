@@ -11,6 +11,7 @@ import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Getter
 public class Match {
@@ -33,6 +34,8 @@ public class Match {
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd:hh:mm:ss")
     private LocalDateTime endTime;
+
+    private LocalDateTime confirmedTime;
 
     @NotNull
     private Gender gender;
@@ -89,10 +92,24 @@ public class Match {
 
     public void confirmMatch(Team team) {
         this.participant = team;
+        this.confirmedTime = LocalDateTime.now();
     }
 
     public void cancelMatch() {
         this.participant = null;
+        this.confirmedTime = null;
+    }
+
+    public void checkCancelDeadline() {
+        LocalDateTime deadline = this.confirmedTime.plusMinutes(10);
+        LocalDateTime now = LocalDateTime.now();
+
+        if (now.isBefore(deadline)) {
+            long minute = ChronoUnit.MINUTES.between(now, deadline);
+            long second = ChronoUnit.SECONDS.between(now, deadline);
+
+            throw new IllegalArgumentException(String.format("%d분 %초 후에 취소 가능합니다.", minute, second));
+        }
     }
 
     public void rateMannerPoint(MannerRate mannerRate) {
