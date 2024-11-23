@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 public class TestDataBuilder {
 
-    public Match createConfirmedMatch(Long matchId, Team host, Team participant) {
+    public Match createConfirmedMatch(Long matchId, Team host, Team participant, LocalDateTime confirmedTime) {
         return Match.builder()
                 .id(matchId)
                 .host(host)
@@ -18,6 +18,7 @@ public class TestDataBuilder {
                 .gender(Gender.MALE)
                 .stadiumCost(10000)
                 .etc("Friendly Match")
+                .confirmedTime(confirmedTime)
                 .build();
     }
 

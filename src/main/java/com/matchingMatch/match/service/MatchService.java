@@ -13,6 +13,8 @@ import com.matchingMatch.match.dto.PostMatchPostRequest;
 import com.matchingMatch.team.domain.entity.Team;
 import com.matchingMatch.team.domain.entity.TeamEntity;
 import com.matchingMatch.match.exception.UnauthorizedAccessException;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -53,9 +55,7 @@ public class MatchService {
 
     public void deleteMatchPost(Long matchId, Long userId) {
         Match match = matchAdapter.getMatchBy(matchId);
-
         match.checkHost(userId);
-
         matchAdapter.deleteById(matchId);
     }
 
@@ -110,7 +110,7 @@ public class MatchService {
     public void cancelMatchRequest(Long requestId, Long userId) {
 
         MatchRequestEntity matchRequest = matchRequestAdapter.findById(requestId);
-
+        
         Match match = matchAdapter.getMatchBy(matchRequest.getMatchId());
 
         match.checkHost(userId);
@@ -142,8 +142,7 @@ public class MatchService {
         Match match = matchAdapter.getMatchBy(matchId);
 
         match.checkHostOrParticipant(currentUserId);
-        match.checkCancelDeadline();
-
+        match.checkCancelDeadline(LocalDateTime.now());
         match.cancelMatch();
 
         matchAdapter.updateMatch(match);
@@ -152,7 +151,7 @@ public class MatchService {
     @Transactional
     public void refuseMatchRequest(Long matchRequestId, Long currentUserId) {
         MatchRequestEntity request = matchRequestAdapter.findById(matchRequestId);
-
+        
         Match match = matchAdapter.getMatchBy(request.getMatchId());
 
         match.checkHost(currentUserId);
@@ -168,7 +167,7 @@ public class MatchService {
         Match match = matchAdapter.getMatchWithRateCheck(matchId);
 
         match.checkHostOrParticipant(mannerRate.userId());
-
+        
         match.rateMannerPoint(mannerRate);
 
         matchAdapter.updateMatch(match);

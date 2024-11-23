@@ -40,7 +40,7 @@ public class MatchEntity extends BaseEntity {
 
     @Builder
     public MatchEntity(Long hostId, Long participantId, LocalDateTime startTime, LocalDateTime endTime, Gender gender,
-                       int stadiumCost, Long stadiumId, String etc) {
+                       int stadiumCost, Long stadiumId, String etc, LocalDateTime confirmedTime) {
         this.hostId = hostId;
         this.participantId = participantId;
         this.startTime = startTime;
@@ -49,6 +49,7 @@ public class MatchEntity extends BaseEntity {
         this.stadiumCost = stadiumCost;
         this.etc = etc;
         this.stadiumId = stadiumId;
+        this.confirmedTime = confirmedTime;
     }
 
     @Id
@@ -77,17 +78,12 @@ public class MatchEntity extends BaseEntity {
 
     private String etc;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd:hh:mm:ss")
+    private LocalDateTime confirmedTime;
+
 
     public void setHost(Long target) {
         this.hostId = target;
     }
-
-
-    public void isHost(Long target) {
-        if (!hostId.equals(target)) {
-            throw new UnauthorizedAccessException();
-        }
-    }
-
 
 }

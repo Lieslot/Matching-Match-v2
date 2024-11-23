@@ -35,6 +35,7 @@ public class Match {
     @DateTimeFormat(pattern = "yyyy-MM-dd:hh:mm:ss")
     private LocalDateTime endTime;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd:hh:mm:ss")
     private LocalDateTime confirmedTime;
 
     @NotNull
@@ -46,20 +47,23 @@ public class Match {
 
     private String etc;
 
-    private Boolean isParticipantRate;
+    private Boolean isParticipantRate = false;
 
-    private Boolean isHostRate;
+    private Boolean isHostRate = false;
 
     @Builder
     public Match(Long id, Team host, Team participant, LocalDateTime startTime, LocalDateTime endTime, Gender gender, int stadiumCost,
                  String etc,
-                 Stadium stadium, Boolean isParticipantRate, Boolean isHostRate) {
+                 Stadium stadium, Boolean isParticipantRate, Boolean isHostRate, LocalDateTime confirmedTime) {
         this.id = id;
         this.host = host;
         this.participant = participant;
         this.startTime = startTime;
         this.endTime = endTime;
         this.stadium = stadium;
+        this.gender = gender;
+        this.etc = etc;
+        this.confirmedTime = confirmedTime;
     }
 
 
@@ -100,9 +104,8 @@ public class Match {
         this.confirmedTime = null;
     }
 
-    public void checkCancelDeadline() {
+    public void checkCancelDeadline(LocalDateTime now) {
         LocalDateTime deadline = this.confirmedTime.plusMinutes(10);
-        LocalDateTime now = LocalDateTime.now();
 
         if (now.isBefore(deadline)) {
             long minute = ChronoUnit.MINUTES.between(now, deadline);
@@ -114,10 +117,10 @@ public class Match {
 
     public void rateMannerPoint(MannerRate mannerRate) {
         if (mannerRate.isRater(participant.getLeaderId())) {
-            rateHost();
+            rateParticipantRate();
             host.rateMannerPoint(mannerRate.rate());
         } else if (mannerRate.isRater(host.getLeaderId())) {
-            rateParticipantRate();
+            rateHost();
             participant.rateMannerPoint(mannerRate.rate());
         } else {
             throw new IllegalArgumentException(INVALID_AUTHORITY);
