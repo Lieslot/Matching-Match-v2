@@ -1,11 +1,15 @@
 package com.matchingMatch.team.service;
 
 
+import com.matchingMatch.match.TeamAdapter;
+import com.matchingMatch.team.domain.entity.Team;
 import com.matchingMatch.team.domain.entity.TeamEntity;
 import com.matchingMatch.match.domain.repository.TeamRepository;
 import com.matchingMatch.match.dto.TeamProfileResponse;
 import com.matchingMatch.match.dto.TeamProfileUpdateRequest;
 import java.util.Optional;
+
+import com.matchingMatch.team.dto.TeamRegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,34 +19,43 @@ import org.springframework.transaction.annotation.Transactional;
 public class TeamService {
 
 
-    private final TeamRepository teamRepository;
+    private final TeamAdapter teamAdapter;
 
     @Transactional
     public TeamProfileResponse getTeamProfile(Long teamId) {
-        Optional<TeamEntity> result = teamRepository.findById(teamId);
-        if (result.isEmpty()) {
-            throw new IllegalArgumentException();
-        }
+        Team team = teamAdapter.getTeamBy(teamId);
 
-        TeamEntity team = result.get();
+
         return TeamProfileResponse.builder()
                 .teamName(team.getName())
                 .teamLogoUrl(team.getLogoUrl())
-                .mannerPoint(team.calculateMannerPoint())
+                .mannerPoint(team.getMannerPoint())
                 .region(team.getRegion())
                 .gender(team.getGender())
                 .teamDescription(team.getDescription())
                 .build();
     }
 
+    public Long registerTeam(TeamRegisterRequest teamRegisterRequest, Long leaderId) {
+
+        Team team = Team.builder()
+                .name(teamRegisterRequest.getName())
+                .teamDescription(teamRegisterRequest.getDescription())
+                .teamLogoUrl(teamRegisterRequest.getLogoUrl())
+                .leaderId(leaderId)
+                .region(teamRegisterRequest.getRegion())
+                .build();
+
+        return teamAdapter.save(team);
+    }
+
     @Transactional
-    public void updateTeamProfile(Long teamId,
-                                  TeamProfileUpdateRequest teamProfileUpdateRequest) {
-        Optional<TeamEntity> result = teamRepository.findById(teamId);
-        if (result.isEmpty()) {
-            throw new IllegalArgumentException();
-        }
-        TeamEntity team = result.get();
+    public void updateTeamProfile(TeamProfileUpdateRequest teamProfileUpdateRequest, Long userId) {
+
+        Long teamId = teamProfileUpdateRequest.getId();
+        Team team = teamAdapter.getTeamBy(teamId);
+
+        team.checkLeader(userId);
 
         team.setDescription(teamProfileUpdateRequest.getTeamDescription());
         team.setName(teamProfileUpdateRequest.getTeamName());
@@ -51,4 +64,10 @@ public class TeamService {
         team.setLogoUrl(teamProfileUpdateRequest.getTeamLogoUrl());
     }
 
+    public void deleteTeam(Long id) {
+        Team team = teamAdapter.getTeamBy(id);
+        team.checkLeader(id);
+
+        teamAdapter.delete(id);
+    }
 }

@@ -1,6 +1,7 @@
 package com.matchingMatch.team.domain.entity;
 
 import com.matchingMatch.match.domain.enums.Gender;
+import com.matchingMatch.match.exception.UnauthorizedAccessException;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,8 +20,8 @@ public class Team {
     @NotNull
     private String name;
 
-    private String teamDescription;
-    private String teamLogoUrl;
+    private String description;
+    private String logoUrl;
 
     @NotNull
     private Long leaderId;
@@ -39,8 +40,8 @@ public class Team {
     public Team(Long id, Gender gender, String name, String teamDescription, String teamLogoUrl, Long leaderId, Long mannerPointSum, Long matchCount, String region, List<Long> confirmedMatchIds) {
         this.id = id;
         this.name = name;
-        this.teamDescription = teamDescription;
-        this.teamLogoUrl = teamLogoUrl;
+        this.description = teamDescription;
+        this.logoUrl = teamLogoUrl;
         this.leaderId = leaderId;
         this.mannerPointSum = mannerPointSum;
         this.matchCount = matchCount;
@@ -69,4 +70,36 @@ public class Team {
         return BigDecimal.valueOf(mannerPointSum).divide(BigDecimal.valueOf(matchCount),2,  RoundingMode.HALF_UP);
     }
 
+    public void checkLeader(Long leaderId) {
+        if (!this.leaderId.equals(leaderId)) {
+            throw new UnauthorizedAccessException();
+        }
+    }
+
+    public void updateTeamDetail(String name, String description, String logoUrl, String region) {
+        this.name = name;
+        this.description = description;
+        this.logoUrl = logoUrl;
+        this.region = region;
+    }
+
+    public void setName(@NotNull String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
+    }
+
+    public void setRegion(@NotNull String region) {
+        this.region = region;
+    }
+
+    public void setGender(@NotNull Gender gender) {
+        this.gender = gender;
+    }
 }

@@ -5,23 +5,25 @@ import com.matchingMatch.match.domain.enums.Gender;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.math.BigDecimal;
+
 @Getter
 public class TeamProfileResponse {
 
-    private String teamName;
-    private String teamLogoUrl;
-    private Float mannerPoint;
-    private String teamDescription;
+    private String name;
+    private String logoUrl;
+    private BigDecimal mannerPoint;
+    private String description;
     private String region;
     private Gender gender;
 
     @Builder
-    public TeamProfileResponse(String teamName, String teamLogoUrl, Float mannerPoint, String teamDescription,
+    public TeamProfileResponse(String teamName, String teamLogoUrl, BigDecimal mannerPoint, String teamDescription,
                                String region, Gender gender) {
-        this.teamName = teamName;
-        this.teamLogoUrl = teamLogoUrl;
+        this.name = teamName;
+        this.logoUrl = teamLogoUrl;
         this.mannerPoint = mannerPoint;
-        this.teamDescription = teamDescription;
+        this.description = teamDescription;
         this.region = region;
         this.gender = gender;
     }

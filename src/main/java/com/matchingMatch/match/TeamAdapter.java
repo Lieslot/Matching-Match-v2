@@ -41,5 +41,13 @@ public class TeamAdapter {
                 .toList();
     }
 
+    public Long save(Team team) {
+        return teamRepository.save(TeamEntity.of(team)).getId();
+    }
+
+    public void delete(Long teamId) {
+        teamRepository.deleteById(teamId);
+    }
+
 
 }

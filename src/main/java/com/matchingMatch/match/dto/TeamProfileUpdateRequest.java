@@ -9,6 +9,8 @@ import lombok.Setter;
 @Setter
 public class TeamProfileUpdateRequest {
 
+    private Long id;
+
     private String teamName;
 
     private String teamDescription;
