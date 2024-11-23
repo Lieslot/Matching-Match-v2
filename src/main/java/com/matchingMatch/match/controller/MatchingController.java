@@ -77,7 +77,7 @@ public class MatchingController {
     public void refuseMatchRequest(
             @RequestBody MatchRefuseRequest matchRefuseRequest,
             @Authentication UserAuth userAuth) {
-
+        matchService.refuseMatchRequest(matchRefuseRequest.getMatchRequestId(), userAuth.getId());
     }
 
     @PostMapping("/rate")

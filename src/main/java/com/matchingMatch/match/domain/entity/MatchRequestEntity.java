@@ -69,6 +69,10 @@ public class MatchRequestEntity extends BaseEntity {
         return sendTeamId.equals(teamId);
     }
 
+    public Boolean hasTargetTeam(Long teamId) {
+        return targetTeamId.equals(teamId);
+    }
+
     public void checkCancelDeadline() {
         LocalDateTime deadline = this.getCreatedAt().plusMinutes(10);
         LocalDateTime now = LocalDateTime.now();

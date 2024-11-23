@@ -3,6 +3,7 @@ package com.matchingMatch.match.service;
 
 import com.matchingMatch.match.TeamAdapter;
 import com.matchingMatch.match.domain.MannerRate;
+import com.matchingMatch.match.dto.MatchRefuseRequest;
 import com.matchingMatch.match.dto.ModifyMatchPostRequest;
 import com.matchingMatch.match.MatchAdapter;
 import com.matchingMatch.match.domain.Match;
@@ -155,16 +156,15 @@ public class MatchService {
     }
 
     @Transactional
-    public void refuseMatchRequest(Long matchId, Long currentUserId, Long requestingTeamId) {
-
-        Match match = matchAdapter.getMatchBy(matchId);
+    public void refuseMatchRequest(Long matchRequestId, Long currentUserId) {
+        MatchRequestEntity request = matchRequestAdapter.findById(matchRequestId);
+        Match match = matchAdapter.getMatchBy(request.getMatchId());
 
         match.checkHost(currentUserId);
         match.checkAlreadyConfirmed();
 
-        matchRequestAdapter.deleteByMatchIdAndSendTeamId(matchId, requestingTeamId);
+        matchRequestAdapter.deleteByMatchIdAndSendTeamId(matchRequestId, match.getHost().getId());
 
-        // TODO 알림 보내기
     }
 
     @Transactional
