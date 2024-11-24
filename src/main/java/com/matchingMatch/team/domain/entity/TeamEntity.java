@@ -142,6 +142,7 @@ public class TeamEntity extends BaseEntity {
                 .mannerPointSum(mannerPointSum)
                 .matchCount(matchCount)
                 .region(region)
+                .gender(gender)
                 .build();
     }
 }

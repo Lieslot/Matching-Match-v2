@@ -81,13 +81,6 @@ public class Team {
         return this.leaderId.equals(leaderId);
     }
 
-    public void updateTeamDetail(String name, String description, String logoUrl, String region) {
-        this.name = name;
-        this.description = description;
-        this.logoUrl = logoUrl;
-        this.region = region;
-    }
-
     public void updateTeamProfile(TeamProfileUpdateRequest teamProfileUpdateRequest) {
         this.name = teamProfileUpdateRequest.getTeamName();
         this.description = teamProfileUpdateRequest.getTeamDescription();

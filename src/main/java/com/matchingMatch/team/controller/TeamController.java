@@ -7,6 +7,8 @@ import com.matchingMatch.auth.dto.UserAuth;
 import com.matchingMatch.match.dto.TeamProfileResponse;
 import com.matchingMatch.match.dto.TeamProfileUpdateRequest;
 import com.matchingMatch.team.dto.LeaderChangeRequest;
+import com.matchingMatch.team.dto.LeaderRefuseRequest;
+import com.matchingMatch.team.dto.LeaderTransferRequest;
 import com.matchingMatch.team.dto.TeamRegisterRequest;
 import com.matchingMatch.team.service.TeamService;
 import lombok.RequiredArgsConstructor;
@@ -49,33 +51,33 @@ public class TeamController {
     }
 
     @AuthenticatedUser
-    @PutMapping("/leader")
+    @PostMapping("/leader/accept")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void acceptLeader(
             @RequestBody LeaderChangeRequest leaderChangeRequest,
             @Authentication UserAuth userAuth) {
 
-        teamService.changeLeader(leaderChangeRequest, userAuth.getId());
+        teamService.changeLeader(leaderChangeRequest.getTeamId(), userAuth.getId());
     }
 
     @AuthenticatedUser
-    @PutMapping("/leader/refuse")
+    @PostMapping("/leader/refuse")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void refuseLeader(
-            @RequestBody LeaderChangeRequest leaderChangeRequest,
+            @RequestBody LeaderRefuseRequest leaderRefuseRequest,
             @Authentication UserAuth userAuth) {
 
-        teamService.refuseLeaderRequest(leaderChangeRequest.getTeamId(), userAuth.getId());
+        teamService.refuseLeaderRequest(leaderRefuseRequest.getTeamId(), userAuth.getId());
     }
 
     @AuthenticatedUser
     @PostMapping("/leader")
     @ResponseStatus(HttpStatus.OK)
     public void requestLeaderTransfer(
-            @RequestBody LeaderChangeRequest leaderChangeRequest,
+            @RequestBody LeaderTransferRequest leaderTransferRequest,
             @Authentication UserAuth userAuth) {
 
-        teamService.createLeaderRequest(leaderChangeRequest.getTeamId(), userAuth.getId());
+        teamService.createLeaderRequest(leaderTransferRequest.getTeamId(), leaderTransferRequest.getUsername(), userAuth.getId());
     }
 
     @AuthenticatedUser

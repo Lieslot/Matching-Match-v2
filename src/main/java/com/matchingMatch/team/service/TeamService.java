@@ -10,6 +10,8 @@ import com.matchingMatch.match.dto.TeamProfileUpdateRequest;
 
 import com.matchingMatch.team.dto.LeaderChangeRequest;
 import com.matchingMatch.team.dto.TeamRegisterRequest;
+import com.matchingMatch.user.domain.UserDetail;
+import com.matchingMatch.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,7 @@ public class TeamService {
 
 
     private final TeamAdapter teamAdapter;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public TeamProfileResponse getTeamProfile(Long teamId) {
@@ -72,20 +75,19 @@ public class TeamService {
     }
 
     @Transactional
-    public void changeLeader(LeaderChangeRequest leaderChangeRequest, Long userId) {
+    public void changeLeader(Long teamId, Long userId) {
 
-        Long teamId = leaderChangeRequest.getTeamId();
         LeaderRequestEntity leaderRequest = teamAdapter.getLeaderRequest(teamId);
 
-        Team team = teamAdapter.getTeamBy(teamId);
         if (leaderRequest.hasTargetUserId(userId)) {
             throw new IllegalArgumentException("지정된 새로운 팀장이 아닙니다.");
         }
-
-        team.changeLeader(leaderRequest.getTargetUserId());
-
         teamAdapter.deleteLeaderRequest(teamId);
-        
+
+        Team team = teamAdapter.getTeamBy(teamId);
+        team.changeLeader(leaderRequest.getTargetUserId());
+        teamAdapter.save(team);
+
         // TODO 알림 날리기
     }
 
@@ -104,9 +106,11 @@ public class TeamService {
     }
 
     @Transactional
-    public void createLeaderRequest(Long teamId, Long userId) {
+    public void createLeaderRequest(Long teamId, String targetUsername, Long userId) {
 
         Team team = teamAdapter.getTeamBy(teamId);
+        Long targetUserId = userRepository.findByUsername(targetUsername)
+                .orElseThrow(IllegalArgumentException::new).getId();
 
         if (!team.hasLeader(userId)) {
             throw new UnauthorizedAccessException();
@@ -115,13 +119,13 @@ public class TeamService {
         if (teamAdapter.countUserTeam(userId) > 3) {
             throw new IllegalArgumentException("팀장은 세 개 이상의 팀을 가질 수 없습니다.");
         }
-        
+
         teamAdapter.deleteLeaderRequest(teamId); // 기존 요청 삭제
 
         LeaderRequestEntity leaderRequest = LeaderRequestEntity.builder()
                 .teamId(team.getId())
-                .sendUserId(teamId)
-                .targetUserId(team.getLeaderId())
+                .sendUserId(userId)
+                .targetUserId(targetUserId)
                 .build();
 
         teamAdapter.save(leaderRequest);
