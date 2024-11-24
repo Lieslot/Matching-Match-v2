@@ -6,7 +6,6 @@ import com.matchingMatch.team.domain.entity.LeaderRequestEntity;
 import com.matchingMatch.team.domain.entity.Team;
 import com.matchingMatch.team.domain.entity.TeamEntity;
 import com.matchingMatch.team.domain.repository.LeaderRequestRepository;
-import com.matchingMatch.user.domain.UserDetail;
 import com.matchingMatch.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -66,13 +65,13 @@ public class TeamAdapter {
         teamRepository.deleteById(teamId);
     }
 
-    public LeaderRequestEntity getLeaderRequest(Long teamId) {
-        return leaderRequestRepository.findById(teamId)
+    public LeaderRequestEntity getLeaderRequestByTeamID(Long teamId) {
+        return leaderRequestRepository.findByTeamId(teamId)
                 .orElseThrow(IllegalArgumentException::new);
     }
 
-    public void deleteLeaderRequest(Long teamId) {
-        leaderRequestRepository.deleteById(teamId);
+    public void deleteLeaderRequestByTeamId(Long teamId) {
+        leaderRequestRepository.deleteByTeamId(teamId);
     }
 
     public Long countUserTeam(Long userId) {

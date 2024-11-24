@@ -8,9 +8,7 @@ import com.matchingMatch.team.domain.entity.Team;
 import com.matchingMatch.match.dto.TeamProfileResponse;
 import com.matchingMatch.match.dto.TeamProfileUpdateRequest;
 
-import com.matchingMatch.team.dto.LeaderChangeRequest;
 import com.matchingMatch.team.dto.TeamRegisterRequest;
-import com.matchingMatch.user.domain.UserDetail;
 import com.matchingMatch.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -77,12 +75,12 @@ public class TeamService {
     @Transactional
     public void changeLeader(Long teamId, Long userId) {
 
-        LeaderRequestEntity leaderRequest = teamAdapter.getLeaderRequest(teamId);
+        LeaderRequestEntity leaderRequest = teamAdapter.getLeaderRequestByTeamID(teamId);
 
-        if (leaderRequest.hasTargetUserId(userId)) {
+        if (!leaderRequest.hasTargetUserId(userId)) {
             throw new IllegalArgumentException("지정된 새로운 팀장이 아닙니다.");
         }
-        teamAdapter.deleteLeaderRequest(teamId);
+        teamAdapter.deleteLeaderRequestByTeamId(teamId);
 
         Team team = teamAdapter.getTeamBy(teamId);
         team.changeLeader(leaderRequest.getTargetUserId());
@@ -94,13 +92,13 @@ public class TeamService {
     @Transactional
     public void refuseLeaderRequest(Long teamId, Long userId) {
 
-        LeaderRequestEntity leaderRequest = teamAdapter.getLeaderRequest(teamId);
+        LeaderRequestEntity leaderRequest = teamAdapter.getLeaderRequestByTeamID(teamId);
 
         if (!leaderRequest.hasTargetUserId(userId)) {
             throw new UnauthorizedAccessException();
         }
 
-        teamAdapter.deleteLeaderRequest(teamId);
+        teamAdapter.deleteLeaderRequestByTeamId(teamId);
         
         // TODO 알림 날리기
     }
@@ -116,11 +114,11 @@ public class TeamService {
             throw new UnauthorizedAccessException();
         }
 
-        if (teamAdapter.countUserTeam(userId) > 3) {
+        if (teamAdapter.countUserTeam(userId) >= 3) {
             throw new IllegalArgumentException("팀장은 세 개 이상의 팀을 가질 수 없습니다.");
         }
 
-        teamAdapter.deleteLeaderRequest(teamId); // 기존 요청 삭제
+        teamAdapter.deleteLeaderRequestByTeamId(teamId); // 기존 요청 삭제
 
         LeaderRequestEntity leaderRequest = LeaderRequestEntity.builder()
                 .teamId(team.getId())

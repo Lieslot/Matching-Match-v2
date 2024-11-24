@@ -2,7 +2,9 @@ package com.matchingMatch.match;
 
 import com.matchingMatch.match.domain.Match;
 import com.matchingMatch.match.domain.enums.Gender;
+import com.matchingMatch.match.domain.enums.Role;
 import com.matchingMatch.team.domain.entity.Team;
+import com.matchingMatch.user.domain.UserDetail;
 
 import java.time.LocalDateTime;
 
@@ -49,4 +51,27 @@ public class TestDataBuilder {
                 .leaderId(leaderId)
                 .build();
     }
+
+    public Team createNotPersistedTeam(Long leaderId) {
+        return Team.builder()
+                .name("default")
+                .gender(Gender.MALE)
+                .teamDescription("default")
+                .region("default")
+                .teamLogoUrl("default")
+                .mannerPointSum(0L)
+                .matchCount(0L)
+                .leaderId(leaderId)
+                .build();
+    }
+
+    public UserDetail createNotPersistedUser(String username) {
+        return UserDetail.builder()
+                .username(username)
+                .nickname("default")
+                .role(Role.USER)
+                .password("default")
+                .build();
+    }
+
 }
