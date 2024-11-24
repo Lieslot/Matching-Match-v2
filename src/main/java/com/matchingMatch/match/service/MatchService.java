@@ -126,9 +126,9 @@ public class MatchService {
         match.checkHost(currentUserId);
         match.checkAlreadyConfirmed();
 
-        Team rqeustingTeam = teamAdapter.getTeamBy(requestingTeamId);
+        Team requestingTeam = teamAdapter.getTeamBy(requestingTeamId);
 
-        match.confirmMatch(rqeustingTeam);
+        match.confirmMatch(requestingTeam);
 
         matchAdapter.updateMatch(match);
         matchRequestAdapter.deleteAllByMatchId(matchId);
@@ -167,10 +167,17 @@ public class MatchService {
         Match match = matchAdapter.getMatchWithRateCheck(matchId);
 
         match.checkHostOrParticipant(mannerRate.userId());
+        match.checkAlreadyRate(mannerRate.userId());
         
         match.rateMannerPoint(mannerRate);
 
         matchAdapter.updateMatch(match);
+
+        if (mannerRate.userId().equals(match.getHost().getId())) {
+            teamAdapter.save(match.getParticipant());
+        } else {
+            teamAdapter.save(match.getHost());
+        }
 
     }
 

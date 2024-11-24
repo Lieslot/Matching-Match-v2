@@ -4,6 +4,8 @@ import com.matchingMatch.match.domain.enums.Gender;
 import com.matchingMatch.match.dto.MatchPostListElementResponse;
 import com.matchingMatch.match.dto.ModifyMatchPostRequest;
 import com.matchingMatch.match.exception.MatchAlreadyConfirmedException;
+import com.matchingMatch.match.exception.MatchAlreadyRatedException;
+import com.matchingMatch.match.exception.UnauthorizedAccessException;
 import com.matchingMatch.team.domain.entity.Team;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -78,13 +80,13 @@ public class Match {
 
     public void checkHost(Long leaderId) {
         if (!host.getLeaderId().equals(leaderId)) {
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
+            throw new UnauthorizedAccessException();
         }
     }
 
     public void checkHostOrParticipant(Long userId) {
         if (!host.getLeaderId().equals(userId) && !participant.getLeaderId().equals(userId)) {
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
+            throw new UnauthorizedAccessException();
         }
     }
 
@@ -155,5 +157,14 @@ public class Match {
     }
 
 
+    public void checkAlreadyRate(Long userId) {
 
+        if (isHostRate && host.getLeaderId().equals(userId)) {
+            throw new MatchAlreadyRatedException(host.getLeaderId());
+        }
+
+        if (isParticipantRate && participant.getLeaderId().equals(userId)) {
+            throw new MatchAlreadyRatedException(participant.getLeaderId());
+        }
+    }
 }
