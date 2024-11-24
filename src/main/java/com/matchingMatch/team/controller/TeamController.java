@@ -6,7 +6,7 @@ import com.matchingMatch.auth.Authentication;
 import com.matchingMatch.auth.dto.UserAuth;
 import com.matchingMatch.match.dto.TeamProfileResponse;
 import com.matchingMatch.match.dto.TeamProfileUpdateRequest;
-import com.matchingMatch.match.service.MatchBookmarkService;
+import com.matchingMatch.team.dto.LeaderChangeRequest;
 import com.matchingMatch.team.dto.TeamRegisterRequest;
 import com.matchingMatch.team.service.TeamService;
 import lombok.RequiredArgsConstructor;
@@ -27,17 +27,16 @@ public class TeamController {
 
 
     private final TeamService teamService;
-    private final MatchBookmarkService matchBookmarkService;
 
 
     @AuthenticatedUser
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerTeam(
+    public Long registerTeam(
             TeamRegisterRequest teamRegisterRequest,
             @Authentication UserAuth userAuth) {
 
-        teamService.registerTeam(teamRegisterRequest, userAuth.getId());
+        return teamService.registerTeam(teamRegisterRequest, userAuth.getId());
     }
 
     @AuthenticatedUser
@@ -50,16 +49,38 @@ public class TeamController {
     }
 
     @AuthenticatedUser
-    @PutMapping("leader")
+    @PutMapping("/leader")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void changeLeader(
+    public void acceptLeader(
+            @RequestBody LeaderChangeRequest leaderChangeRequest,
             @Authentication UserAuth userAuth) {
 
+        teamService.changeLeader(leaderChangeRequest, userAuth.getId());
     }
 
+    @AuthenticatedUser
+    @PutMapping("/leader/refuse")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void refuseLeader(
+            @RequestBody LeaderChangeRequest leaderChangeRequest,
+            @Authentication UserAuth userAuth) {
+
+        teamService.refuseLeaderRequest(leaderChangeRequest.getTeamId(), userAuth.getId());
+    }
+
+    @AuthenticatedUser
+    @PostMapping("/leader")
+    @ResponseStatus(HttpStatus.OK)
+    public void requestLeaderTransfer(
+            @RequestBody LeaderChangeRequest leaderChangeRequest,
+            @Authentication UserAuth userAuth) {
+
+        teamService.createLeaderRequest(leaderChangeRequest.getTeamId(), userAuth.getId());
+    }
 
     @AuthenticatedUser
     @GetMapping("/profile")
+    @ResponseStatus(HttpStatus.OK)
     public TeamProfileResponse getTeamProfile(
             @Authentication UserAuth userAuth) {
 

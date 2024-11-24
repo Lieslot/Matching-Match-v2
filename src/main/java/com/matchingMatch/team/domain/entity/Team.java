@@ -69,11 +69,15 @@ public class Team {
 
         return BigDecimal.valueOf(mannerPointSum).divide(BigDecimal.valueOf(matchCount),2,  RoundingMode.HALF_UP);
     }
-
+    // TODO 체크 로직과 예외처리 로직 분리
     public void checkLeader(Long leaderId) {
         if (!this.leaderId.equals(leaderId)) {
             throw new UnauthorizedAccessException();
         }
+    }
+
+    public boolean hasLeader(Long leaderId) {
+        return this.leaderId.equals(leaderId);
     }
 
     public void updateTeamDetail(String name, String description, String logoUrl, String region) {
@@ -101,5 +105,9 @@ public class Team {
 
     public void setGender(@NotNull Gender gender) {
         this.gender = gender;
+    }
+
+    public void changeLeader(Long targetUserId) {
+        this.leaderId = targetUserId;
     }
 }

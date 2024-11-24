@@ -2,8 +2,10 @@ package com.matchingMatch.match;
 
 import com.matchingMatch.match.domain.repository.TeamRepository;
 import com.matchingMatch.match.exception.UnauthorizedAccessException;
+import com.matchingMatch.team.domain.entity.LeaderRequestEntity;
 import com.matchingMatch.team.domain.entity.Team;
 import com.matchingMatch.team.domain.entity.TeamEntity;
+import com.matchingMatch.team.domain.repository.LeaderRequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +16,7 @@ import java.util.List;
 public class TeamAdapter {
 
     private final TeamRepository teamRepository;
-
+    private final LeaderRequestRepository leaderRequestRepository;
 
     public Team getTeamBy(Long teamId) {
 
@@ -45,9 +47,24 @@ public class TeamAdapter {
         return teamRepository.save(TeamEntity.of(team)).getId();
     }
 
+    public void save(LeaderRequestEntity leaderRequestEntity) {
+        leaderRequestRepository.save(leaderRequestEntity);
+    }
+
     public void delete(Long teamId) {
         teamRepository.deleteById(teamId);
     }
 
+    public LeaderRequestEntity getLeaderRequest(Long teamId) {
+        return leaderRequestRepository.findById(teamId)
+                .orElseThrow(IllegalArgumentException::new);
+    }
 
+    public void deleteLeaderRequest(Long teamId) {
+        leaderRequestRepository.deleteById(teamId);
+    }
+
+    public Long countUserTeam(Long userId) {
+         return teamRepository.countAllByLeaderId(userId);
+    }
 }
