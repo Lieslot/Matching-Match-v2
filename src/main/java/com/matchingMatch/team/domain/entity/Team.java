@@ -1,6 +1,7 @@
 package com.matchingMatch.team.domain.entity;
 
 import com.matchingMatch.match.domain.enums.Gender;
+import com.matchingMatch.match.dto.TeamProfileUpdateRequest;
 import com.matchingMatch.match.exception.UnauthorizedAccessException;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -87,24 +88,12 @@ public class Team {
         this.region = region;
     }
 
-    public void setName(@NotNull String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setLogoUrl(String logoUrl) {
-        this.logoUrl = logoUrl;
-    }
-
-    public void setRegion(@NotNull String region) {
-        this.region = region;
-    }
-
-    public void setGender(@NotNull Gender gender) {
-        this.gender = gender;
+    public void updateTeamProfile(TeamProfileUpdateRequest teamProfileUpdateRequest) {
+        this.name = teamProfileUpdateRequest.getTeamName();
+        this.description = teamProfileUpdateRequest.getTeamDescription();
+        this.logoUrl = teamProfileUpdateRequest.getTeamLogoUrl();
+        this.region = teamProfileUpdateRequest.getRegion();
+        this.gender = teamProfileUpdateRequest.getGender();
     }
 
     public void changeLeader(Long targetUserId) {

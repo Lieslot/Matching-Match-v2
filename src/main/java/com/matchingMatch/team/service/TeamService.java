@@ -57,11 +57,10 @@ public class TeamService {
 
         team.checkLeader(userId);
 
-        team.setDescription(teamProfileUpdateRequest.getTeamDescription());
-        team.setName(teamProfileUpdateRequest.getTeamName());
-        team.setGender(teamProfileUpdateRequest.getGender());
-        team.setRegion(teamProfileUpdateRequest.getRegion());
-        team.setLogoUrl(teamProfileUpdateRequest.getTeamLogoUrl());
+        team.updateTeamProfile(teamProfileUpdateRequest);
+
+        teamAdapter.save(team);
+
     }
 
     @Transactional
