@@ -35,7 +35,7 @@ public class AuthServiceTest {
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
 
-    private TeamEntity team;
+    private UserDetail user;
 
     @Autowired
     private JwtProvider jwtProvider;
@@ -47,9 +47,10 @@ public class AuthServiceTest {
 
     @BeforeEach
     void setUp() {
-        UserDetail user = UserDetail.builder()
+        user = UserDetail.builder()
                 .username(ACCOUNT)
                 .password(passwordEncoder.encode(PASSWORD))
+                .nickname("default")
                 .role(Role.USER)
                 .banDeadLine(LocalDate.MIN)
                 .build();
@@ -80,7 +81,7 @@ public class AuthServiceTest {
 
         // given
         String before = refreshTokenRepository.save(
-                new RefreshToken(team.getId(), jwtProvider.createRefreshToken(team.getId()))).getContent();
+                new RefreshToken(user.getId(), jwtProvider.createRefreshToken(user.getId()))).getContent();
         Thread.sleep(1000);
         // when
         String after = authService.login(ACCOUNT, PASSWORD).getRefreshToken();

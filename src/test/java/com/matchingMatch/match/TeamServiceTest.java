@@ -173,9 +173,5 @@ public class TeamServiceTest {
         Assertions.assertThat(result).isInstanceOf(IllegalArgumentException.class);
     }
 
-    // 팀 삭제 시 팀과 관련된 모든 엔티티 삭제 테스트
-
-
-
 
 }
