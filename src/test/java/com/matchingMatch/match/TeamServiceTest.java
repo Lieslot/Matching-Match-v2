@@ -72,7 +72,7 @@ public class TeamServiceTest {
         // given
         UserDetail leader = testEntityManager.persist(testDataBuilder.createNotPersistedUser("default1"));
         Long teamId = teamAdapter.save(testDataBuilder.createNotPersistedTeam(leader.getId(), "default"));
-        BDDMockito.given(teamAdapter.countUserTeam(leader.getId())).willReturn(3L);
+        BDDMockito.given(teamAdapter.countUserTeam(leader.getId())).willReturn(1L);
         // when
         Throwable result = Assertions.catchThrowable(() -> teamService.createLeaderRequest(teamId, leader.getUsername(), leader.getId()));
         // then

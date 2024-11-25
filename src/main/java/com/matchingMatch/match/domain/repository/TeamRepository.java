@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface TeamRepository extends JpaRepository<TeamEntity, Long> {
-    List<TeamEntity> findAllByLeaderId(Long leaderId);
     Long countAllByLeaderId(Long leaderId);
-
+    Optional<TeamEntity> findByLeaderId(Long leaderId);
 }

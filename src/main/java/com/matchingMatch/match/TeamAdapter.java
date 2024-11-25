@@ -45,14 +45,6 @@ public class TeamAdapter {
         return teamRepository.existsById(teamId);
     }
 
-    public List<Team> getUserTeams (Long userId) {
-        List<TeamEntity> teams = teamRepository.findAllByLeaderId(userId);
-
-        return teams.stream()
-                .map(TeamEntity::toDomain)
-                .toList();
-    }
-
     public Long save(Team team) {
         return teamRepository.save(TeamEntity.of(team)).getId();
     }

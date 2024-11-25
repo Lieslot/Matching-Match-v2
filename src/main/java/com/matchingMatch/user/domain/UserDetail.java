@@ -32,7 +32,7 @@ public class UserDetail {
     private Role role;
 
     // TODO: 기본값 정하기
-    private LocalDate banDeadLine;
+    private LocalDate banDeadLine = null;
 
     @Builder
     public UserDetail(Long id, String password, String username, Role role, LocalDate banDeadLine, String nickname) {
@@ -44,5 +44,17 @@ public class UserDetail {
         this.nickname = nickname;
     }
 
+    public Boolean isBanned() {
+        return banDeadLine != null && banDeadLine.isAfter(LocalDate.now());
+    }
+
+
+    public void ban(Integer days) {
+        this.banDeadLine = LocalDate.now().plusDays(days);
+    }
+
+    public void unban() {
+        this.banDeadLine = null;
+    }
 
 }
