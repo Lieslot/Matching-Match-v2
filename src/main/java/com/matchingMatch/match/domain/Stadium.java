@@ -9,11 +9,11 @@ public class Stadium {
     private Long id;
     private String name;
     private SeoulDistrict district;
-    private String isParkPossible;
+    private Boolean isParkPossible;
     private String address;
 
     @Builder
-    public Stadium(Long id, String name, SeoulDistrict district, String isParkPossible, String address) {
+    public Stadium(Long id, String name, SeoulDistrict district, Boolean isParkPossible, String address) {
         this.id = id;
         this.name = name;
         this.district = district;

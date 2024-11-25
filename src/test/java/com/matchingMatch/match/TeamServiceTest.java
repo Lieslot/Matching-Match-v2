@@ -1,8 +1,13 @@
 package com.matchingMatch.match;
 
+import com.matchingMatch.listener.DeleteEventListener;
+import com.matchingMatch.match.domain.entity.MatchEntity;
+import com.matchingMatch.match.domain.entity.MatchRequestEntity;
+import com.matchingMatch.match.domain.entity.StadiumEntity;
 import com.matchingMatch.match.exception.UnauthorizedAccessException;
 import com.matchingMatch.team.domain.entity.LeaderRequestEntity;
 import com.matchingMatch.team.domain.entity.Team;
+import com.matchingMatch.team.domain.entity.TeamEntity;
 import com.matchingMatch.team.domain.repository.LeaderRequestRepository;
 import com.matchingMatch.team.service.TeamService;
 import com.matchingMatch.user.domain.UserDetail;
@@ -12,11 +17,18 @@ import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
+import org.springframework.core.task.SyncTaskExecutor;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Optional;
+import java.util.concurrent.Executor;
 
 @DataJpaTest
 @Import({TeamService.class, TeamAdapter.class})
@@ -33,7 +45,10 @@ public class TeamServiceTest {
 
     @Autowired
     private LeaderRequestRepository leaderRequestRepository;
+
     TestDataBuilder testDataBuilder = new TestDataBuilder();
+
+
 
     // 팀 리더 양도 요청 성공 테스트
 
@@ -42,7 +57,7 @@ public class TeamServiceTest {
     void leaderTransferRequestSuccess() {
         // given
         UserDetail leader = testEntityManager.persist(testDataBuilder.createNotPersistedUser("default1"));
-        Long teamId = teamAdapter.save(testDataBuilder.createNotPersistedTeam(leader.getId()));
+        Long teamId = teamAdapter.save(testDataBuilder.createNotPersistedTeam(leader.getId(), "default"));
         // when
         teamService.createLeaderRequest(teamId, leader.getUsername(), leader.getId());
         // then
@@ -56,7 +71,7 @@ public class TeamServiceTest {
     void leader_transfer_request_failed_when_user_has_max_team() {
         // given
         UserDetail leader = testEntityManager.persist(testDataBuilder.createNotPersistedUser("default1"));
-        Long teamId = teamAdapter.save(testDataBuilder.createNotPersistedTeam(leader.getId()));
+        Long teamId = teamAdapter.save(testDataBuilder.createNotPersistedTeam(leader.getId(), "default"));
         BDDMockito.given(teamAdapter.countUserTeam(leader.getId())).willReturn(3L);
         // when
         Throwable result = Assertions.catchThrowable(() -> teamService.createLeaderRequest(teamId, leader.getUsername(), leader.getId()));
@@ -68,7 +83,7 @@ public class TeamServiceTest {
     void leader_transfer_request_failed_when_user_is_not_target() {
         // given
         UserDetail leader = testEntityManager.persist(testDataBuilder.createNotPersistedUser("default1"));
-        Long teamId = teamAdapter.save(testDataBuilder.createNotPersistedTeam(leader.getId()));
+        Long teamId = teamAdapter.save(testDataBuilder.createNotPersistedTeam(leader.getId(), "default"));
         Long weirdTargetId = 0L;
         // when
         Throwable result = Assertions.catchThrowable(() -> teamService.createLeaderRequest(teamId, leader.getUsername(), weirdTargetId));
@@ -87,7 +102,7 @@ public class TeamServiceTest {
 
         Long leaderId = leader.getId();
         Long newLeaderId = newLeader.getId();
-        Long teamId = teamAdapter.save(testDataBuilder.createNotPersistedTeam(leaderId));
+        Long teamId = teamAdapter.save(testDataBuilder.createNotPersistedTeam(leaderId, "default"));
 
         teamService.createLeaderRequest(teamId, newLeader.getUsername(), leaderId);
         // when
@@ -108,7 +123,7 @@ public class TeamServiceTest {
 
         Long leaderId = leader.getId();
         Long weirdTargetId = 0L;
-        Long teamId = teamAdapter.save(testDataBuilder.createNotPersistedTeam(leaderId));
+        Long teamId = teamAdapter.save(testDataBuilder.createNotPersistedTeam(leaderId, "default"));
 
         teamService.createLeaderRequest(teamId, newLeader.getUsername(), leaderId);
         // when
@@ -127,7 +142,7 @@ public class TeamServiceTest {
 
         Long leaderId = leader.getId();
         Long newLeaderId = newLeader.getId();
-        Long teamId = teamAdapter.save(testDataBuilder.createNotPersistedTeam(leaderId));
+        Long teamId = teamAdapter.save(testDataBuilder.createNotPersistedTeam(leaderId, "default"));
 
         teamService.createLeaderRequest(teamId, newLeader.getUsername(), leaderId);
         // when
@@ -148,7 +163,7 @@ public class TeamServiceTest {
 
         Long leaderId = leader.getId();
         Long weirdTargetId = 0L;
-        Long teamId = teamAdapter.save(testDataBuilder.createNotPersistedTeam(leaderId));
+        Long teamId = teamAdapter.save(testDataBuilder.createNotPersistedTeam(leaderId, "default"));
 
         teamService.createLeaderRequest(teamId, newLeader.getUsername(), leaderId);
         // when
@@ -157,6 +172,9 @@ public class TeamServiceTest {
         Team team = teamAdapter.getTeamBy(teamId);
         Assertions.assertThat(result).isInstanceOf(IllegalArgumentException.class);
     }
+
+    // 팀 삭제 시 팀과 관련된 모든 엔티티 삭제 테스트
+
 
 
 

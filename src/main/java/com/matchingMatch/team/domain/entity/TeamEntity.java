@@ -15,7 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
+@Entity(name = "team")
 @Getter
 @Setter
 public class TeamEntity extends BaseEntity {

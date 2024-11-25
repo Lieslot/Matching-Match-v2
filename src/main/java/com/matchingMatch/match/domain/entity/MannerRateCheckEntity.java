@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Entity
+@Entity(name = "manner_rate_check")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MannerRateCheckEntity extends BaseEntity {
 

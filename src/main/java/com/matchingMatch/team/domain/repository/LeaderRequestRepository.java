@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface LeaderRequestRepository extends JpaRepository<LeaderRequestEntity, Long> {
     Optional<LeaderRequestEntity> findByTeamId(Long teamId);
     void deleteByTeamId(Long teamId);
+    void deleteAllByTeamId(Long teamId);
 }

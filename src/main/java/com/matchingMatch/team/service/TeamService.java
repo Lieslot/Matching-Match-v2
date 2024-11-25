@@ -1,6 +1,7 @@
 package com.matchingMatch.team.service;
 
 
+import com.matchingMatch.listener.TeamDeleteEvent;
 import com.matchingMatch.match.TeamAdapter;
 import com.matchingMatch.match.exception.UnauthorizedAccessException;
 import com.matchingMatch.team.domain.entity.LeaderRequestEntity;
@@ -11,6 +12,7 @@ import com.matchingMatch.match.dto.TeamProfileUpdateRequest;
 import com.matchingMatch.team.dto.TeamRegisterRequest;
 import com.matchingMatch.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +23,7 @@ public class TeamService {
 
     private final TeamAdapter teamAdapter;
     private final UserRepository userRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional(readOnly = true)
     public TeamProfileResponse getTeamProfile(Long teamId) {
@@ -70,6 +73,9 @@ public class TeamService {
         team.checkLeader(id);
 
         teamAdapter.delete(id);
+
+        eventPublisher.publishEvent(new TeamDeleteEvent(id));
+
     }
 
     @Transactional

@@ -3,11 +3,9 @@ package com.matchingMatch.match.domain;
 import com.matchingMatch.match.TestDataBuilder;
 import com.matchingMatch.match.exception.MatchAlreadyConfirmedException;
 import com.matchingMatch.team.domain.entity.Team;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

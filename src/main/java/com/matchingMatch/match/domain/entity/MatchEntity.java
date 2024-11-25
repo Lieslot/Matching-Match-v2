@@ -30,9 +30,9 @@ public class MatchEntity extends BaseEntity {
     public static MatchEntity from(Match match) {
         return MatchEntity.builder()
                 .hostId(match.getHost().getId())
-                .participantId(match.getParticipant().getId())
                 .startTime(match.getStartTime())
                 .endTime(match.getEndTime())
+                .gender(match.getGender())
                 .stadiumCost(match.getStadiumCost())
                 .stadiumId(match.getStadium().getId())
                 .build();
@@ -72,6 +72,7 @@ public class MatchEntity extends BaseEntity {
     @Column(nullable = false)
     private Gender gender;
 
+    @Column(nullable = false)
     private Long stadiumId;
 
     private int stadiumCost;

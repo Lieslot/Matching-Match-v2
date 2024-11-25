@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 
-@Entity
+@Entity(name = "stadium")
 @Getter
 public class StadiumEntity {
 
@@ -19,7 +19,7 @@ public class StadiumEntity {
     }
 
     @Builder
-    public StadiumEntity(String name, SeoulDistrict district, String isParkPossible, String address) {
+    public StadiumEntity(String name, SeoulDistrict district, Boolean isParkPossible, String address) {
         this.name = name;
         this.district = district;
         this.isParkPossible = isParkPossible;
@@ -34,7 +34,7 @@ public class StadiumEntity {
     @Column(nullable = false)
     private SeoulDistrict district;
     @Column(nullable = false)
-    private String isParkPossible;
+    private Boolean isParkPossible;
     @Column(nullable = false)
     private String address;
 

@@ -28,7 +28,7 @@ public class MatchingServiceTest {
     @MockBean
     private TeamAdapter teamAdapter;
 
-    private TestDataBuilder testDataBuilder = new TestDataBuilder();
+    TestDataBuilder testDataBuilder = new TestDataBuilder();
 
     @Captor
     private ArgumentCaptor<Match> matchArgumentCaptor;

@@ -1,6 +1,7 @@
 package com.matchingMatch.match.service;
 
 
+import com.matchingMatch.listener.event.MatchDeleteEvent;
 import com.matchingMatch.match.MatchRequestAdapter;
 import com.matchingMatch.match.TeamAdapter;
 import com.matchingMatch.match.domain.MannerRate;
@@ -17,6 +18,7 @@ import com.matchingMatch.match.exception.UnauthorizedAccessException;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +30,7 @@ public class MatchService {
 
     private final MatchAdapter matchAdapter;
     private final MatchRequestAdapter matchRequestAdapter;
-//    private final ApplicationEventPublisher eventPublisher;
+    private final ApplicationEventPublisher eventPublisher;
 
     private final TeamAdapter teamAdapter;
 
@@ -53,10 +55,13 @@ public class MatchService {
         return matchAdapter.getMatchBy(matchId);
     }
 
+    @Transactional
     public void deleteMatchPost(Long matchId, Long userId) {
         Match match = matchAdapter.getMatchBy(matchId);
         match.checkHost(userId);
         matchAdapter.deleteById(matchId);
+
+        eventPublisher.publishEvent(new MatchDeleteEvent(matchId));
     }
 
     // TODO 추후에 일관성 고민해보기
@@ -98,12 +103,12 @@ public class MatchService {
         }
 
         MatchRequestEntity matchRequest = MatchRequestEntity.builder()
-                .teamId(requestTeamId)
+                .sendTeamId(requestTeamId)
                 .matchId(matchId)
                 .targetTeamId(match.getHost().getId())
                 .build();
         matchRequestAdapter.save(matchRequest);
-        // TODO: 알림 보내기
+        // TODO: 매치 요청 알림 보내기
     }
 
     @Transactional

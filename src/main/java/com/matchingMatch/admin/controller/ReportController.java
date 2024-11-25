@@ -76,7 +76,7 @@ public class ReportController {
     @DeleteMapping("/{reportId}")
     @AuthenticatedUser
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteReport(@RequestParam Long reportId) {
+    public void deleteReport(@RequestParam String reportId) {
 
     }
 
@@ -85,16 +85,16 @@ public class ReportController {
     @PutMapping("/{reportId}")
     @AuthenticatedUser
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ModifyReportResponse updateReport(@RequestParam Long reportId,
+    public ModifyReportResponse updateReport(@RequestParam String reportId,
                                              @RequestBody ModifyReportRequest reportRequest) {
         return null;
     }
 
 
-    @PostMapping("/{reportId}")
+    @PostMapping("/{reportId}/reply")
     @AuthenticatedAdmin
     @ResponseStatus(HttpStatus.CREATED)
-    public PostReportReplyResponse replyReport(@RequestParam Long reportId,
+    public PostReportReplyResponse replyReport(@RequestParam String reportId,
                                                @RequestBody PostReportReplyRequest reportRequest) {
         return null;
 
@@ -102,7 +102,7 @@ public class ReportController {
 
 
 
-    @PutMapping("/{reportId}")
+    @PutMapping("/{reportId}/reply")
     @AuthenticatedAdmin
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ModifyReportReplyResponse updateReportReply(@RequestParam Long reportId,
@@ -110,7 +110,7 @@ public class ReportController {
         return null;
     }
 
-    @DeleteMapping("/{reportId}")
+    @DeleteMapping("/{reportId}/reply")
     @AuthenticatedUser
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteReportReply(@RequestParam Long reportId) {

@@ -21,7 +21,7 @@ import org.springframework.cglib.core.Local;
 
 
 @Getter
-@Entity
+@Entity(name = "match_request")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MatchRequestEntity extends BaseEntity {
 
@@ -37,8 +37,8 @@ public class MatchRequestEntity extends BaseEntity {
     private Long targetTeamId;
 
     @Builder
-    public MatchRequestEntity(Long teamId, Long matchId, Long targetTeamId) {
-        this.sendTeamId = teamId;
+    public MatchRequestEntity(Long sendTeamId, Long matchId, Long targetTeamId) {
+        this.sendTeamId = sendTeamId;
         this.matchId = matchId;
         this.targetTeamId = targetTeamId;
     }
