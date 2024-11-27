@@ -131,6 +131,10 @@ public class Match {
 
     }
 
+    public Boolean started() {
+        return startTime.isBefore(LocalDateTime.now());
+    }
+
     private void rateHost() {
         isHostRate = true;
     }

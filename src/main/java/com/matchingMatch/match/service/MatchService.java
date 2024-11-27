@@ -13,7 +13,6 @@ import com.matchingMatch.match.domain.entity.MatchRequestEntity;
 import com.matchingMatch.match.dto.PostMatchPostRequest;
 import com.matchingMatch.team.domain.entity.Team;
 import com.matchingMatch.team.domain.entity.TeamEntity;
-import com.matchingMatch.match.exception.UnauthorizedAccessException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -78,14 +77,19 @@ public class MatchService {
     }
 
 
-    public List<Match> getMyMatches (Long teamId) {
+    public List<Match> getMyMatches (Long userId) {
         // matchRequestEntity에서 userId와 같은 teamId matchId를 가져온다.
-        return matchAdapter.getMyMatches(teamId);
+        Team userTeam = teamAdapter.getTeamByLeaderId(userId);
+
+
+        return matchAdapter.getTeamRequestingMatches(userTeam.getId());
     }
 
-    public List<Match> getOtherMatches (Long teamId) {
+    public List<Match> getOtherMatches (Long userId) {
         // matchRequestEntity에서 userId와 같은 teamId matchId를 가져온다.
-        return matchAdapter.getOtherMatches(teamId);
+        Team userTeam = teamAdapter.getTeamByLeaderId(userId);
+
+        return matchAdapter.getTeamRequestedMatches(userTeam.getId());
     }
 
     @Transactional
@@ -184,6 +188,11 @@ public class MatchService {
             teamAdapter.save(match.getHost());
         }
 
+    }
+
+    public List<Match> getHostingMatches(Long teamId) {
+
+        return matchAdapter.getHostingMatches(teamId);
     }
 
 //    public List<MatchEntity> getPagedMatchPostsByNoOffset(Long lastMatchId, Integer pageSize) {

@@ -38,6 +38,7 @@ public class MatchEntity extends BaseEntity {
                 .build();
     }
 
+
     @Builder
     public MatchEntity(Long hostId, Long participantId, LocalDateTime startTime, LocalDateTime endTime, Gender gender,
                        int stadiumCost, Long stadiumId, String etc, LocalDateTime confirmedTime) {
@@ -86,5 +87,7 @@ public class MatchEntity extends BaseEntity {
     public void setHost(Long target) {
         this.hostId = target;
     }
+
+
 
 }

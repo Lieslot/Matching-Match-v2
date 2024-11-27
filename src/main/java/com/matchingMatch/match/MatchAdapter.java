@@ -93,7 +93,7 @@ public class MatchAdapter {
     }
 
     @Transactional(readOnly = true)
-    public List<Match> getMyMatches(Long teamId) {
+    public List<Match> getTeamRequestingMatches(Long teamId) {
         List<MatchRequestEntity> myMatchRequests = matchRequestRepository.findAllBySendTeamId(teamId);
 
         return myMatchRequests.stream()
@@ -101,8 +101,9 @@ public class MatchAdapter {
                 .toList();
     }
 
+
     @Transactional(readOnly = true)
-    public List<Match> getOtherMatches(Long teamId) {
+    public List<Match> getTeamRequestedMatches(Long teamId) {
         List<MatchRequestEntity> myMatchRequests = matchRequestRepository.findAllByTargetTeamId(teamId);
 
         return myMatchRequests.stream()
@@ -115,4 +116,16 @@ public class MatchAdapter {
         matchRepository.deleteById(matchId);
     }
 
+    @Transactional
+    public List<Match> getHostingMatches(Long teamId) {
+        return matchRepository.findAllByHostId(teamId).stream()
+                .map(match -> {
+                    Long id = match.getId();
+                    return getMatchBy(id);
+                })
+                .filter(match -> {
+                    return !match.started();
+                })
+                .toList();
+    }
 }

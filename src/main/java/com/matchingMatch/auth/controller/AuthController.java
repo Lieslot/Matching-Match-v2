@@ -26,7 +26,6 @@ public class AuthController {
     public ResponseEntity<AccessTokenResponse> login(
             @RequestBody LoginRequest loginRequest,
             HttpServletResponse response) {
-
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
         AuthToken authToken = authService.login(username, password);

@@ -17,7 +17,6 @@ public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
             + "order by m.id asc")
     List<MatchEntity> findPagesById(@Param("matchId") Long matchId, Pageable pageable);
     List<MatchEntity> findAllByParticipantId(Long participantId);
-    Optional<MatchEntity> findByHostId(Long hostId);
     void deleteAllByHostId(Long hostId);
 
 

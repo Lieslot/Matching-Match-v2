@@ -59,13 +59,17 @@ public class MatchPostController {
 
 
     @GetMapping("/{postId}")
+    @ResponseStatus(HttpStatus.OK)
     public Match getMatchPost(@PathVariable Long postId) {
 
         return matchService.getMatch(postId);
     }
 
+
+
     @AuthenticatedUser
     @DeleteMapping("/{postId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMatchPost(
             @PathVariable Long postId,
             @Authentication UserAuth userAuth) {
@@ -75,6 +79,7 @@ public class MatchPostController {
 
     @AuthenticatedUser
     @PutMapping("/{postId}")
+    @ResponseStatus(HttpStatus.OK)
     public void updateMatchPost(
             @PathVariable Long postId,
             @Valid @RequestBody ModifyMatchPostRequest matchPostRequest,
@@ -86,8 +91,9 @@ public class MatchPostController {
     // TODO 내가 요청한 매치 리스트
     @GetMapping("/requests")
     @AuthenticatedUser
-    public MatchPostsResponse getMyMatchList(@Authentication UserAuth userAuth, @RequestParam("teamId") Long teamId) {
-        List<Match> matches = matchService.getMyMatches(teamId);
+    @ResponseStatus(HttpStatus.OK)
+    public MatchPostsResponse getMyMatchList(@Authentication UserAuth userAuth) {
+        List<Match> matches = matchService.getMyMatches(userAuth.getId());
         List<MatchPostListElementResponse> posts = matches.stream()
                 .map(Match::toMatchPostResponse)
                 .toList();
@@ -98,8 +104,21 @@ public class MatchPostController {
     // TODO 다른 팀이 요청한 매치 리스트
     @GetMapping("/requests/other")
     @AuthenticatedUser
+    @ResponseStatus(HttpStatus.OK)
     public MatchPostsResponse getOtherMatchList(@Authentication UserAuth userAuth) {
         List<Match> matches = matchService.getOtherMatches(userAuth.getId());
+        List<MatchPostListElementResponse> posts = matches.stream()
+                .map(Match::toMatchPostResponse)
+                .toList();
+
+        return new MatchPostsResponse(posts);
+    }
+
+    @GetMapping("/matches/{teamId}")
+    @AuthenticatedUser
+    @ResponseStatus(HttpStatus.OK)
+    public MatchPostsResponse getHostingMatches(@Authentication UserAuth userAuth, @PathVariable Long teamId) {
+        List<Match> matches = matchService.getHostingMatches(teamId);
         List<MatchPostListElementResponse> posts = matches.stream()
                 .map(Match::toMatchPostResponse)
                 .toList();

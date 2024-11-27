@@ -69,4 +69,9 @@ public class TeamAdapter {
     public Long countUserTeam(Long userId) {
          return teamRepository.countAllByLeaderId(userId);
     }
+    public Team getTeamByLeaderId(Long userId) {
+        TeamEntity teamEntity = teamRepository.findByLeaderId(userId)
+                .orElseThrow(IllegalArgumentException::new);
+        return teamEntity.toDomain();
+    }
 }
