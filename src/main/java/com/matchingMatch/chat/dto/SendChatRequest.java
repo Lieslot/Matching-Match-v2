@@ -16,6 +16,8 @@ public class SendChatRequest {
 
     private Long teamId;
 
+    private Long targetTeamId;
+
     public boolean hasRoomId() {
         return roomId != -1L;
     }
