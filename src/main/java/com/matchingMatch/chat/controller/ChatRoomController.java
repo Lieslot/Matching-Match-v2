@@ -52,7 +52,6 @@ public class ChatRoomController {
 
     }
 
-    // TODO
     @PutMapping("/unblock")
     @ResponseStatus(HttpStatus.CREATED)
     @AuthenticatedUser
@@ -61,7 +60,6 @@ public class ChatRoomController {
         chatRoomService.unblockParticipant(userAuth.getId(), blockUseRequest.getUserId());
     }
 
-    // TODO
     @GetMapping("/block/users")
     @ResponseStatus(HttpStatus.OK)
     @AuthenticatedUser

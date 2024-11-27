@@ -7,6 +7,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,5 +31,14 @@ public class ChatEntity {
 
     @Column(nullable = false)
     private String content;
+
+    @Builder
+    public ChatEntity(Long id, Long roomId, ChatType chatType, Long sendTeamId, String content) {
+        this.id = id;
+        this.roomId = roomId;
+        this.chatType = chatType;
+        this.sendTeamId = sendTeamId;
+        this.content = content;
+    }
 
 }

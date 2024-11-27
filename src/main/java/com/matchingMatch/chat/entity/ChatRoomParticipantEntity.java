@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Builder;
 import lombok.Getter;
 
 @Entity(name = "chat_room_participant")
@@ -24,5 +25,13 @@ public class ChatRoomParticipantEntity {
 
     @Column(nullable = false)
     private Long lastChatId;
+
+    @Builder
+    public ChatRoomParticipantEntity(Long id, Long roomId, Long teamId, Long lastChatId) {
+        this.id = id;
+        this.roomId = roomId;
+        this.teamId = teamId;
+        this.lastChatId = lastChatId;
+    }
 
 }
