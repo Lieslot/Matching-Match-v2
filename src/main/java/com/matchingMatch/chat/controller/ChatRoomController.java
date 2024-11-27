@@ -5,6 +5,7 @@ import com.matchingMatch.auth.AuthenticatedUser;
 import com.matchingMatch.auth.Authentication;
 import com.matchingMatch.auth.dto.UserAuth;
 import com.matchingMatch.chat.dto.BlockChatUserRequest;
+import com.matchingMatch.chat.dto.BlockedUsersResponse;
 import com.matchingMatch.chat.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -61,11 +62,11 @@ public class ChatRoomController {
     }
 
     // TODO
-    @GetMapping("/block")
+    @GetMapping("/block/users")
     @ResponseStatus(HttpStatus.OK)
     @AuthenticatedUser
-    public void getBlockList() {
-
+    public BlockedUsersResponse getBlockList(@Authentication UserAuth userAuth) {
+        return chatRoomService.getBlockUsers(userAuth.getId());
     }
 
     // TODO 채팅방 검색

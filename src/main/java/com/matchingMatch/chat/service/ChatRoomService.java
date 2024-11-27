@@ -1,9 +1,11 @@
 package com.matchingMatch.chat.service;
 
+import com.matchingMatch.chat.dto.BlockedUserResponse;
+import com.matchingMatch.chat.dto.BlockedUsersResponse;
 import com.matchingMatch.chat.entity.BlockChatUserEntity;
 import com.matchingMatch.chat.entity.repository.BlockUserRepository;
 import com.matchingMatch.chat.entity.repository.ChatRoomRepository;
-import com.matchingMatch.match.TeamAdapter;
+import com.matchingMatch.user.domain.UserDetail;
 import com.matchingMatch.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -58,10 +60,19 @@ public class ChatRoomService {
         blockUserRepository.delete(blockChatUser);
     }
 
-    public List<BlockChatUserEntity> getBlockUsers(Long userId) {
+    public BlockedUsersResponse getBlockUsers(Long userId) {
         List<BlockChatUserEntity> blockedUsers = blockUserRepository.findAllByUserId(userId);
         // TODO dto 변환하기
-        return blockedUsers;
+        List<UserDetail> userDetails = userRepository.findAllById(blockedUsers.stream().map(BlockChatUserEntity::getBlockUserId).toList());
+
+        List<BlockedUserResponse> blockedUserResponses = userDetails.stream()
+                .map(userDetail -> BlockedUserResponse.builder()
+                        .id(userDetail.getId())
+                        .nickname(userDetail.getNickname())
+                        .build())
+                .toList();
+
+        return new BlockedUsersResponse(blockedUserResponses);
     }
 }
 
