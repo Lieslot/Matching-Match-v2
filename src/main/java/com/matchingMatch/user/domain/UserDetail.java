@@ -1,5 +1,6 @@
 package com.matchingMatch.user.domain;
 
+import com.matchingMatch.match.domain.BaseEntity;
 import com.matchingMatch.match.domain.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,7 +17,7 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserDetail {
+public class UserDetail extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,7 @@
 package com.matchingMatch.team.domain.entity;
 
 
+import com.matchingMatch.match.domain.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Entity(name = "leader_request")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LeaderRequestEntity {
+public class LeaderRequestEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

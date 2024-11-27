@@ -1,5 +1,6 @@
 package com.matchingMatch.match.domain.entity;
 
+import com.matchingMatch.match.domain.BaseEntity;
 import com.matchingMatch.match.domain.Stadium;
 import com.matchingMatch.match.domain.enums.SeoulDistrict;
 import jakarta.persistence.Column;
@@ -12,7 +13,7 @@ import lombok.Getter;
 
 @Entity(name = "stadium")
 @Getter
-public class StadiumEntity {
+public class StadiumEntity extends BaseEntity {
 
     public StadiumEntity() {
 
