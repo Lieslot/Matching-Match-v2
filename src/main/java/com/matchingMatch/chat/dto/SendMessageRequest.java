@@ -1,14 +1,9 @@
 package com.matchingMatch.chat.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.matchingMatch.chat.entity.ChatType;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.Getter;
 
 @Getter
-public class SendChatRequest {
+public class SendMessageRequest {
 
     private Long roomId = -1L;
 

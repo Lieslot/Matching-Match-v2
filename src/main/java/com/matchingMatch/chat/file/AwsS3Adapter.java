@@ -1,13 +1,14 @@
-package com.matchingMatch.chat;
+package com.matchingMatch.chat.file;
 
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
-@Component
+
 public class AwsS3Adapter implements FileStorage {
 
 
-    public String uploadFile() {
+    public String uploadFile(MultipartFile multipartFile) {
 
         // TODO: 파일 업로드
 

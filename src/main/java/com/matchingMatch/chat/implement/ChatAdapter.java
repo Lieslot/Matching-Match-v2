@@ -19,7 +19,7 @@ public class ChatAdapter {
     private final ChatRoomParticipantRepository chatRoomParticipantRepository;
 
 
-    public Long writeMessage(Long teamId, Long roomId, String content, Long targetTeamId) {
+    public Long write(Long teamId, Long roomId, String content, ChatType chatType, Long targetTeamId) {
 
         if (roomId == -1L) {
 
@@ -27,7 +27,7 @@ public class ChatAdapter {
 
             ChatEntity chat = chatRepository.save(ChatEntity.builder()
                     .roomId(room.getId())
-                    .chatType(ChatType.MESSAGE)
+                    .chatType(chatType)
                     .content(content)
                     .sendTeamId(teamId)
                     .build());
@@ -50,7 +50,7 @@ public class ChatAdapter {
 
         return chatRepository.save(ChatEntity.builder()
                 .roomId(roomId)
-                .chatType(ChatType.MESSAGE)
+                .chatType(chatType)
                 .content(content)
                 .sendTeamId(teamId)
                 .build()).getId();

@@ -1,7 +1,8 @@
 package com.matchingMatch.chat.service;
 
-import com.matchingMatch.chat.FileStorage;
-import com.matchingMatch.chat.dto.SendChatRequest;
+import com.matchingMatch.chat.entity.ChatType;
+import com.matchingMatch.chat.file.FileStorage;
+import com.matchingMatch.chat.dto.SendMessageRequest;
 import com.matchingMatch.chat.dto.SendChatResponse;
 import com.matchingMatch.chat.implement.ChatAdapter;
 import com.matchingMatch.match.TeamAdapter;
@@ -9,6 +10,7 @@ import com.matchingMatch.team.domain.entity.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -19,20 +21,25 @@ public class ChatService {
     private final ChatAdapter chatAdapter;
 
     @Transactional
-    public SendChatResponse sendMessage(SendChatRequest sendChatRequest, Long userId) {
+    public Long sendMessage(SendMessageRequest sendChatRequest, Long userId) {
         Team userTeam = teamAdapter.getTeamByLeaderId(userId);
-
-        Long chatId = chatAdapter.writeMessage(userTeam.getId(),
-                sendChatRequest.getRoomId(),
-                sendChatRequest.getContent(),
-                sendChatRequest.getTargetTeamId());
+        // TODO 차단 로직 추가
 
         // TODO 상대방에게 알림 보내기
-        return new SendChatResponse(chatId);
+        return chatAdapter.write(userTeam.getId(),
+                sendChatRequest.getRoomId(),
+                sendChatRequest.getContent(),
+                ChatType.MESSAGE,
+                sendChatRequest.getTargetTeamId()
+
+        );
     }
 
 
-    public void sendImage() {
+    public Long sendImage(Long roomId, Long teamId, Long targetTeamId, MultipartFile multipartFile) {
 
+        String uploadedUrl = fileStorage.uploadFile(multipartFile);
+
+        return chatAdapter.write(teamId, roomId, uploadedUrl, ChatType.IMAGE, targetTeamId);
     }
 }

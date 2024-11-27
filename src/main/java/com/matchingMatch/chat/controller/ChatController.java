@@ -4,8 +4,9 @@ package com.matchingMatch.chat.controller;
 import com.matchingMatch.auth.AuthenticatedUser;
 import com.matchingMatch.auth.Authentication;
 import com.matchingMatch.auth.dto.UserAuth;
-import com.matchingMatch.chat.dto.SendChatRequest;
+import com.matchingMatch.chat.dto.SendMessageRequest;
 import com.matchingMatch.chat.dto.SendChatResponse;
+import com.matchingMatch.chat.dto.SendImageRequest;
 import com.matchingMatch.chat.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,21 +28,29 @@ public class ChatController {
     private final ChatService chatService;
 
     // TODO: 채팅 메세지 송신
-    @PostMapping
+    @PostMapping("/message")
     @ResponseStatus(HttpStatus.CREATED)
     @AuthenticatedUser
-    public SendChatResponse sendMessage(@Authentication UserAuth userAuth, @RequestBody SendChatRequest sendChatRequest) {
+    public SendChatResponse sendMessage(@Authentication UserAuth userAuth, @RequestBody SendMessageRequest sendChatRequest) {
 
-        return chatService.sendMessage(sendChatRequest , userAuth.getId());
+        Long chatId = chatService.sendMessage(sendChatRequest, userAuth.getId());
+
+        return new SendChatResponse(chatId);
     }
 
-    @PostMapping
+    // TODO 이미지 전송
+    @PostMapping("/image")
     @ResponseStatus(HttpStatus.CREATED)
     @AuthenticatedUser
-    public void sendImage(@Authentication UserAuth userAuth) {
+    public SendChatResponse sendImage(@Authentication UserAuth userAuth, @RequestBody SendImageRequest sendImageRequest,
+                                      @RequestParam("file") MultipartFile image) {
 
-        chatService.sendImage();
+        Long chatId = chatService.sendImage(sendImageRequest.getRoomId(),
+                sendImageRequest.getTeamId(),
+                sendImageRequest.getTargetTeamId(),
+                image);
 
+        return new SendChatResponse(chatId);
     }
 
     // TODO 채팅방 메세지 리스트

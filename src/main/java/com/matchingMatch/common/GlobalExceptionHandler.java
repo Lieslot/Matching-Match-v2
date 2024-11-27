@@ -1,5 +1,6 @@
 package com.matchingMatch.common;
 
+import com.matchingMatch.match.exception.FileUploadException;
 import com.matchingMatch.match.exception.MatchAlreadyConfirmedException;
 import com.matchingMatch.match.exception.MatchAlreadyRatedException;
 import com.matchingMatch.match.exception.MatchNotFoundException;
@@ -43,4 +44,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
 
+    @ExceptionHandler(FileUploadException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ErrorResponse handleFileUploadException(FileUploadException e) {
+        return new ErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value());
+    }
 }
