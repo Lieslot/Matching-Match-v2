@@ -34,7 +34,7 @@ public class ChatRoomController {
     }
 
     // TODO 채팅방 퇴장
-    @GetMapping
+    @PostMapping("/exit")
     @ResponseStatus(HttpStatus.OK)
     @AuthenticatedUser
     public void exitChatRoom() {

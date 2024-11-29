@@ -4,6 +4,8 @@ package com.matchingMatch.auth.resolver;
 import com.matchingMatch.auth.dto.UserAuth;
 import com.matchingMatch.match.domain.enums.Role;
 import java.util.stream.Stream;
+
+import com.matchingMatch.match.exception.UnauthorizedAccessException;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -12,7 +14,6 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class UserAuthVerifier {
-    private static final String INVALID_AUTHORITY = "권한이 없습니다.";
 
     // TODO ADMIN인지 체크하기
 
@@ -23,7 +24,7 @@ public class UserAuthVerifier {
                 .map(UserAuth.class::cast) // UserAuth 클래스로 캐스트
                 .filter(userAuth -> userAuth.getRole() == Role.ADMIN)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(INVALID_AUTHORITY));
+                .orElseThrow(UnauthorizedAccessException::new);
 
     }
 
@@ -36,7 +37,7 @@ public class UserAuthVerifier {
                 .map(UserAuth.class::cast) // UserAuth 클래스로 캐스트
                 .filter(userAuth -> userAuth.getRole() == Role.USER)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(INVALID_AUTHORITY));
+                .orElseThrow(UnauthorizedAccessException::new);
     }
 
 

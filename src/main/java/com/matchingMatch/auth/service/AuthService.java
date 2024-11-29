@@ -30,8 +30,10 @@ public class AuthService {
 
         UserDetail user = userRepository.findByUsername(username).orElseThrow(() -> new BadCredentialsException("아이디 또는 비밀번호가 잘못됨"));
 
-        if (!checkPassword(password, user)) {
-            throw new BadCredentialsException("아이디 또는 비밀번호가 잘못됨");
+        checkPassword(password, user);
+
+        if (user.isBanned()) {
+            throw new BadCredentialsException("차단된 계정입니다.");
         }
 
         String accessToken = jwtProvider.createAccessToken(user.getId());
@@ -50,9 +52,12 @@ public class AuthService {
 
     }
 
-    private boolean checkPassword(String password, UserDetail userDetail) {
+    private void checkPassword(String password, UserDetail userDetail) {
 
-        return passwordEncoder.matches(password, userDetail.getPassword());
+        if (!passwordEncoder.matches(password, userDetail.getPassword())) {
+            throw new BadCredentialsException("아이디 또는 비밀번호가 잘못됨");
+
+        }
     }
 
 

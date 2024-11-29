@@ -6,6 +6,7 @@ import com.matchingMatch.match.exception.MatchAlreadyRatedException;
 import com.matchingMatch.match.exception.MatchNotFoundException;
 import com.matchingMatch.match.exception.UnauthorizedAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -48,5 +49,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ErrorResponse handleFileUploadException(FileUploadException e) {
         return new ErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    protected ErrorResponse handleBadCredentialsException(BadCredentialsException e) {
+        return new ErrorResponse(e.getMessage(), HttpStatus.UNAUTHORIZED.value());
     }
 }
