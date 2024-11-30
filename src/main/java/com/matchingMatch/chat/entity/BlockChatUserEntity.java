@@ -1,6 +1,7 @@
 package com.matchingMatch.chat.entity;
 
 import com.matchingMatch.match.domain.BaseEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,16 +26,23 @@ public class BlockChatUserEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private Long userId;
 
+    @Column(nullable = false)
     private Long blockUserId;
+
+    @Column(nullable = false)
+    private Long blockTeamId;
 
     private LocalDateTime deletedAt;
 
     @Builder
-    public BlockChatUserEntity(Long id, Long userId, Long blockUserId) {
+    public BlockChatUserEntity(Long id, Long userId, Long blockUserId, Long blockTeamId) {
+        this.id = id;
         this.userId = userId;
         this.blockUserId = blockUserId;
+        this.blockTeamId = blockTeamId;
     }
 
     public void unblock() {

@@ -6,6 +6,7 @@ import com.matchingMatch.chat.entity.BlockChatUserEntity;
 import com.matchingMatch.chat.entity.repository.BlockUserRepository;
 import com.matchingMatch.chat.entity.repository.ChatRoomParticipantRepository;
 import com.matchingMatch.chat.entity.repository.ChatRoomRepository;
+import com.matchingMatch.match.TeamAdapter;
 import com.matchingMatch.user.domain.UserDetail;
 import com.matchingMatch.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +24,13 @@ public class ChatRoomService {
     private final ChatRoomParticipantRepository chatRoomParticipantRepository;
     private final UserRepository userRepository;
     private final BlockUserRepository blockUserRepository;
+    private final TeamAdapter teamAdapter;
+
 
     @Transactional
-    public void blockParticipant(Long userId, Long blockUserId) {
+    public void blockUser(Long userId, Long blockTeamId) {
+
+        Long blockUserId = teamAdapter.getTeamBy(blockTeamId).getLeaderId();
 
         boolean isBlockUserExists = userRepository.existsById(blockUserId);
         if (!isBlockUserExists) {
@@ -37,17 +42,16 @@ public class ChatRoomService {
         if (result.isEmpty()) {
             blockUserRepository.save(BlockChatUserEntity.builder()
                     .userId(userId)
-                    .blockUserId(blockUserId)
+                    .blockUserId(blockTeamId)
                     .build());
-            return;
         }
 
-        BlockChatUserEntity blockUserEntity = result.get();
-        blockUserRepository.delete(blockUserEntity);
     }
 
     @Transactional
-    public void unblockParticipant(Long userId, Long blockUserId) {
+    public void unblockUser(Long userId, Long blockTeamId) {
+
+        Long blockUserId = teamAdapter.getTeamBy(blockTeamId).getLeaderId();
 
         boolean isBlockUserExists = userRepository.existsById(blockUserId);
         if (!isBlockUserExists) {
@@ -80,7 +84,6 @@ public class ChatRoomService {
     public void exitChatRoom(Long roomId, Long teamId) {
 
         chatRoomParticipantRepository.deleteByRoomIdAndTeamId(roomId, teamId);
-
 
     }
 }

@@ -65,7 +65,7 @@ public class ChatRoomServiceTest {
         Long blockUserId = target.getId();
 
         // when
-        chatRoomService.blockParticipant(userId, blockUserId);
+        chatRoomService.blockUser(userId, blockUserId);
 
         // then
         BlockChatUserEntity blockChatUser = blockUserRepository.findByUserIdAndBlockUserId(userId, blockUserId).orElseThrow(
@@ -85,9 +85,9 @@ public class ChatRoomServiceTest {
         // given
         Long userId = user.getId();
         Long blockUserId = target.getId();
-        chatRoomService.blockParticipant(userId, blockUserId);
+        chatRoomService.blockUser(userId, blockUserId);
         // when
-        chatRoomService.unblockParticipant(userId, blockUserId);
+        chatRoomService.unblockUser(userId, blockUserId);
 
         // then
         blockUserRepository.deleteByUserIdAndBlockUserId(userId, blockUserId);

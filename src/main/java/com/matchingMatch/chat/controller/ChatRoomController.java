@@ -50,7 +50,7 @@ public class ChatRoomController {
     @AuthenticatedUser
     public void blockParticipant(@Authentication UserAuth userAuth, @RequestBody BlockChatUserRequest blockUseRequest) {
 
-        chatRoomService.blockParticipant(userAuth.getId(), blockUseRequest.getUserId());
+        chatRoomService.blockUser(userAuth.getId(), blockUseRequest.getTeamId());
 
     }
 
@@ -59,7 +59,7 @@ public class ChatRoomController {
     @AuthenticatedUser
     public void unblockParticipant(@Authentication UserAuth userAuth, @RequestBody BlockChatUserRequest blockUseRequest) {
 
-        chatRoomService.unblockParticipant(userAuth.getId(), blockUseRequest.getUserId());
+        chatRoomService.unblockUser(userAuth.getId(), blockUseRequest.getTeamId());
     }
 
     @GetMapping("/block/users")
