@@ -9,6 +9,7 @@ import com.matchingMatch.chat.entity.repository.ChatRoomParticipantRepository;
 import com.matchingMatch.chat.entity.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class ChatAdapter {
     private final ChatRoomParticipantRepository chatRoomParticipantRepository;
 
 
+    @Transactional
     public Long write(Long teamId, Long roomId, String content, ChatType chatType, Long targetTeamId) {
 
         if (roomId == -1L) {
@@ -35,25 +37,32 @@ public class ChatAdapter {
             chatRoomParticipantRepository.save(ChatRoomParticipantEntity.builder()
                     .roomId(room.getId())
                     .teamId(teamId)
-                    .lastChatId(chat.getId())
+                    .lastReadChatId(chat.getId())
                     .build());
 
 
             chatRoomParticipantRepository.save(ChatRoomParticipantEntity.builder()
                     .roomId(room.getId())
                     .teamId(targetTeamId)
-                    .lastChatId(chat.getId())
+                    .lastReadChatId(chat.getId())
                     .build());
 
             return chat.getId();
         }
 
-        return chatRepository.save(ChatEntity.builder()
+        Long chatId = chatRepository.save(ChatEntity.builder()
                 .roomId(roomId)
                 .chatType(chatType)
                 .content(content)
                 .sendTeamId(teamId)
                 .build()).getId();
+
+        chatRoomRepository.findById(roomId).ifPresent(room -> {
+            room.setLastChatId(chatId);
+            chatRoomRepository.save(room);
+        });
+
+        return chatId;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.matchingMatch.chat.entity;
 
+import com.matchingMatch.match.domain.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Entity(name = "chat")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChatEntity {
+public class ChatEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;

@@ -27,14 +27,14 @@ public class ChatRoomParticipantEntity {
     private Long teamId;
 
     @Column(nullable = false)
-    private Long lastChatId;
+    private Long lastReadChatId;
 
     @Builder
-    public ChatRoomParticipantEntity(Long id, Long roomId, Long teamId, Long lastChatId) {
+    public ChatRoomParticipantEntity(Long id, Long roomId, Long teamId, Long lastReadChatId) {
         this.id = id;
         this.roomId = roomId;
         this.teamId = teamId;
-        this.lastChatId = lastChatId;
+        this.lastReadChatId = lastReadChatId;
     }
 
 }

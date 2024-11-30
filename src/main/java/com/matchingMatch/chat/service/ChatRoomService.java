@@ -1,20 +1,20 @@
 package com.matchingMatch.chat.service;
 
-import com.matchingMatch.chat.dto.BlockedUserResponse;
-import com.matchingMatch.chat.dto.BlockedUsersResponse;
-import com.matchingMatch.chat.entity.BlockChatUserEntity;
-import com.matchingMatch.chat.entity.repository.BlockUserRepository;
+import com.matchingMatch.chat.dto.ChatRoomPreview;
+import com.matchingMatch.chat.dto.GetChatRoomPreviewResponse;
+import com.matchingMatch.chat.entity.ChatEntity;
+import com.matchingMatch.chat.entity.ChatRoomEntity;
+import com.matchingMatch.chat.entity.ChatRoomParticipantEntity;
+import com.matchingMatch.chat.entity.repository.ChatRepository;
 import com.matchingMatch.chat.entity.repository.ChatRoomParticipantRepository;
 import com.matchingMatch.chat.entity.repository.ChatRoomRepository;
 import com.matchingMatch.match.TeamAdapter;
-import com.matchingMatch.user.domain.UserDetail;
+import com.matchingMatch.team.domain.entity.Team;
 import com.matchingMatch.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,67 +23,42 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRoomParticipantRepository chatRoomParticipantRepository;
     private final UserRepository userRepository;
-    private final BlockUserRepository blockUserRepository;
     private final TeamAdapter teamAdapter;
-
-
-    @Transactional
-    public void blockUser(Long userId, Long blockTeamId) {
-
-        Long blockUserId = teamAdapter.getTeamBy(blockTeamId).getLeaderId();
-
-        boolean isBlockUserExists = userRepository.existsById(blockUserId);
-        if (!isBlockUserExists) {
-            throw new IllegalArgumentException("차단할 유저가 존재하지 않습니다.");
-        }
-
-        Optional<BlockChatUserEntity> result = blockUserRepository.findByUserIdAndBlockUserId(userId, blockUserId);
-
-        if (result.isEmpty()) {
-            blockUserRepository.save(BlockChatUserEntity.builder()
-                    .userId(userId)
-                    .blockUserId(blockTeamId)
-                    .build());
-        }
-
-    }
-
-    @Transactional
-    public void unblockUser(Long userId, Long blockTeamId) {
-
-        Long blockUserId = teamAdapter.getTeamBy(blockTeamId).getLeaderId();
-
-        boolean isBlockUserExists = userRepository.existsById(blockUserId);
-        if (!isBlockUserExists) {
-            throw new IllegalArgumentException("차단할 유저가 존재하지 않습니다.");
-        }
-
-        BlockChatUserEntity blockChatUser = blockUserRepository.findByUserIdAndBlockUserId(userId, blockUserId).orElseThrow(
-                () -> new IllegalArgumentException("잘못된 접근입니다.")
-        );
-
-
-        blockUserRepository.delete(blockChatUser);
-    }
-
-    public BlockedUsersResponse getBlockUsers(Long userId) {
-        List<BlockChatUserEntity> blockedUsers = blockUserRepository.findAllByUserId(userId);
-        // TODO dto 변환하기
-        List<UserDetail> userDetails = userRepository.findAllById(blockedUsers.stream().map(BlockChatUserEntity::getBlockUserId).toList());
-
-        List<BlockedUserResponse> blockedUserResponses = userDetails.stream()
-                .map(userDetail -> BlockedUserResponse.builder()
-                        .id(userDetail.getId())
-                        .nickname(userDetail.getNickname())
-                        .build())
-                .toList();
-
-        return new BlockedUsersResponse(blockedUserResponses);
-    }
+    private final ChatRepository chatRepository;
 
     public void exitChatRoom(Long roomId, Long teamId) {
 
         chatRoomParticipantRepository.deleteByRoomIdAndTeamId(roomId, teamId);
+
+    }
+
+    // TODO 추후에 벌크연산을 사용하여 최적화
+    public GetChatRoomPreviewResponse getChatRoomPreview(Long userId) {
+        Team userTeam = teamAdapter.getTeamByLeaderId(userId);
+
+        List<ChatRoomParticipantEntity> participantEntities = chatRoomParticipantRepository.findAllByTeamId(userTeam.getId());
+
+        // 룸 아이디로 채팅방 정보 가져오기
+        List<Long> chatRoomIds = participantEntities.stream()
+                .map(ChatRoomParticipantEntity::getRoomId)
+                .toList();
+
+        List<ChatRoomEntity> rooms = chatRoomRepository.findAllById(chatRoomIds);
+
+        List<ChatRoomPreview> previews = rooms.stream()
+                .map(room -> {
+                    ChatEntity chat = chatRepository.findById(room.getLastChatId()).orElse(null);
+                    Team team = teamAdapter.getTeamBy(chat.getSendTeamId());
+                    return ChatRoomPreview.builder()
+                            .roomId(room.getId())
+                            .teamLogoUrl(team.getLogoUrl())
+                            .teamName(team.getName())
+                            .lastChat(chat.getContent())
+                            .lastChatTime(chat.getCreatedAt())
+                            .build();
+                }).toList();
+
+        return new GetChatRoomPreviewResponse(previews);
 
     }
 }

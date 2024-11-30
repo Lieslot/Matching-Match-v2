@@ -4,15 +4,14 @@ package com.matchingMatch.chat.controller;
 import com.matchingMatch.auth.AuthenticatedUser;
 import com.matchingMatch.auth.Authentication;
 import com.matchingMatch.auth.dto.UserAuth;
-import com.matchingMatch.chat.dto.BlockChatUserRequest;
-import com.matchingMatch.chat.dto.BlockedUsersResponse;
 import com.matchingMatch.chat.dto.ExistChatRoomRequest;
+import com.matchingMatch.chat.dto.ChatRoomPreview;
+import com.matchingMatch.chat.dto.GetChatRoomPreviewResponse;
 import com.matchingMatch.chat.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -30,8 +29,8 @@ public class ChatRoomController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @AuthenticatedUser
-    public void getChatRoomPreview() {
-
+    public GetChatRoomPreviewResponse getChatRoomPreview(@Authentication UserAuth userAuth) {
+        return chatRoomService.getChatRoomPreview(userAuth.getId());
     }
 
     // TODO 채팅방 퇴장
