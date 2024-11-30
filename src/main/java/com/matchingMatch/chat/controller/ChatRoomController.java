@@ -6,6 +6,7 @@ import com.matchingMatch.auth.Authentication;
 import com.matchingMatch.auth.dto.UserAuth;
 import com.matchingMatch.chat.dto.BlockChatUserRequest;
 import com.matchingMatch.chat.dto.BlockedUsersResponse;
+import com.matchingMatch.chat.dto.ExistChatRoomRequest;
 import com.matchingMatch.chat.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,8 +38,10 @@ public class ChatRoomController {
     @PostMapping("/exit")
     @ResponseStatus(HttpStatus.OK)
     @AuthenticatedUser
-    public void exitChatRoom() {
+    public void exitChatRoom(@RequestBody ExistChatRoomRequest existChatRoomRequest, @Authentication UserAuth userAuth) {
         // ChatRoomParticipantEntity 삭제 하는 방식으로 구현
+
+        chatRoomService.exitChatRoom(existChatRoomRequest.getRoomId(), existChatRoomRequest.getTeamId());
     }
 
     // TODO 상대 차단
@@ -46,7 +49,6 @@ public class ChatRoomController {
     @ResponseStatus(HttpStatus.CREATED)
     @AuthenticatedUser
     public void blockParticipant(@Authentication UserAuth userAuth, @RequestBody BlockChatUserRequest blockUseRequest) {
-        // ChatRoomParticipantEntity 삭제 하는 방식으로 구현
 
         chatRoomService.blockParticipant(userAuth.getId(), blockUseRequest.getUserId());
 

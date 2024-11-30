@@ -4,6 +4,7 @@ import com.matchingMatch.chat.dto.BlockedUserResponse;
 import com.matchingMatch.chat.dto.BlockedUsersResponse;
 import com.matchingMatch.chat.entity.BlockChatUserEntity;
 import com.matchingMatch.chat.entity.repository.BlockUserRepository;
+import com.matchingMatch.chat.entity.repository.ChatRoomParticipantRepository;
 import com.matchingMatch.chat.entity.repository.ChatRoomRepository;
 import com.matchingMatch.user.domain.UserDetail;
 import com.matchingMatch.user.domain.repository.UserRepository;
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
+    private final ChatRoomParticipantRepository chatRoomParticipantRepository;
     private final UserRepository userRepository;
     private final BlockUserRepository blockUserRepository;
 
@@ -73,6 +75,13 @@ public class ChatRoomService {
                 .toList();
 
         return new BlockedUsersResponse(blockedUserResponses);
+    }
+
+    public void exitChatRoom(Long roomId, Long teamId) {
+
+        chatRoomParticipantRepository.deleteByRoomIdAndTeamId(roomId, teamId);
+
+
     }
 }
 
