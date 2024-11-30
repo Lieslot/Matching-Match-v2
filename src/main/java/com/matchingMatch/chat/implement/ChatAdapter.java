@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class ChatAdapter {
@@ -63,6 +65,11 @@ public class ChatAdapter {
         });
 
         return chatId;
+    }
+
+    public List<ChatEntity> getChatInRoom(Long roomId) {
+
+        return chatRepository.findAllByRoomId(roomId);
     }
 
 }

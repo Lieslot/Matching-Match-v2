@@ -4,10 +4,14 @@ package com.matchingMatch.chat.controller;
 import com.matchingMatch.auth.AuthenticatedUser;
 import com.matchingMatch.auth.Authentication;
 import com.matchingMatch.auth.dto.UserAuth;
+import com.matchingMatch.chat.dto.ChatDetail;
+import com.matchingMatch.chat.dto.ChatDetailResponse;
 import com.matchingMatch.chat.dto.SendMessageRequest;
 import com.matchingMatch.chat.dto.SendChatResponse;
 import com.matchingMatch.chat.dto.SendImageRequest;
 import com.matchingMatch.chat.service.ChatService;
+import com.matchingMatch.match.dto.TeamProfileResponse;
+import com.matchingMatch.team.service.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,12 +24,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/chat")
 public class ChatController {
 
     private final ChatService chatService;
+
+    private final TeamService teamService;
 
     // TODO: 채팅 메세지 송신
     @PostMapping("/message")
@@ -57,9 +65,21 @@ public class ChatController {
     @GetMapping("/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     @AuthenticatedUser
-    public void getChatInRoom(@PathVariable Long roomId) {
+    public ChatDetailResponse getChatInRoom(@PathVariable Long roomId, @Authentication UserAuth userAuth
+    , @RequestParam Long targetTeamId, @RequestParam Long myTeamId) {
 
+        TeamProfileResponse myTeam = teamService.getTeamProfile(myTeamId);
+        TeamProfileResponse targetTeam = teamService.getTeamProfile(targetTeamId);
+        List<ChatDetail> chatDetails = chatService.getChatInRoom(roomId);
 
+        return ChatDetailResponse.builder()
+                .roomId(roomId)
+                .chatDetails(chatDetails)
+                .myTeamLogoUrl(myTeam.getLogoUrl())
+                .myTeamName(myTeam.getName())
+                .targetTeamLogoUrl(targetTeam.getLogoUrl())
+                .targetTeamName(targetTeam.getName())
+                .build();
     }
 
 

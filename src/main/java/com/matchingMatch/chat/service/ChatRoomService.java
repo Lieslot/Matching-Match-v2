@@ -51,6 +51,8 @@ public class ChatRoomService {
                     Team team = teamAdapter.getTeamBy(chat.getSendTeamId());
                     return ChatRoomPreview.builder()
                             .roomId(room.getId())
+                            .myTeamId(userTeam.getId())
+                            .targetTeamId(team.getId())
                             .teamLogoUrl(team.getLogoUrl())
                             .teamName(team.getName())
                             .lastChat(chat.getContent())
