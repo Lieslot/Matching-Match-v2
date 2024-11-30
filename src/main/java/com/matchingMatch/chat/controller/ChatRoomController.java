@@ -44,31 +44,6 @@ public class ChatRoomController {
         chatRoomService.exitChatRoom(existChatRoomRequest.getRoomId(), existChatRoomRequest.getTeamId());
     }
 
-    // TODO 상대 차단
-    @PostMapping("/block")
-    @ResponseStatus(HttpStatus.CREATED)
-    @AuthenticatedUser
-    public void blockParticipant(@Authentication UserAuth userAuth, @RequestBody BlockChatUserRequest blockUseRequest) {
-
-        chatRoomService.blockUser(userAuth.getId(), blockUseRequest.getTeamId());
-
-    }
-
-    @PutMapping("/unblock")
-    @ResponseStatus(HttpStatus.CREATED)
-    @AuthenticatedUser
-    public void unblockParticipant(@Authentication UserAuth userAuth, @RequestBody BlockChatUserRequest blockUseRequest) {
-
-        chatRoomService.unblockUser(userAuth.getId(), blockUseRequest.getTeamId());
-    }
-
-    @GetMapping("/block/users")
-    @ResponseStatus(HttpStatus.OK)
-    @AuthenticatedUser
-    public BlockedUsersResponse getBlockList(@Authentication UserAuth userAuth) {
-        return chatRoomService.getBlockUsers(userAuth.getId());
-    }
-
     // TODO 채팅방 검색
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
