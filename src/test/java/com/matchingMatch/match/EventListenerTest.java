@@ -1,21 +1,16 @@
 package com.matchingMatch.match;
 
+import com.matchingMatch.TestDataBuilder;
 import com.matchingMatch.match.domain.entity.MatchEntity;
 import com.matchingMatch.match.domain.entity.MatchRequestEntity;
-import com.matchingMatch.match.domain.repository.MatchRepository;
-import com.matchingMatch.match.domain.repository.MatchRequestRepository;
-import com.matchingMatch.match.domain.repository.TeamRepository;
 import com.matchingMatch.match.service.MatchService;
 import com.matchingMatch.team.domain.entity.LeaderRequestEntity;
 import com.matchingMatch.team.domain.entity.Team;
 import com.matchingMatch.team.domain.entity.TeamEntity;
-import com.matchingMatch.team.domain.repository.LeaderRequestRepository;
 import com.matchingMatch.team.service.TeamService;
 import com.matchingMatch.user.domain.UserDetail;
-import com.matchingMatch.user.domain.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
@@ -96,7 +91,7 @@ public class EventListenerTest {
             Long targetTeamId = teamAdapter.save(testDataBuilder.createNotPersistedTeam(leader2.getId(), "default4"));
 
             Team host = testEntityManager.find(TeamEntity.class, teamId.get()).toDomain();
-            MatchEntity match = MatchEntity.from(testDataBuilder.createNotPersistedMatch(host));
+            MatchEntity match = testDataBuilder.createNotPersistedMatchEntity(host);
             match.setParticipantId(targetTeamId);
             matchId.set(matchAdapter.save(match));
 
@@ -156,7 +151,7 @@ public class EventListenerTest {
                 Long targetTeamId = teamAdapter.save(testDataBuilder.createNotPersistedTeam(leader2.getId(), "default2"));
 
                 Team host = testEntityManager.find(TeamEntity.class, teamId).toDomain();
-                MatchEntity match = MatchEntity.from(testDataBuilder.createNotPersistedMatch(host));
+                MatchEntity match = testDataBuilder.createNotPersistedMatchEntity(host);
                 match.setParticipantId(targetTeamId);
                 matchId.set(matchAdapter.save(match));
 

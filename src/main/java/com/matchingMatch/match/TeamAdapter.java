@@ -2,6 +2,7 @@ package com.matchingMatch.match;
 
 import com.matchingMatch.match.domain.repository.TeamRepository;
 import com.matchingMatch.match.exception.UnauthorizedAccessException;
+import com.matchingMatch.team.TeamNotFoundException;
 import com.matchingMatch.team.domain.entity.LeaderRequestEntity;
 import com.matchingMatch.team.domain.entity.Team;
 import com.matchingMatch.team.domain.entity.TeamEntity;
@@ -23,7 +24,7 @@ public class TeamAdapter {
     public Team getTeamBy(Long teamId) {
 
         TeamEntity team = teamRepository.findById(teamId)
-                .orElseThrow(UnauthorizedAccessException::new);
+                .orElseThrow(() -> new TeamNotFoundException(teamId));
 
         return team.toDomain();
     }
@@ -38,7 +39,7 @@ public class TeamAdapter {
 
     public TeamEntity getTeamEntityBy(Long teamId) {
         return teamRepository.findById(teamId)
-                .orElseThrow(UnauthorizedAccessException::new);
+                .orElseThrow(() -> new TeamNotFoundException(teamId));
     }
 
     public Boolean existsById(Long teamId) {

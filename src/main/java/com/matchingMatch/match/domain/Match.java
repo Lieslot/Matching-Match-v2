@@ -1,11 +1,8 @@
 package com.matchingMatch.match.domain;
 
 import com.matchingMatch.match.domain.enums.Gender;
-import com.matchingMatch.match.dto.MatchPostListElementResponse;
 import com.matchingMatch.match.dto.ModifyMatchPostRequest;
 import com.matchingMatch.match.exception.MatchAlreadyConfirmedException;
-import com.matchingMatch.match.exception.MatchAlreadyRatedException;
-import com.matchingMatch.match.exception.UnauthorizedAccessException;
 import com.matchingMatch.team.domain.entity.Team;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -18,16 +15,16 @@ import java.time.temporal.ChronoUnit;
 @Getter
 public class Match {
 
+
     private static final String INVALID_AUTHORITY = "권한이 없는 접근입니다.";
 
 
-
-    private Long id;
+    private long id;
 
     @NotNull
-    private Team host;
+    private Long hostId;
 
-    private Team participant;
+    private Long participantId;
 
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd:hh:mm:ss")
@@ -43,9 +40,9 @@ public class Match {
     @NotNull
     private Gender gender;
 
-    private Stadium stadium;
+    private Long stadiumId;
 
-    private int stadiumCost;
+    private Integer stadiumCost;
 
     private String etc;
 
@@ -54,55 +51,36 @@ public class Match {
     private Boolean isHostRate = false;
 
     @Builder
-    public Match(Long id, Team host, Team participant, LocalDateTime startTime, LocalDateTime endTime, Gender gender, int stadiumCost,
+    public Match(Long id, Long hostId, Long participantId, LocalDateTime startTime, LocalDateTime endTime, Gender gender, int stadiumCost,
                  String etc,
-                 Stadium stadium, Boolean isParticipantRate, Boolean isHostRate, LocalDateTime confirmedTime) {
+                 Long stadiumId, boolean isParticipantRate, boolean isHostRate, LocalDateTime confirmedTime) {
         this.id = id;
-        this.host = host;
-        this.participant = participant;
+        this.hostId = hostId;
+        this.participantId = participantId;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.stadium = stadium;
+        this.stadiumId = stadiumId;
+        this.stadiumCost = stadiumCost;
         this.gender = gender;
         this.etc = etc;
         this.confirmedTime = confirmedTime;
-    }
-
-
-    public MatchPostListElementResponse toMatchPostResponse() {
-        return MatchPostListElementResponse.builder()
-                .id(id)
-                .hostName(host.getName())
-                .participantName(participant.getName())
-                .startTime(startTime)
-                .endTime(endTime).build();
-    }
-
-    public void checkHost(Long leaderId) {
-        if (!host.getLeaderId().equals(leaderId)) {
-            throw new UnauthorizedAccessException();
-        }
-    }
-
-    public void checkHostOrParticipant(Long userId) {
-        if (!host.getLeaderId().equals(userId) && !participant.getLeaderId().equals(userId)) {
-            throw new UnauthorizedAccessException();
-        }
+        this.isParticipantRate = isParticipantRate;
+        this.isHostRate = isHostRate;
     }
 
     public void checkAlreadyConfirmed() {
-        if (participant != null) {
+        if (participantId != null) {
             throw new MatchAlreadyConfirmedException(id);
         }
     }
 
     public void confirmMatch(Team team) {
-        this.participant = team;
+        this.participantId = team.getId();
         this.confirmedTime = LocalDateTime.now();
     }
 
     public void cancelMatch() {
-        this.participant = null;
+        this.participantId = null;
         this.confirmedTime = null;
     }
 
@@ -117,29 +95,16 @@ public class Match {
         }
     }
 
-    public void rateMannerPoint(MannerRate mannerRate) {
-        if (mannerRate.isRater(participant.getLeaderId())) {
-            rateParticipantRate();
-            host.rateMannerPoint(mannerRate.rate());
-        } else if (mannerRate.isRater(host.getLeaderId())) {
-            rateHost();
-            participant.rateMannerPoint(mannerRate.rate());
-        } else {
-            throw new IllegalArgumentException(INVALID_AUTHORITY);
-        }
-
-
-    }
 
     public Boolean started() {
         return startTime.isBefore(LocalDateTime.now());
     }
 
-    private void rateHost() {
+    public void rateHost() {
         isHostRate = true;
     }
 
-    private void rateParticipantRate() {
+    public void rateParticipantRate() {
         isParticipantRate = true;
     }
 
@@ -161,14 +126,4 @@ public class Match {
     }
 
 
-    public void checkAlreadyRate(Long userId) {
-
-        if (isHostRate && host.getLeaderId().equals(userId)) {
-            throw new MatchAlreadyRatedException(host.getLeaderId());
-        }
-
-        if (isParticipantRate && participant.getLeaderId().equals(userId)) {
-            throw new MatchAlreadyRatedException(participant.getLeaderId());
-        }
-    }
 }

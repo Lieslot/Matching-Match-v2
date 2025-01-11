@@ -10,8 +10,10 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Entity(name = "manner_rate_check")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MannerRateCheckEntity extends BaseEntity {
@@ -23,10 +25,10 @@ public class MannerRateCheckEntity extends BaseEntity {
     private Long matchId;
 
     @Column(nullable = false)
-    private Boolean isParticipantRate;
+    private Boolean isParticipantRate = false;
 
     @Column(nullable = false)
-    private Boolean isHostRate;
+    private Boolean isHostRate = false;
 
     public void rateHost() {
         isHostRate = true;
@@ -41,10 +43,19 @@ public class MannerRateCheckEntity extends BaseEntity {
     }
 
     @Builder
-    public MannerRateCheckEntity(Long matchId) {
+    public MannerRateCheckEntity(Long matchId, Boolean isParticipantRate, Boolean isHostRate) {
         this.matchId = matchId;
-        this.isHostRate = false;
-        this.isParticipantRate = false;
+        this.isHostRate = isHostRate;
+        this.isParticipantRate = isParticipantRate;
     }
+
+    public static MannerRateCheckEntity from(Long matchId) {
+        return MannerRateCheckEntity.builder()
+                .matchId(matchId)
+                .isHostRate(false)
+                .isParticipantRate(false)
+                .build();
+    }
+
 
 }

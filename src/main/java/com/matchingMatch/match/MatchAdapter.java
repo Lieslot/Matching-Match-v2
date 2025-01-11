@@ -2,19 +2,15 @@ package com.matchingMatch.match;
 
 
 import com.matchingMatch.match.domain.Match;
+import com.matchingMatch.match.domain.entity.MannerRateCheckEntity;
 import com.matchingMatch.match.domain.entity.MatchEntity;
 import com.matchingMatch.match.domain.entity.MatchRequestEntity;
-import com.matchingMatch.match.domain.entity.StadiumEntity;
 import com.matchingMatch.match.domain.repository.MannerRateCheckRepository;
 import com.matchingMatch.match.domain.repository.MatchRepository;
 import com.matchingMatch.match.domain.repository.MatchRequestRepository;
 import com.matchingMatch.match.domain.repository.StadiumRepository;
 import com.matchingMatch.match.domain.repository.TeamRepository;
-import com.matchingMatch.match.exception.HostNotFoundException;
 import com.matchingMatch.match.exception.MatchNotFoundException;
-import com.matchingMatch.match.exception.StadiumNotFound;
-import com.matchingMatch.team.domain.entity.Team;
-import com.matchingMatch.team.domain.entity.TeamEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,40 +27,30 @@ public class MatchAdapter {
     private final MatchRequestRepository matchRequestRepository;
     private final StadiumRepository stadiumRepository;
 
-    @Transactional(readOnly = true)
-    public Match getMatchBy(Long matchId) {
+
+    @Transactional
+    public Match getMatchBy2(Long matchId) {
         MatchEntity matchEntity = matchRepository.findById(matchId)
                 .orElseThrow(() -> new MatchNotFoundException(matchId));
-        TeamEntity hostEntity = teamRepository.findById(matchEntity.getHostId())
-                .orElseThrow(() -> new HostNotFoundException(matchEntity.getHostId()));
-        TeamEntity participantEntity = teamRepository.findById(matchEntity.getParticipantId()).orElse(null);
 
-        StadiumEntity stadiumEntity = stadiumRepository.findById(matchEntity.getStadiumId())
-                .orElseThrow(() -> new StadiumNotFound(matchEntity.getStadiumId()));
-
-        Team host = hostEntity.toDomain();
-        Team participant = participantEntity != null ? participantEntity.toDomain() : null;
+        MannerRateCheckEntity mannerRateCheckEntity = mannerRateCheckRepository.findByMatchId(matchId)
+                .orElse(MannerRateCheckEntity.from(matchId));
 
         return Match.builder()
                 .id(matchEntity.getId())
-                .host(host)
-                .participant(participant)
+                .hostId(matchEntity.getHostId())
+                .participantId(matchEntity.getParticipantId())
                 .startTime(matchEntity.getStartTime())
                 .endTime(matchEntity.getEndTime())
-                .stadium(stadiumEntity.toDomain())
+                .stadiumId(matchEntity.getStadiumId())
+                .stadiumCost(matchEntity.getStadiumCost())
+                .etc(matchEntity.getEtc())
+                .isHostRate(mannerRateCheckEntity.getIsHostRate())
+                .isParticipantRate(mannerRateCheckEntity.getIsParticipantRate())
                 .build();
+
     }
 
-    @Transactional(readOnly = true)
-    public Match getMatchWithRateCheck(Long matchId) {
-        Match match = getMatchBy(matchId);
-        mannerRateCheckRepository.findByMatchId(matchId)
-                .ifPresent(mannerRateCheckEntity -> {
-                    match.setHostRate(mannerRateCheckEntity.getIsHostRate());
-                    match.setParticipantRate(mannerRateCheckEntity.getIsParticipantRate());
-                });
-        return match;
-    }
 
     // TODO 추후에 페이징 추가
     @Transactional(readOnly = true)
@@ -72,15 +58,24 @@ public class MatchAdapter {
         List<MatchEntity> matchEntities = matchRepository.findAll();
         return matchEntities.stream()
                 .map(matchEntity -> {
-                    return getMatchBy(matchEntity.getId());
+                    return getMatchBy2(matchEntity.getId());
 
                 })
                 .toList();
     }
 
+
     public void updateMatch(Match match) {
-        MatchEntity from = MatchEntity.from(match);
-        matchRepository.save(from);
+        MatchEntity matchEntity = MatchEntity.from(match);
+        matchRepository.save(matchEntity);
+    }
+
+    public void updateMannerRateCheck(Match match) {
+        MannerRateCheckEntity rateCheck = mannerRateCheckRepository.findByMatchId(match.getId()).orElse(MannerRateCheckEntity.from(match.getId()));
+        rateCheck.setIsHostRate(match.getIsHostRate());
+        rateCheck.setIsParticipantRate(match.getIsParticipantRate());
+        mannerRateCheckRepository.save(rateCheck);
+
     }
 //
 //    public Long saveMatch(Match match) {
@@ -97,7 +92,7 @@ public class MatchAdapter {
         List<MatchRequestEntity> myMatchRequests = matchRequestRepository.findAllBySendTeamId(teamId);
 
         return myMatchRequests.stream()
-                .map(matchRequest -> getMatchBy(matchRequest.getMatchId()))
+                .map(matchRequest -> getMatchBy2(matchRequest.getMatchId()))
                 .toList();
     }
 
@@ -107,7 +102,7 @@ public class MatchAdapter {
         List<MatchRequestEntity> myMatchRequests = matchRequestRepository.findAllByTargetTeamId(teamId);
 
         return myMatchRequests.stream()
-                .map(matchRequest -> getMatchBy(matchRequest.getMatchId()))
+                .map(matchRequest -> getMatchBy2(matchRequest.getMatchId()))
                 .toList();
     }
 
@@ -121,7 +116,7 @@ public class MatchAdapter {
         return matchRepository.findAllByHostId(teamId).stream()
                 .map(match -> {
                     Long id = match.getId();
-                    return getMatchBy(id);
+                    return getMatchBy2(id);
                 })
                 .filter(match -> {
                     return !match.started();

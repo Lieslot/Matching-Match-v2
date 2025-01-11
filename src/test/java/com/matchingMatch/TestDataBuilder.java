@@ -1,7 +1,7 @@
-package com.matchingMatch.match;
+package com.matchingMatch;
 
 import com.matchingMatch.match.domain.Match;
-import com.matchingMatch.match.domain.Stadium;
+import com.matchingMatch.match.domain.entity.MatchEntity;
 import com.matchingMatch.match.domain.entity.StadiumEntity;
 import com.matchingMatch.match.domain.enums.Gender;
 import com.matchingMatch.match.domain.enums.Role;
@@ -16,8 +16,8 @@ public class TestDataBuilder {
     public Match createConfirmedMatch(Long matchId, Team host, Team participant, LocalDateTime confirmedTime) {
         return Match.builder()
                 .id(matchId)
-                .host(host)
-                .participant(participant)
+                .hostId(host.getId())
+                .participantId(participant.getId())
                 .startTime(LocalDateTime.of(2024, 11, 20, 10, 0))
                 .endTime(LocalDateTime.of(2024, 11, 20, 12, 0))
                 .gender(Gender.MALE)
@@ -30,18 +30,13 @@ public class TestDataBuilder {
     public Match createDefaultMatch(Long matchId, Team host) {
         return Match.builder()
                 .id(matchId)
-                .host(host)
-                .participant(null)
+                .hostId(host.getId())
+                .participantId(null)
                 .startTime(LocalDateTime.of(2024, 11, 20, 10, 0))
                 .endTime(LocalDateTime.of(2024, 11, 20, 12, 0))
                 .gender(Gender.MALE)
                 .stadiumCost(10000)
-                .stadium(Stadium.builder()
-                        .name("1")
-                        .address("1")
-                        .district(SeoulDistrict.N5)
-                        .isParkPossible(true)
-                        .build())
+                .stadiumId(1L)
                 .etc("Friendly Match")
                 .build();
 
@@ -58,22 +53,30 @@ public class TestDataBuilder {
 
     public Match createNotPersistedMatch(Team host) {
         return Match.builder()
-                .host(host)
-                .participant(null)
+                .hostId(host.getId())
+                .participantId(null)
                 .startTime(LocalDateTime.of(2024, 11, 20, 10, 0))
                 .endTime(LocalDateTime.of(2024, 11, 20, 12, 0))
                 .gender(Gender.MALE)
-                .stadium(Stadium.builder()
-                        .id(1L)
-                        .name("1")
-                        .address("1")
-                        .district(SeoulDistrict.N5)
-                        .isParkPossible(true)
-                        .build())
+                .stadiumId(1L)
                 .stadiumCost(10000)
                 .etc("Friendly Match")
                 .build();
 
+    }
+
+    public MatchEntity createNotPersistedMatchEntity(Team host) {
+        return MatchEntity.builder()
+                .hostId(host.getId())
+                .participantId(null)
+                .startTime(LocalDateTime.of(2024, 11, 20, 10, 0))
+                .endTime(LocalDateTime.of(2024, 11, 20, 12, 0))
+                .etc("Friendly Match")
+                .gender(Gender.MALE)
+                .confirmedTime(null)
+                .stadiumId(1L)
+                .stadiumCost(10000)
+                .build();
     }
 
 

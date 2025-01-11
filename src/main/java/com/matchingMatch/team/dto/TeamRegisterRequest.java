@@ -10,9 +10,11 @@ public class TeamRegisterRequest {
     @NotNull
     private String name;
     private String logoUrl;
+    @NotNull
     private String description;
     @NotNull
     private Gender gender;
+    @NotNull
     private String region;
 
 }

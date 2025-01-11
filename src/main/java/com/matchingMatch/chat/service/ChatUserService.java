@@ -40,7 +40,8 @@ public class ChatUserService {
         if (result.isEmpty()) {
             blockUserRepository.save(BlockChatUserEntity.builder()
                     .userId(userId)
-                    .blockUserId(blockTeamId)
+                    .blockTeamId(blockTeamId)
+                    .blockUserId(blockUserId)
                     .build());
         }
 
@@ -53,13 +54,12 @@ public class ChatUserService {
 
         boolean isBlockUserExists = userRepository.existsById(blockUserId);
         if (!isBlockUserExists) {
-            throw new IllegalArgumentException("차단할 유저가 존재하지 않습니다.");
+            throw new IllegalArgumentException("차단된 유저가 존재하지 않습니다.");
         }
 
         BlockChatUserEntity blockChatUser = blockUserRepository.findByUserIdAndBlockUserId(userId, blockUserId).orElseThrow(
                 () -> new IllegalArgumentException("잘못된 접근입니다.")
         );
-
 
         blockUserRepository.delete(blockChatUser);
     }

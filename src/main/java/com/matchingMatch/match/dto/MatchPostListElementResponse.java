@@ -39,4 +39,15 @@ public class MatchPostListElementResponse {
         this.stadiumAddress = stadiumAddress;
     }
 
+
+    public static MatchPostListElementResponse of(Long id, String hostName, String participantName, LocalDateTime startTime, LocalDateTime endTime) {
+        return MatchPostListElementResponse.builder()
+                .id(id)
+                .hostName(hostName)
+                .participantName(participantName)
+                .startTime(startTime)
+                .endTime(endTime)
+                .build();
+    }
+
 }

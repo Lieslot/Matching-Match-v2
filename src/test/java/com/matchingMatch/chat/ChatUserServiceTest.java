@@ -3,8 +3,10 @@ package com.matchingMatch.chat;
 import com.matchingMatch.chat.entity.BlockChatUserEntity;
 import com.matchingMatch.chat.entity.repository.BlockUserRepository;
 import com.matchingMatch.chat.service.ChatUserService;
+import com.matchingMatch.match.TeamAdapter;
 import com.matchingMatch.match.domain.enums.Role;
 import com.matchingMatch.user.domain.UserDetail;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +15,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 
 import java.time.LocalDate;
+import com.matchingMatch.TestDataBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import(ChatUserService.class)
+@Import({ChatUserService.class, TeamAdapter.class})
 public class ChatUserServiceTest {
 
     private static final String PASSWORD = "password1234";
@@ -25,6 +28,8 @@ public class ChatUserServiceTest {
 
     @Autowired
     private ChatUserService chatUserService;
+
+    TestDataBuilder testDataBuilder = new TestDataBuilder();
 
     @Autowired
     private TestEntityManager testEntityManager;
@@ -34,6 +39,8 @@ public class ChatUserServiceTest {
 
     UserDetail user;
     UserDetail target;
+    @Autowired
+    private TeamAdapter teamAdapter;
 
     @BeforeEach
     void setUp() {
@@ -56,6 +63,13 @@ public class ChatUserServiceTest {
         testEntityManager.persist(target);
     }
 
+    @AfterEach
+    void tearDown() {
+            testEntityManager.getEntityManager().createNativeQuery("TRUNCATE TABLE user_detail").executeUpdate();
+            testEntityManager.getEntityManager().createNativeQuery("TRUNCATE TABLE match").executeUpdate();
+            testEntityManager.getEntityManager().createNativeQuery("TRUNCATE TABLE team").executeUpdate();
+    }
+
     // 차단 성공 테스트
 
     @Test
@@ -63,9 +77,12 @@ public class ChatUserServiceTest {
         // given
         Long userId = user.getId();
         Long blockUserId = target.getId();
+        teamAdapter.save(testDataBuilder.createNotPersistedTeam(userId, "default"));
+        Long blockTeamId = teamAdapter.save(testDataBuilder.createNotPersistedTeam(blockUserId, "default2"));
+
 
         // when
-        chatUserService.blockUser(userId, blockUserId);
+        chatUserService.blockUser(userId, blockTeamId);
 
         // then
         BlockChatUserEntity blockChatUser = blockUserRepository.findByUserIdAndBlockUserId(userId, blockUserId).orElseThrow(

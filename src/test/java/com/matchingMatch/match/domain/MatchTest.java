@@ -1,13 +1,11 @@
 package com.matchingMatch.match.domain;
 
-import com.matchingMatch.match.TestDataBuilder;
+import com.matchingMatch.TestDataBuilder;
 import com.matchingMatch.match.exception.MatchAlreadyConfirmedException;
 import com.matchingMatch.team.domain.entity.Team;
 import org.assertj.core.api.Assertions;
-import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class MatchTest {
@@ -15,7 +13,6 @@ public class MatchTest {
 
     private TestDataBuilder testDataBuilder = new TestDataBuilder();
     private static final LocalDateTime MATCH_CONFIRMED_TIME = LocalDateTime.of(2021, 1, 1, 0, 0, 0);
-
 
     @Test
     void confirm_the_match() {
@@ -55,7 +52,7 @@ public class MatchTest {
         // when
         match.cancelMatch();
         // then
-        Assertions.assertThat(match.getParticipant()).isNull();
+        Assertions.assertThat(match.getParticipantId()).isNull();
         Assertions.assertThat(match.getConfirmedTime()).isNull();
     }
 
@@ -75,61 +72,7 @@ public class MatchTest {
         Assertions.assertThat(throwableBorder).isNull();
     }
 
-    @Test
-    void rate_manner_point() {
-        // given
-        Team host = testDataBuilder.createDefaultTeam(1L, 1L);
-        Team participant = testDataBuilder.createDefaultTeam(2L, 2L);
-        Match match = testDataBuilder.createConfirmedMatch(1L, host, participant, MATCH_CONFIRMED_TIME);
 
-        // when
-
-        match.rateMannerPoint(new MannerRate(1L, 1L));
-        match.rateMannerPoint(new MannerRate(2L, 1L));
-        match.rateMannerPoint(new MannerRate(2L, 2L));
-        // then
-
-        Assertions.assertThat(match.getHost().getMannerPoint())
-                .isCloseTo(BigDecimal.valueOf(1.5), Offset.offset(BigDecimal.valueOf(0.01)));
-        Assertions.assertThat(match.getParticipant().getMannerPoint())
-                .isCloseTo(BigDecimal.valueOf(1.0), Offset.offset(BigDecimal.valueOf(0.01)));
-    }
-
-    @Test
-    void rate_manner_point_only_host() {
-        // given
-        Team host = testDataBuilder.createDefaultTeam(1L, 1L);
-        Team participant = testDataBuilder.createDefaultTeam(2L, 2L);
-        Match match = testDataBuilder.createConfirmedMatch(1L, host, participant, MATCH_CONFIRMED_TIME);
-
-        // when
-        match.rateMannerPoint(new MannerRate(1L, 1L));
-        match.rateMannerPoint(new MannerRate(1L, 2L));
-        match.rateMannerPoint(new MannerRate(1L, 3L));
-        // then
-        Assertions.assertThat(match.getIsHostRate()).isTrue();
-        Assertions.assertThat(match.getIsParticipantRate()).isFalse();
-        Assertions.assertThat(match.getParticipant().getMannerPoint())
-                .isCloseTo(BigDecimal.valueOf(2.0), Offset.offset(BigDecimal.valueOf(0.01)));
-    }
-
-    @Test
-    void rate_manner_point_only_participant() {
-        // given
-        Team host = testDataBuilder.createDefaultTeam(1L, 1L);
-        Team participant = testDataBuilder.createDefaultTeam(2L, 2L);
-        Match match = testDataBuilder.createConfirmedMatch(1L, host, participant, MATCH_CONFIRMED_TIME);
-
-        // when
-        match.rateMannerPoint(new MannerRate(2L, 1L));
-        match.rateMannerPoint(new MannerRate(2L, 2L));
-        match.rateMannerPoint(new MannerRate(2L, 3L));
-        // then
-        Assertions.assertThat(match.getIsParticipantRate()).isTrue();
-        Assertions.assertThat(match.getIsHostRate()).isFalse();
-        Assertions.assertThat(match.getHost().getMannerPoint())
-                .isCloseTo(BigDecimal.valueOf(2.0), Offset.offset(BigDecimal.valueOf(0.01)));
-    }
 
 
 }

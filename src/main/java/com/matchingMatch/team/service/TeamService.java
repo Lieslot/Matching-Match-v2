@@ -120,8 +120,8 @@ public class TeamService {
             throw new UnauthorizedAccessException();
         }
 
-        if (teamAdapter.countUserTeam(userId) >= 1) {
-            throw new IllegalArgumentException("팀장은 한 개 이상의 팀을 가질 수 없습니다.");
+        if (teamAdapter.countUserTeam(targetUserId) >= 1) {
+            throw new IllegalArgumentException("유저는 하나의 팀만 가질 수 있습니다." + "userId: " + userId);
         }
 
         teamAdapter.deleteLeaderRequestByTeamId(teamId); // 기존 요청 삭제

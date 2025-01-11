@@ -4,7 +4,6 @@ package com.matchingMatch.match.domain.entity;
 import com.matchingMatch.match.domain.BaseEntity;
 import com.matchingMatch.match.domain.Match;
 import com.matchingMatch.match.domain.enums.Gender;
-import com.matchingMatch.match.exception.UnauthorizedAccessException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,21 +26,25 @@ public class MatchEntity extends BaseEntity {
 
     }
 
+
     public static MatchEntity from(Match match) {
         return MatchEntity.builder()
-                .hostId(match.getHost().getId())
+                .id(match.getId())
+                .hostId(match.getHostId())
                 .startTime(match.getStartTime())
                 .endTime(match.getEndTime())
                 .gender(match.getGender())
                 .stadiumCost(match.getStadiumCost())
-                .stadiumId(match.getStadium().getId())
+                .stadiumId(match.getStadiumId())
                 .build();
     }
 
 
+
     @Builder
-    public MatchEntity(Long hostId, Long participantId, LocalDateTime startTime, LocalDateTime endTime, Gender gender,
+    public MatchEntity(Long id, Long hostId, Long participantId, LocalDateTime startTime, LocalDateTime endTime, Gender gender,
                        int stadiumCost, Long stadiumId, String etc, LocalDateTime confirmedTime) {
+        this.id = id;
         this.hostId = hostId;
         this.participantId = participantId;
         this.startTime = startTime;
