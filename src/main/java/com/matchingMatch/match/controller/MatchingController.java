@@ -11,6 +11,7 @@ import com.matchingMatch.match.dto.MatchCancelRequest;
 import com.matchingMatch.match.dto.MatchConfirmRequest;
 import com.matchingMatch.match.dto.MatchRefuseRequest;
 import com.matchingMatch.match.service.MatchService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,7 +46,7 @@ public class MatchingController {
     @PostMapping("/confirm")
     @ResponseStatus(HttpStatus.OK)
     public void confirmMatchRequest(
-            @RequestBody MatchConfirmRequest matchConfirmRequest,
+            @Valid @RequestBody MatchConfirmRequest matchConfirmRequest,
             @Authentication UserAuth userAuth) {
 
         matchService.confirmMatchRequest(matchConfirmRequest.getPostId(), userAuth.getId(), matchConfirmRequest.getRequestingTeamId());
@@ -55,7 +56,7 @@ public class MatchingController {
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cancelMatchRequest(
-            @RequestBody MatchCancelRequest matchCancelRequest,
+            @Valid @RequestBody MatchCancelRequest matchCancelRequest,
             @Authentication UserAuth userAuth) {
 
         matchService.cancelMatchRequest(matchCancelRequest.getMatchRequestId(), userAuth.getId());
@@ -67,7 +68,7 @@ public class MatchingController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cancelConfirmedMatchRequest(
             @Authentication UserAuth userAuth,
-            @RequestBody MatchCancelConfirmedRequest matchCancelConfirmedRequest) {
+            @Valid @RequestBody MatchCancelConfirmedRequest matchCancelConfirmedRequest) {
         matchService.cancelConfirmedMatch(matchCancelConfirmedRequest.getMatchId(), userAuth.getId());
     }
 
@@ -75,7 +76,7 @@ public class MatchingController {
     @DeleteMapping("/refuse")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void refuseMatchRequest(
-            @RequestBody MatchRefuseRequest matchRefuseRequest,
+            @Valid @RequestBody MatchRefuseRequest matchRefuseRequest,
             @Authentication UserAuth userAuth) {
         matchService.refuseMatchRequest(matchRefuseRequest.getMatchRequestId(), userAuth.getId());
     }
@@ -84,7 +85,7 @@ public class MatchingController {
     @AuthenticatedUser
     @ResponseStatus(HttpStatus.OK)
     public void rateMannerPoint(
-            @RequestBody MannerRateRequest mannerRateRequest,
+            @Valid @RequestBody MannerRateRequest mannerRateRequest,
             @Authentication UserAuth userAuth) {
         // 구현
         MannerRate mannerRate = new MannerRate(userAuth.getId(), mannerRateRequest.getRate());

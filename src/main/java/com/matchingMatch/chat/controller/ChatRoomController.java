@@ -5,9 +5,9 @@ import com.matchingMatch.auth.AuthenticatedUser;
 import com.matchingMatch.auth.Authentication;
 import com.matchingMatch.auth.dto.UserAuth;
 import com.matchingMatch.chat.dto.ExistChatRoomRequest;
-import com.matchingMatch.chat.dto.ChatRoomPreview;
 import com.matchingMatch.chat.dto.GetChatRoomPreviewResponse;
 import com.matchingMatch.chat.service.ChatRoomService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +37,7 @@ public class ChatRoomController {
     @PostMapping("/exit")
     @ResponseStatus(HttpStatus.OK)
     @AuthenticatedUser
-    public void exitChatRoom(@RequestBody ExistChatRoomRequest existChatRoomRequest, @Authentication UserAuth userAuth) {
+    public void exitChatRoom(@Valid @RequestBody ExistChatRoomRequest existChatRoomRequest, @Authentication UserAuth userAuth) {
         // ChatRoomParticipantEntity 삭제 하는 방식으로 구현
 
         chatRoomService.exitChatRoom(existChatRoomRequest.getRoomId(), existChatRoomRequest.getTeamId());
@@ -51,6 +51,7 @@ public class ChatRoomController {
 
     }
 
+    // TODO 새로운 메세지 로드
 
 
 }

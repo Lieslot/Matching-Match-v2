@@ -11,6 +11,7 @@ import com.matchingMatch.auth.AuthenticatedAdmin;
 import com.matchingMatch.auth.Authentication;
 import com.matchingMatch.auth.dto.UserAuth;
 import com.matchingMatch.user.domain.UserDetail;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,7 @@ public class AdminController {
     @PutMapping("/ban")
     @AuthenticatedAdmin
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void banUser(@RequestBody UserBanRequest userBanRequest, @Authentication UserAuth userAuth) {
+    public void banUser(@Valid @RequestBody UserBanRequest userBanRequest, @Authentication UserAuth userAuth) {
 
         adminService.banUser(userBanRequest.getId(), userBanRequest.getDay());
     }
@@ -43,7 +44,7 @@ public class AdminController {
     @PutMapping("/unban")
     @AuthenticatedAdmin
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void unbanUser(@RequestBody UserUnbanRequest userUnbanRequest, @Authentication UserAuth userAuth) {
+    public void unbanUser(@Valid @RequestBody UserUnbanRequest userUnbanRequest, @Authentication UserAuth userAuth) {
 
         adminService.unBanUser(userUnbanRequest.getId());
     }
@@ -68,7 +69,7 @@ public class AdminController {
     @DeleteMapping("/user")
     @AuthenticatedAdmin
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void withdrawUser(@RequestBody UserWithDrawRequest userWithDrawRequest, @Authentication UserAuth userAuth) {
+    public void withdrawUser(@Valid @RequestBody UserWithDrawRequest userWithDrawRequest, @Authentication UserAuth userAuth) {
         adminService.withDrawUser(userWithDrawRequest.getId());
     }
 

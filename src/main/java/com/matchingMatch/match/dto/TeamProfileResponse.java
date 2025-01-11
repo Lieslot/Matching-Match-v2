@@ -2,6 +2,7 @@ package com.matchingMatch.match.dto;
 
 
 import com.matchingMatch.match.domain.enums.Gender;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,12 +10,17 @@ import java.math.BigDecimal;
 
 @Getter
 public class TeamProfileResponse {
-
+    @NotNull
     private String name;
+    @NotNull
     private String logoUrl;
+    @NotNull
     private BigDecimal mannerPoint;
+    @NotNull
     private String description;
+    @NotNull
     private String region;
+    @NotNull
     private Gender gender;
 
     @Builder

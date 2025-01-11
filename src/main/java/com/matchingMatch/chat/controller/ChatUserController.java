@@ -6,6 +6,7 @@ import com.matchingMatch.auth.dto.UserAuth;
 import com.matchingMatch.chat.dto.BlockChatUserRequest;
 import com.matchingMatch.chat.dto.BlockedUsersResponse;
 import com.matchingMatch.chat.service.ChatUserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,7 @@ public class ChatUserController {
     @PostMapping("/block")
     @ResponseStatus(HttpStatus.CREATED)
     @AuthenticatedUser
-    public void blockParticipant(@Authentication UserAuth userAuth, @RequestBody BlockChatUserRequest blockUseRequest) {
+    public void blockParticipant(@Authentication UserAuth userAuth, @Valid @RequestBody BlockChatUserRequest blockUseRequest) {
 
         chatUserService.blockUser(userAuth.getId(), blockUseRequest.getTeamId());
 
@@ -34,7 +35,7 @@ public class ChatUserController {
     @PutMapping("/unblock")
     @ResponseStatus(HttpStatus.CREATED)
     @AuthenticatedUser
-    public void unblockParticipant(@Authentication UserAuth userAuth, @RequestBody BlockChatUserRequest blockUseRequest) {
+    public void unblockParticipant(@Authentication UserAuth userAuth, @Valid @RequestBody BlockChatUserRequest blockUseRequest) {
 
         chatUserService.unblockUser(userAuth.getId(), blockUseRequest.getTeamId());
     }

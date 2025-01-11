@@ -23,6 +23,7 @@ public class ModifyMatchPostRequest {
 
     private int stadiumCost;
 
+    @NotNull(message = "경기장 이름을 입력해주세요")
     private String etc;
 
 }

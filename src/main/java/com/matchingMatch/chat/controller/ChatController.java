@@ -12,6 +12,7 @@ import com.matchingMatch.chat.dto.SendImageRequest;
 import com.matchingMatch.chat.service.ChatService;
 import com.matchingMatch.match.dto.TeamProfileResponse;
 import com.matchingMatch.team.service.TeamService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,7 +40,7 @@ public class ChatController {
     @PostMapping("/message")
     @ResponseStatus(HttpStatus.CREATED)
     @AuthenticatedUser
-    public SendChatResponse sendMessage(@Authentication UserAuth userAuth, @RequestBody SendMessageRequest sendChatRequest) {
+    public SendChatResponse sendMessage(@Authentication UserAuth userAuth, @Valid @RequestBody SendMessageRequest sendChatRequest) {
 
         Long chatId = chatService.sendMessage(sendChatRequest, userAuth.getId());
 
@@ -50,7 +51,7 @@ public class ChatController {
     @PostMapping("/image")
     @ResponseStatus(HttpStatus.CREATED)
     @AuthenticatedUser
-    public SendChatResponse sendImage(@Authentication UserAuth userAuth, @RequestBody SendImageRequest sendImageRequest,
+    public SendChatResponse sendImage(@Authentication UserAuth userAuth, @Valid @RequestBody SendImageRequest sendImageRequest,
                                       @RequestParam("file") MultipartFile image) {
 
         Long chatId = chatService.sendImage(sendImageRequest.getRoomId(),
@@ -67,7 +68,6 @@ public class ChatController {
     @AuthenticatedUser
     public ChatDetailResponse getChatInRoom(@PathVariable Long roomId, @Authentication UserAuth userAuth
     , @RequestParam Long targetTeamId, @RequestParam Long myTeamId) {
-
         TeamProfileResponse myTeam = teamService.getTeamProfile(myTeamId);
         TeamProfileResponse targetTeam = teamService.getTeamProfile(targetTeamId);
         List<ChatDetail> chatDetails = chatService.getChatInRoom(roomId);

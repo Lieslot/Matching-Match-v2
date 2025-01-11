@@ -1,6 +1,7 @@
 package com.matchingMatch.match.dto;
 
 import com.matchingMatch.match.domain.enums.Gender;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -8,20 +9,22 @@ import java.time.LocalDateTime;
 
 @Getter
 public class MatchPostListElementResponse {
+
+    @NotNull
     private Long id;
-
+    @NotNull
     private String hostName;
-
+    @NotNull
     private String participantName;
-
+    @NotNull
     private LocalDateTime startTime;
-
+    @NotNull
     private LocalDateTime endTime;
-
+    @NotNull
     private Gender gender;
-
+    @NotNull
     private String stadiumName;
-
+    @NotNull
     private String stadiumAddress;
 
     @Builder

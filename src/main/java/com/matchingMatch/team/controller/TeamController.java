@@ -11,6 +11,7 @@ import com.matchingMatch.team.dto.LeaderRefuseRequest;
 import com.matchingMatch.team.dto.LeaderTransferRequest;
 import com.matchingMatch.team.dto.TeamRegisterRequest;
 import com.matchingMatch.team.service.TeamService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -54,7 +55,7 @@ public class TeamController {
     @PostMapping("/leader/accept")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void acceptLeader(
-            @RequestBody LeaderChangeRequest leaderChangeRequest,
+            @Valid @RequestBody LeaderChangeRequest leaderChangeRequest,
             @Authentication UserAuth userAuth) {
 
         teamService.changeLeader(leaderChangeRequest.getTeamId(), userAuth.getId());
@@ -64,7 +65,7 @@ public class TeamController {
     @PostMapping("/leader/refuse")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void refuseLeader(
-            @RequestBody LeaderRefuseRequest leaderRefuseRequest,
+            @Valid @RequestBody LeaderRefuseRequest leaderRefuseRequest,
             @Authentication UserAuth userAuth) {
 
         teamService.refuseLeaderRequest(leaderRefuseRequest.getTeamId(), userAuth.getId());
@@ -74,7 +75,7 @@ public class TeamController {
     @PostMapping("/leader")
     @ResponseStatus(HttpStatus.OK)
     public void requestLeaderTransfer(
-            @RequestBody LeaderTransferRequest leaderTransferRequest,
+            @Valid @RequestBody LeaderTransferRequest leaderTransferRequest,
             @Authentication UserAuth userAuth) {
 
         teamService.createLeaderRequest(leaderTransferRequest.getTeamId(), leaderTransferRequest.getUsername(), userAuth.getId());
@@ -95,7 +96,7 @@ public class TeamController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void updateTeamProfile(
             @Authentication UserAuth userAuth,
-            @RequestBody TeamProfileUpdateRequest teamProfileUpdateRequest) {
+            @Valid @RequestBody TeamProfileUpdateRequest teamProfileUpdateRequest) {
 
         teamService.updateTeamProfile(teamProfileUpdateRequest, userAuth.getId());
 

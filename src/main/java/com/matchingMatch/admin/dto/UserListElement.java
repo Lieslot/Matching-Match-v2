@@ -1,5 +1,6 @@
 package com.matchingMatch.admin.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -8,9 +9,14 @@ import java.time.LocalDateTime;
 
 @Getter
 public class UserListElement {
+
+    @NotNull(message = "유저 아이디는 필수입니다.")
     private Long id;
+    @NotNull
     private String username;
+    @NotNull
     private String nickname;
+    @NotNull
     private LocalDate banDeadLine;
 
     @Builder

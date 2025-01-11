@@ -6,6 +6,7 @@ import com.matchingMatch.auth.dto.LoginRequest;
 import com.matchingMatch.auth.service.AuthService;
 import com.matchingMatch.auth.AuthToken;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -24,7 +25,7 @@ public class AuthController {
 
     @PostMapping
     public ResponseEntity<AccessTokenResponse> login(
-            @RequestBody LoginRequest loginRequest,
+            @Valid @RequestBody LoginRequest loginRequest,
             HttpServletResponse response) {
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();

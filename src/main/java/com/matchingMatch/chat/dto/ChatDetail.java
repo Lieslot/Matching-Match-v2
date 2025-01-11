@@ -1,6 +1,7 @@
 package com.matchingMatch.chat.dto;
 
 import com.matchingMatch.chat.entity.ChatType;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -8,11 +9,15 @@ import java.time.LocalDateTime;
 
 @Getter
 public class ChatDetail {
-
+    @NotNull
     private Long id;
+    @NotNull
     private Long teamId;
+    @NotNull
     private ChatType chatType;
+    @NotNull
     private String content;
+    @NotNull
     private LocalDateTime createdAt;
 
     @Builder

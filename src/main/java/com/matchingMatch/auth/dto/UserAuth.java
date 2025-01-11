@@ -2,6 +2,7 @@ package com.matchingMatch.auth.dto;
 
 
 import com.matchingMatch.match.domain.enums.Role;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,9 @@ import org.apache.catalina.User;
 @AllArgsConstructor
 public class UserAuth {
 
+    @NotNull
     private Long id;
+    @NotNull
     private Role role;
 
     public static UserAuth team(Long id) {

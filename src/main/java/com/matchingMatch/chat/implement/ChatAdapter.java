@@ -69,6 +69,8 @@ public class ChatAdapter {
 
     public List<ChatEntity> getChatInRoom(Long roomId) {
 
+
+
         return chatRepository.findAllByRoomId(roomId);
     }
 
