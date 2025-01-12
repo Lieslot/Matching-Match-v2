@@ -12,6 +12,8 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Objects.requireNonNullElse;
+
 @Getter
 public class Team {
 
@@ -82,11 +84,11 @@ public class Team {
     }
 
     public void updateTeamProfile(TeamProfileUpdateRequest teamProfileUpdateRequest) {
-        this.name = teamProfileUpdateRequest.getTeamName();
-        this.description = teamProfileUpdateRequest.getTeamDescription();
-        this.logoUrl = teamProfileUpdateRequest.getTeamLogoUrl();
-        this.region = teamProfileUpdateRequest.getRegion();
-        this.gender = teamProfileUpdateRequest.getGender();
+        this.name = requireNonNullElse(teamProfileUpdateRequest.getTeamName(), this.name);
+        this.description = requireNonNullElse(teamProfileUpdateRequest.getTeamDescription(), this.description);
+        this.logoUrl = requireNonNullElse(teamProfileUpdateRequest.getTeamLogoUrl(), this.logoUrl);
+        this.region = requireNonNullElse(teamProfileUpdateRequest.getRegion(), this.region);
+        this.gender = requireNonNullElse(teamProfileUpdateRequest.getGender(), this.gender);
     }
 
     public void changeLeader(Long targetUserId) {

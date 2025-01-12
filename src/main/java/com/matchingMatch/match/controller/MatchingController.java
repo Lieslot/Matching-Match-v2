@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/match/matching")
+@RequestMapping("/matches")
 public class MatchingController {
 
 
@@ -32,7 +32,7 @@ public class MatchingController {
 
 
     @AuthenticatedUser
-    @PostMapping("/{postId}")
+    @PostMapping("/{postId}/request")
     @ResponseStatus(HttpStatus.OK)
     public void sendMatchRequest(
             @PathVariable Long postId,
@@ -53,7 +53,7 @@ public class MatchingController {
     }
 
     @AuthenticatedUser
-    @DeleteMapping
+    @DeleteMapping("/cancel")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cancelMatchRequest(
             @Valid @RequestBody MatchCancelRequest matchCancelRequest,
@@ -64,7 +64,7 @@ public class MatchingController {
     }
 
     @AuthenticatedUser
-    @DeleteMapping("/confirm")
+    @DeleteMapping("cancel/confirm")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cancelConfirmedMatchRequest(
             @Authentication UserAuth userAuth,

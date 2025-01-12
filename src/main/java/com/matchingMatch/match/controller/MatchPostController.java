@@ -27,12 +27,12 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/match")
+@RequestMapping("/matches")
 public class MatchPostController {
 
     private final MatchPostService matchPostService;
 
-    @GetMapping("/posts")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public MatchPostsResponse getMatchPosts() {
 
@@ -40,7 +40,6 @@ public class MatchPostController {
 
         return new MatchPostsResponse(posts);
     }
-
 
     @AuthenticatedUser
     @PostMapping
@@ -52,15 +51,12 @@ public class MatchPostController {
         return matchPostService.postNewMatch(matchPostRequest, userAuth.getId());
     }
 
-
     @GetMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
     public Match getMatchPost(@PathVariable Long postId) {
 
         return matchPostService.getMatch(postId);
     }
-
-
 
     @AuthenticatedUser
     @DeleteMapping("/{postId}")
@@ -73,17 +69,16 @@ public class MatchPostController {
     }
 
     @AuthenticatedUser
-    @PutMapping("/{postId}")
+    @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public void updateMatchPost(
-            @PathVariable Long postId,
             @Valid @RequestBody ModifyMatchPostRequest matchPostRequest,
             @Authentication UserAuth userAuth) {
 
         matchPostService.updateMatch(matchPostRequest, userAuth.getId());
     }
 
-    @GetMapping("/requests")
+    @GetMapping("/host")
     @AuthenticatedUser
     @ResponseStatus(HttpStatus.OK)
     public MatchPostsResponse getMyMatchList(@Authentication UserAuth userAuth) {
@@ -91,7 +86,7 @@ public class MatchPostController {
         return new MatchPostsResponse(posts);
     }
 
-    @GetMapping("/requests/other")
+    @GetMapping("/participate")
     @AuthenticatedUser
     @ResponseStatus(HttpStatus.OK)
     public MatchPostsResponse getOtherMatchList(@Authentication UserAuth userAuth) {
@@ -99,7 +94,7 @@ public class MatchPostController {
         return new MatchPostsResponse(posts);
     }
 
-    @GetMapping("/matches/{teamId}")
+    @GetMapping("/{teamId}/host")
     @AuthenticatedUser
     @ResponseStatus(HttpStatus.OK)
     public MatchPostsResponse getHostingMatches(@Authentication UserAuth userAuth, @PathVariable Long teamId) {

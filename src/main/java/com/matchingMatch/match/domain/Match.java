@@ -12,6 +12,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+import static java.util.Objects.requireNonNullElse;
+
 @Getter
 public class Match {
 
@@ -19,7 +21,7 @@ public class Match {
     private static final String INVALID_AUTHORITY = "권한이 없는 접근입니다.";
 
 
-    private long id;
+    private Long id;
 
     @NotNull
     private Long hostId;
@@ -121,11 +123,11 @@ public class Match {
 
     public void update(ModifyMatchPostRequest newDetail) {
 
-        this.startTime = newDetail.getStartTime();
-        this.endTime = newDetail.getEndTime();
-        this.stadiumCost = newDetail.getStadiumCost();
-        this.etc = newDetail.getEtc();
-        this.gender = newDetail.getGender();
+        this.startTime = requireNonNullElse(newDetail.getStartTime(), this.startTime);
+        this.endTime = requireNonNullElse(newDetail.getEndTime(), this.endTime);
+        this.stadiumCost = requireNonNullElse(newDetail.getStadiumCost(), this.stadiumCost);
+        this.etc = requireNonNullElse(newDetail.getEtc(), this.etc);
+        this.gender = requireNonNullElse(newDetail.getGender(), this.gender);
     }
 
     public Boolean isEnd() {

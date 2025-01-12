@@ -12,15 +12,10 @@ public class TeamProfileUpdateRequest {
 
     @NotNull
     private Long id;
-    @NotNull
     private String teamName;
-    @NotNull
     private String teamDescription;
-    @NotNull
     private String teamLogoUrl;
-    @NotNull
     private String region;
-    @NotNull
     private Gender gender;
 
 }

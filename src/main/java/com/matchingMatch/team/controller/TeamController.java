@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/team")
+@RequestMapping("/teams")
 public class TeamController {
 
 
@@ -88,7 +88,6 @@ public class TeamController {
             @Authentication UserAuth userAuth) {
 
         return teamService.getTeamProfile(userAuth.getId());
-
     }
 
     @AuthenticatedUser
@@ -99,7 +98,6 @@ public class TeamController {
             @Valid @RequestBody TeamProfileUpdateRequest teamProfileUpdateRequest) {
 
         teamService.updateTeamProfile(teamProfileUpdateRequest, userAuth.getId());
-
     }
 
 
