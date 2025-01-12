@@ -16,7 +16,7 @@ public class PostMatchPostRequest {
     @NotNull
     private Long hostId;
 
-    @NotNull
+
     private Long postId;
 
     @NotNull(message = "시작 시간을 선택해주세요")

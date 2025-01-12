@@ -92,10 +92,6 @@ public class MatchEntity extends BaseEntity {
     private LocalDateTime confirmedTime;
 
 
-    public void setHost(Long target) {
-        this.hostId = target;
-    }
-
 
 
 }

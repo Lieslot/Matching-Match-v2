@@ -1,7 +1,6 @@
 package com.matchingMatch.match;
 
 import com.matchingMatch.match.domain.repository.TeamRepository;
-import com.matchingMatch.match.exception.UnauthorizedAccessException;
 import com.matchingMatch.team.TeamNotFoundException;
 import com.matchingMatch.team.domain.entity.LeaderRequestEntity;
 import com.matchingMatch.team.domain.entity.Team;
@@ -11,6 +10,7 @@ import com.matchingMatch.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 
 @Component
@@ -40,6 +40,11 @@ public class TeamAdapter {
     public TeamEntity getTeamEntityBy(Long teamId) {
         return teamRepository.findById(teamId)
                 .orElseThrow(() -> new TeamNotFoundException(teamId));
+    }
+
+    public TeamEntity getTeamEntityByLeaderId(Long userId) {
+        return teamRepository.findByLeaderId(userId)
+                .orElseThrow(() -> new TeamNotFoundException(userId));
     }
 
     public Boolean existsById(Long teamId) {
@@ -74,5 +79,11 @@ public class TeamAdapter {
         TeamEntity teamEntity = teamRepository.findByLeaderId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Team Not Found" + "userId: " + userId));
         return teamEntity.toDomain();
+    }
+
+    public List<Team> getAllTeamBy(Collection<Long> teamIds) {
+        return teamRepository.findAllById(teamIds).stream()
+                .map(TeamEntity::toDomain)
+                .toList();
     }
 }

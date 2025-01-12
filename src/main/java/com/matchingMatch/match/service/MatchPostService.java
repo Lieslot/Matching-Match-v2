@@ -17,6 +17,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -32,44 +37,20 @@ public class MatchPostService {
     private final TeamAdapter teamAdapter;
 
     public Long postNewMatch(PostMatchPostRequest match, Long userId) {
-        TeamEntity host = teamAdapter.getTeamEntityBy(match.getHostId());
+        TeamEntity host = teamAdapter.getTeamEntityByLeaderId(userId);
 
         MatchEntity matchPost = match.toEntity();
 
-        matchPost.setHost(host.getId());
+        matchPost.setHostId(host.getId());
         matchPost.setStadiumId(match.getStadium().getId());
 
-        Long newId = matchAdapter.save(matchPost);
-
-        return newId;
-    }
-
-
-    public List<MatchPostListElementResponse> getPosts() {
-        List<Match> matches = matchAdapter.getMatches();
-
-        return matches.stream()
-                .map((match) -> {
-                    Team host = teamAdapter.getTeamBy(match.getHostId());
-                    Team participant = teamAdapter.getTeamBy(match.getParticipantId());
-                    return MatchPostListElementResponse.of(
-                            match.getId(),
-                            host.getName(),
-                            participant.getName(),
-                            match.getStartTime(),
-                            match.getEndTime()
-                    );
-                } )
-                .toList();
-    }
-
-    public Match getMatch(Long matchId) {
-        return matchAdapter.getMatchBy(matchId);
+        return matchAdapter.save(matchPost);
     }
 
     @Transactional
     public void deleteMatchPost(Long matchId, Long userId) {
         Match match = matchAdapter.getMatchBy(matchId);
+
         matchTeamValidator.checkHost(match, userId);
         matchAdapter.deleteById(matchId);
 
@@ -88,63 +69,61 @@ public class MatchPostService {
         matchAdapter.updateMatch(match);
     }
 
+    public Match getMatch(Long matchId) {
+        return matchAdapter.getMatchBy(matchId);
+    }
+
+
+    public List<MatchPostListElementResponse> getPosts() {
+        List<Match> matches = matchAdapter.getMatches();
+
+        return toResponse(matches);
+    }
 
     public List<MatchPostListElementResponse> getMyMatches (Long userId) {
-        // matchRequestEntity에서 userId와 같은 teamId matchId를 가져온다.
+
         Team userTeam = teamAdapter.getTeamByLeaderId(userId);
         List<Match> matches = matchAdapter.getTeamRequestedMatches(userTeam.getId());
-        return matches.stream()
-                .map((match) -> {
-                    Team host = teamAdapter.getTeamBy(match.getHostId());
-                    Team participant = teamAdapter.getTeamBy(match.getParticipantId());
-                    return MatchPostListElementResponse.of(
-                            match.getId(),
-                            host.getName(),
-                            participant.getName(),
-                            match.getStartTime(),
-                            match.getEndTime()
-                    );
-                } )
-                .toList();
+        return toResponse(matches);
     }
 
     public List<MatchPostListElementResponse>  getOtherMatches (Long userId) {
-        // matchRequestEntity에서 userId와 같은 teamId matchId를 가져온다.
+
         Team userTeam = teamAdapter.getTeamByLeaderId(userId);
         List<Match> matches = matchAdapter.getTeamRequestingMatches(userTeam.getId());
 
-        return matches.stream()
-                .map((match) -> {
-                    Team host = teamAdapter.getTeamBy(match.getHostId());
-                    Team participant = teamAdapter.getTeamBy(match.getParticipantId());
-                    return MatchPostListElementResponse.of(
-                            match.getId(),
-                            host.getName(),
-                            participant.getName(),
-                            match.getStartTime(),
-                            match.getEndTime()
-                    );
-                } )
-                .toList();
+        return toResponse(matches);
     }
 
     public List<MatchPostListElementResponse> getHostingMatches(Long teamId) {
         // TODO refactor
-        Team team = teamAdapter.getTeamBy(teamId);
         List<Match> matches = matchAdapter.getHostingMatches(teamId);
 
+        return toResponse(matches);
+    }
+
+    private List<MatchPostListElementResponse> toResponse(List<Match> matches) {
+        Set<Long> teamIds = matches.stream()
+                .flatMap(m -> Stream.of(m.getHostId(), m.getParticipantId()))
+                .collect(Collectors.toSet());
+
+        List<Team> teamList = teamAdapter.getAllTeamBy(teamIds);
+
+        Map<Long, Team> teamMap = teamList.stream()
+                .collect(Collectors.toMap(Team::getId, Function.identity()));
+
         return matches.stream()
-                .map((match) -> {
-                    Team host = teamAdapter.getTeamBy(match.getHostId());
-                    Team participant = teamAdapter.getTeamBy(match.getParticipantId());
+                .map(m -> {
+                    Team host = teamMap.get(m.getHostId());
+                    Team participant = teamMap.getOrDefault(m.getParticipantId(), null);
                     return MatchPostListElementResponse.of(
-                            match.getId(),
+                            m.getId(),
                             host.getName(),
-                            participant.getName(),
-                            match.getStartTime(),
-                            match.getEndTime()
+                            participant != null ? participant.getName() : null,
+                            m.getStartTime(),
+                            m.getEndTime()
                     );
-                } )
+                })
                 .toList();
     }
 }
