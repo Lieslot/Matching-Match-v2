@@ -91,10 +91,13 @@ public class Match {
             long minute = ChronoUnit.MINUTES.between(now, deadline);
             long second = ChronoUnit.SECONDS.between(now, deadline);
 
-            throw new IllegalArgumentException(String.format("%d분 %초 후에 취소 가능합니다.", minute, second));
+            throw new IllegalArgumentException(String.format("%d분 %d초 후에 취소 가능합니다.", minute, second));
         }
     }
 
+    public Boolean isConfirmed() {
+        return participantId != null;
+    }
 
     public Boolean started() {
         return startTime.isBefore(LocalDateTime.now());
@@ -125,5 +128,8 @@ public class Match {
         this.gender = newDetail.getGender();
     }
 
+    public Boolean isEnd() {
+        return endTime.isBefore(LocalDateTime.now());
+    }
 
 }

@@ -65,4 +65,10 @@ public class MannerRater {
     }
 
 
+    public void checkMatchEnd(Match match) {
+        if (!match.isEnd()) {
+            throw new IllegalArgumentException("매치가 종료되지 않았습니다.");
+        }
+
+    }
 }

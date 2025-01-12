@@ -72,7 +72,7 @@ public class TeamAdapter {
     }
     public Team getTeamByLeaderId(Long userId) {
         TeamEntity teamEntity = teamRepository.findByLeaderId(userId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new IllegalArgumentException("Team Not Found" + "userId: " + userId));
         return teamEntity.toDomain();
     }
 }

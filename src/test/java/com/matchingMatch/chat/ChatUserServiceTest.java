@@ -54,10 +54,11 @@ public class ChatUserServiceTest {
         target = UserDetail.builder()
                 .username("rlaxodud2")
                 .password(PASSWORD)
-                .nickname("default")
+                .nickname("default2")
                 .role(Role.USER)
                 .banDeadLine(LocalDate.MIN)
                 .build();
+
 
         testEntityManager.persist(user);
         testEntityManager.persist(target);
@@ -102,12 +103,15 @@ public class ChatUserServiceTest {
         // given
         Long userId = user.getId();
         Long blockUserId = target.getId();
-        chatUserService.blockUser(userId, blockUserId);
+        Long blockTeamId = teamAdapter.save(testDataBuilder.createNotPersistedTeam(blockUserId, "default2"));
+
+        chatUserService.blockUser(userId, blockTeamId);
+
         // when
-        chatUserService.unblockUser(userId, blockUserId);
+        chatUserService.unblockUser(userId, blockTeamId);
 
         // then
-        blockUserRepository.deleteByUserIdAndBlockUserId(userId, blockUserId);
+        blockUserRepository.deleteByUserIdAndBlockUserId(userId, blockTeamId);
 
         assertThat(blockUserRepository.findAllByUserId(userId)).isEmpty();
         // 차단 성공

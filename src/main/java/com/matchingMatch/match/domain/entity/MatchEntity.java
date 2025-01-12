@@ -31,6 +31,9 @@ public class MatchEntity extends BaseEntity {
         return MatchEntity.builder()
                 .id(match.getId())
                 .hostId(match.getHostId())
+                .participantId(match.getParticipantId())
+                .confirmedTime(match.getConfirmedTime())
+                .etc(match.getEtc())
                 .startTime(match.getStartTime())
                 .endTime(match.getEndTime())
                 .gender(match.getGender())
@@ -38,6 +41,8 @@ public class MatchEntity extends BaseEntity {
                 .stadiumId(match.getStadiumId())
                 .build();
     }
+
+
 
 
 

@@ -3,7 +3,7 @@ package com.matchingMatch.match;
 import com.matchingMatch.TestDataBuilder;
 import com.matchingMatch.match.domain.entity.MatchEntity;
 import com.matchingMatch.match.domain.entity.MatchRequestEntity;
-import com.matchingMatch.match.service.MatchService;
+import com.matchingMatch.match.service.MatchPostService;
 import com.matchingMatch.team.domain.entity.LeaderRequestEntity;
 import com.matchingMatch.team.domain.entity.Team;
 import com.matchingMatch.team.domain.entity.TeamEntity;
@@ -49,7 +49,7 @@ public class EventListenerTest {
     @Autowired
     PlatformTransactionManager platformTransactionManager;
     @Autowired
-    private MatchService matchService;
+    private MatchPostService matchPostService;
 
     @TestConfiguration
     static class TestConfig {
@@ -91,7 +91,7 @@ public class EventListenerTest {
             Long targetTeamId = teamAdapter.save(testDataBuilder.createNotPersistedTeam(leader2.getId(), "default4"));
 
             Team host = testEntityManager.find(TeamEntity.class, teamId.get()).toDomain();
-            MatchEntity match = testDataBuilder.createNotPersistedMatchEntity(host);
+            MatchEntity match = testDataBuilder.createNotPersistedMatchEntity(host.getId());
             match.setParticipantId(targetTeamId);
             matchId.set(matchAdapter.save(match));
 
@@ -151,7 +151,7 @@ public class EventListenerTest {
                 Long targetTeamId = teamAdapter.save(testDataBuilder.createNotPersistedTeam(leader2.getId(), "default2"));
 
                 Team host = testEntityManager.find(TeamEntity.class, teamId).toDomain();
-                MatchEntity match = testDataBuilder.createNotPersistedMatchEntity(host);
+                MatchEntity match = testDataBuilder.createNotPersistedMatchEntity(host.getId());
                 match.setParticipantId(targetTeamId);
                 matchId.set(matchAdapter.save(match));
 
@@ -170,7 +170,7 @@ public class EventListenerTest {
                     new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRES_NEW));
 
             whenTransactionTemplate.execute(status -> {
-                matchService.deleteMatchPost(matchId.get(), hostLeaderId.get());
+                matchPostService.deleteMatchPost(matchId.get(), hostLeaderId.get());
                 return null;
             });
 

@@ -65,9 +65,9 @@ public class TestDataBuilder {
 
     }
 
-    public MatchEntity createNotPersistedMatchEntity(Team host) {
+    public MatchEntity createNotPersistedMatchEntity(Long hostId) {
         return MatchEntity.builder()
-                .hostId(host.getId())
+                .hostId(hostId)
                 .participantId(null)
                 .startTime(LocalDateTime.of(2024, 11, 20, 10, 0))
                 .endTime(LocalDateTime.of(2024, 11, 20, 12, 0))

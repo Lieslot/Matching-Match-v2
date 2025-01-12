@@ -29,28 +29,16 @@ public class MatchAdapter {
 
 
     @Transactional
-    public Match getMatchBy2(Long matchId) {
+    public Match getMatchBy(Long matchId) {
         MatchEntity matchEntity = matchRepository.findById(matchId)
                 .orElseThrow(() -> new MatchNotFoundException(matchId));
 
         MannerRateCheckEntity mannerRateCheckEntity = mannerRateCheckRepository.findByMatchId(matchId)
                 .orElse(MannerRateCheckEntity.from(matchId));
 
-        return Match.builder()
-                .id(matchEntity.getId())
-                .hostId(matchEntity.getHostId())
-                .participantId(matchEntity.getParticipantId())
-                .startTime(matchEntity.getStartTime())
-                .endTime(matchEntity.getEndTime())
-                .stadiumId(matchEntity.getStadiumId())
-                .stadiumCost(matchEntity.getStadiumCost())
-                .etc(matchEntity.getEtc())
-                .isHostRate(mannerRateCheckEntity.getIsHostRate())
-                .isParticipantRate(mannerRateCheckEntity.getIsParticipantRate())
-                .build();
+        return toMach(matchEntity, mannerRateCheckEntity);
 
     }
-
 
     // TODO 추후에 페이징 추가
     @Transactional(readOnly = true)
@@ -58,7 +46,7 @@ public class MatchAdapter {
         List<MatchEntity> matchEntities = matchRepository.findAll();
         return matchEntities.stream()
                 .map(matchEntity -> {
-                    return getMatchBy2(matchEntity.getId());
+                    return getMatchBy(matchEntity.getId());
 
                 })
                 .toList();
@@ -92,7 +80,7 @@ public class MatchAdapter {
         List<MatchRequestEntity> myMatchRequests = matchRequestRepository.findAllBySendTeamId(teamId);
 
         return myMatchRequests.stream()
-                .map(matchRequest -> getMatchBy2(matchRequest.getMatchId()))
+                .map(matchRequest -> getMatchBy(matchRequest.getMatchId()))
                 .toList();
     }
 
@@ -102,7 +90,7 @@ public class MatchAdapter {
         List<MatchRequestEntity> myMatchRequests = matchRequestRepository.findAllByTargetTeamId(teamId);
 
         return myMatchRequests.stream()
-                .map(matchRequest -> getMatchBy2(matchRequest.getMatchId()))
+                .map(matchRequest -> getMatchBy(matchRequest.getMatchId()))
                 .toList();
     }
 
@@ -116,11 +104,29 @@ public class MatchAdapter {
         return matchRepository.findAllByHostId(teamId).stream()
                 .map(match -> {
                     Long id = match.getId();
-                    return getMatchBy2(id);
+                    return getMatchBy(id);
                 })
                 .filter(match -> {
                     return !match.started();
                 })
                 .toList();
+    }
+
+
+    private Match toMach(MatchEntity matchEntity, MannerRateCheckEntity mannerRateCheckEntity) {
+        return Match.builder()
+                .id(matchEntity.getId())
+                .hostId(matchEntity.getHostId())
+                .participantId(matchEntity.getParticipantId())
+                .startTime(matchEntity.getStartTime())
+                .endTime(matchEntity.getEndTime())
+                .stadiumId(matchEntity.getStadiumId())
+                .stadiumCost(matchEntity.getStadiumCost())
+                .confirmedTime(matchEntity.getConfirmedTime())
+                .etc(matchEntity.getEtc())
+                .gender(matchEntity.getGender())
+                .isHostRate(mannerRateCheckEntity.getIsHostRate())
+                .isParticipantRate(mannerRateCheckEntity.getIsParticipantRate())
+                .build();
     }
 }

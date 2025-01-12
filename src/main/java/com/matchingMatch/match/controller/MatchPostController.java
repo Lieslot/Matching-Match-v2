@@ -9,7 +9,7 @@ import com.matchingMatch.auth.dto.UserAuth;
 import com.matchingMatch.match.dto.MatchPostListElementResponse;
 import com.matchingMatch.match.dto.PostMatchPostRequest;
 import com.matchingMatch.match.dto.MatchPostsResponse;
-import com.matchingMatch.match.service.MatchService;
+import com.matchingMatch.match.service.MatchPostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,14 +30,13 @@ import java.util.List;
 @RequestMapping("/match")
 public class MatchPostController {
 
-    private final MatchService matchService;
-
+    private final MatchPostService matchPostService;
 
     @GetMapping("/posts")
     @ResponseStatus(HttpStatus.OK)
     public MatchPostsResponse getMatchPosts() {
 
-        List<MatchPostListElementResponse> posts = matchService.getPosts();
+        List<MatchPostListElementResponse> posts = matchPostService.getPosts();
 
         return new MatchPostsResponse(posts);
     }
@@ -50,7 +49,7 @@ public class MatchPostController {
             @Valid @RequestBody PostMatchPostRequest matchPostRequest,
             @Authentication UserAuth userAuth) {
 
-        return matchService.postNewMatch(matchPostRequest, userAuth.getId());
+        return matchPostService.postNewMatch(matchPostRequest, userAuth.getId());
     }
 
 
@@ -58,7 +57,7 @@ public class MatchPostController {
     @ResponseStatus(HttpStatus.OK)
     public Match getMatchPost(@PathVariable Long postId) {
 
-        return matchService.getMatch(postId);
+        return matchPostService.getMatch(postId);
     }
 
 
@@ -70,7 +69,7 @@ public class MatchPostController {
             @PathVariable Long postId,
             @Authentication UserAuth userAuth) {
 
-        matchService.deleteMatchPost(postId, userAuth.getId());
+        matchPostService.deleteMatchPost(postId, userAuth.getId());
     }
 
     @AuthenticatedUser
@@ -81,14 +80,14 @@ public class MatchPostController {
             @Valid @RequestBody ModifyMatchPostRequest matchPostRequest,
             @Authentication UserAuth userAuth) {
 
-        matchService.updateMatch(matchPostRequest, userAuth.getId());
+        matchPostService.updateMatch(matchPostRequest, userAuth.getId());
     }
 
     @GetMapping("/requests")
     @AuthenticatedUser
     @ResponseStatus(HttpStatus.OK)
     public MatchPostsResponse getMyMatchList(@Authentication UserAuth userAuth) {
-        List<MatchPostListElementResponse> posts = matchService.getMyMatches(userAuth.getId());
+        List<MatchPostListElementResponse> posts = matchPostService.getMyMatches(userAuth.getId());
         return new MatchPostsResponse(posts);
     }
 
@@ -96,7 +95,7 @@ public class MatchPostController {
     @AuthenticatedUser
     @ResponseStatus(HttpStatus.OK)
     public MatchPostsResponse getOtherMatchList(@Authentication UserAuth userAuth) {
-        List<MatchPostListElementResponse> posts = matchService.getOtherMatches(userAuth.getId());
+        List<MatchPostListElementResponse> posts = matchPostService.getOtherMatches(userAuth.getId());
         return new MatchPostsResponse(posts);
     }
 
@@ -104,7 +103,7 @@ public class MatchPostController {
     @AuthenticatedUser
     @ResponseStatus(HttpStatus.OK)
     public MatchPostsResponse getHostingMatches(@Authentication UserAuth userAuth, @PathVariable Long teamId) {
-        List<MatchPostListElementResponse> posts = matchService.getHostingMatches(teamId);
+        List<MatchPostListElementResponse> posts = matchPostService.getHostingMatches(teamId);
         return new MatchPostsResponse(posts);
     }
 

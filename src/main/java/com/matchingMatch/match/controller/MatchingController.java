@@ -10,7 +10,7 @@ import com.matchingMatch.match.dto.MatchCancelConfirmedRequest;
 import com.matchingMatch.match.dto.MatchCancelRequest;
 import com.matchingMatch.match.dto.MatchConfirmRequest;
 import com.matchingMatch.match.dto.MatchRefuseRequest;
-import com.matchingMatch.match.service.MatchService;
+import com.matchingMatch.match.service.MatchingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MatchingController {
 
 
-    private final MatchService matchService;
+    private final MatchingService matchService;
 
 
     @AuthenticatedUser
