@@ -16,6 +16,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -42,13 +46,16 @@ public class MatchAdapter {
 
     // TODO 추후에 페이징 추가
     @Transactional(readOnly = true)
-    public List<Match> getMatches() {
-        List<MatchEntity> matchEntities = matchRepository.findAll();
-        return matchEntities.stream()
-                .map(matchEntity -> {
-                    return getMatchBy(matchEntity.getId());
+    public List<Match> getCurrentMatches() {
+        Map<Long, MatchEntity> matches = matchRepository.findAll().stream()
+                .collect(Collectors.toMap(MatchEntity::getId, Function.identity()));
 
-                })
+        Set<Long> matchIds = matches.keySet();
+
+        List<MannerRateCheckEntity> mannerRateCheckEntities = mannerRateCheckRepository.findAllByMatchIdIn(matchIds);
+
+        return mannerRateCheckEntities.stream()
+                .map(mannerRateCheckEntity -> toMach(matches.get(mannerRateCheckEntity.getMatchId()), mannerRateCheckEntity))
                 .toList();
     }
 
@@ -65,52 +72,49 @@ public class MatchAdapter {
         mannerRateCheckRepository.save(rateCheck);
 
     }
-//
-//    public Long saveMatch(Match match) {
-//        MatchEntity from = MatchEntity.from(match);
-//        return matchRepository.save(from).getId();
-//    }
 
     public Long save(MatchEntity matchEntity) {
         return matchRepository.save(matchEntity).getId();
     }
 
     @Transactional(readOnly = true)
-    public List<Match> getTeamRequestingMatches(Long teamId) {
-        List<MatchRequestEntity> myMatchRequests = matchRequestRepository.findAllBySendTeamId(teamId);
+    public List<Match> getMatchesByHostId(Long hostId) {
+        Map<Long, MatchEntity> matches = matchRepository.findAllByHostId(hostId)
+                .stream()
+                .collect(Collectors.toMap(MatchEntity::getId, Function.identity()));
 
-        return myMatchRequests.stream()
-                .map(matchRequest -> getMatchBy(matchRequest.getMatchId()))
+        Set<Long> matchIds = matches.keySet();
+
+        List<MannerRateCheckEntity> mannerRateCheckEntities = mannerRateCheckRepository.findAllByMatchIdIn(matchIds);
+
+        return mannerRateCheckEntities.stream()
+                .map(mannerRateCheckEntity -> toMach(matches.get(mannerRateCheckEntity.getMatchId()), mannerRateCheckEntity))
                 .toList();
+
     }
 
 
-    @Transactional(readOnly = true)
-    public List<Match> getTeamRequestedMatches(Long teamId) {
-        List<MatchRequestEntity> myMatchRequests = matchRequestRepository.findAllByTargetTeamId(teamId);
+    @Transactional
+    public List<Match> getMatchesByParticipantId(Long participantId) {
+        Map<Long, MatchEntity> matches = matchRepository.findAllByParticipantId(participantId)
+                .stream()
+                .collect(Collectors.toMap(MatchEntity::getId, Function.identity()));
 
-        return myMatchRequests.stream()
-                .map(matchRequest -> getMatchBy(matchRequest.getMatchId()))
+        Set<Long> matchIds = matches.keySet();
+
+        List<MannerRateCheckEntity> mannerRateCheckEntities = mannerRateCheckRepository.findAllByMatchIdIn(matchIds);
+
+        return mannerRateCheckEntities.stream()
+                .map(mannerRateCheckEntity -> toMach(matches.get(mannerRateCheckEntity.getMatchId()), mannerRateCheckEntity))
                 .toList();
     }
+
 
     @Transactional
     public void deleteById(Long matchId) {
         matchRepository.deleteById(matchId);
     }
 
-    @Transactional
-    public List<Match> getHostingMatches(Long teamId) {
-        return matchRepository.findAllByHostId(teamId).stream()
-                .map(match -> {
-                    Long id = match.getId();
-                    return getMatchBy(id);
-                })
-                .filter(match -> {
-                    return !match.started();
-                })
-                .toList();
-    }
 
 
     private Match toMach(MatchEntity matchEntity, MannerRateCheckEntity mannerRateCheckEntity) {

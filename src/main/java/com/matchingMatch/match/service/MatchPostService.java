@@ -75,7 +75,7 @@ public class MatchPostService {
 
 
     public List<MatchPostListElementResponse> getPosts() {
-        List<Match> matches = matchAdapter.getMatches();
+        List<Match> matches = matchAdapter.getCurrentMatches();
 
         return toResponse(matches);
     }
@@ -83,21 +83,21 @@ public class MatchPostService {
     public List<MatchPostListElementResponse> getMyMatches (Long userId) {
 
         Team userTeam = teamAdapter.getTeamByLeaderId(userId);
-        List<Match> matches = matchAdapter.getTeamRequestedMatches(userTeam.getId());
+        List<Match> matches = matchAdapter.getMatchesByHostId(userTeam.getId());
         return toResponse(matches);
     }
 
     public List<MatchPostListElementResponse>  getOtherMatches (Long userId) {
 
         Team userTeam = teamAdapter.getTeamByLeaderId(userId);
-        List<Match> matches = matchAdapter.getTeamRequestingMatches(userTeam.getId());
+        List<Match> matches = matchAdapter.getMatchesByParticipantId(userTeam.getId());
 
         return toResponse(matches);
     }
 
     public List<MatchPostListElementResponse> getHostingMatches(Long teamId) {
         // TODO refactor
-        List<Match> matches = matchAdapter.getHostingMatches(teamId);
+        List<Match> matches = matchAdapter.getMatchesByHostId(teamId);
 
         return toResponse(matches);
     }

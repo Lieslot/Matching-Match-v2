@@ -92,4 +92,6 @@ public class MatchingController {
         matchService.rateMannerPoint(mannerRateRequest.getMatchId(), mannerRate);
     }
 
+
+    // TODO 다른 사람이 신청한 매치 요청 목록 보기
 }
