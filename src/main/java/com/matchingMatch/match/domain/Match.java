@@ -77,8 +77,8 @@ public class Match {
     }
 
     public void confirmMatch(Team team) {
-        this.participantId = team.getId();
-        this.confirmedTime = LocalDateTime.now();
+            this.participantId = team.getId();
+            this.confirmedTime = LocalDateTime.now();
     }
 
     public void cancelMatch() {

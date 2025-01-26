@@ -1,7 +1,6 @@
 package com.matchingMatch.notification.domain;
 
 import com.matchingMatch.match.domain.BaseEntity;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -16,26 +15,29 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Notification extends BaseEntity {
+public class MatchNotificationEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private Long targetTeamId;
 
-    @Column(nullable = false)
+    private Long sendTeamId;
+
     private Long targetMatchId;
 
     @Enumerated(EnumType.STRING)
-    private NotificationType notificationType;
+    private MatchNotificationType notificationType;
 
+    private Boolean isRead = false;
 
     @Builder
-    public Notification(Long targetTeamId, Long targetMatchId, NotificationType notificationType) {
+    public MatchNotificationEntity(Long targetTeamId, Long targetMatchId, MatchNotificationType notificationType, Boolean isRead, Long sendTeamId) {
         this.targetTeamId = targetTeamId;
         this.targetMatchId = targetMatchId;
         this.notificationType = notificationType;
+        this.isRead = isRead;
+        this.sendTeamId = sendTeamId;
     }
 }

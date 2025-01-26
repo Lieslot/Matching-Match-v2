@@ -8,11 +8,18 @@ import com.matchingMatch.match.TeamAdapter;
 import com.matchingMatch.match.domain.MannerRate;
 import com.matchingMatch.match.domain.Match;
 import com.matchingMatch.match.MatchAdapter;
+import com.matchingMatch.match.domain.entity.MannerRateCheckEntity;
+import com.matchingMatch.match.domain.entity.MatchEntity;
 import com.matchingMatch.match.domain.entity.MatchRequestEntity;
+import com.matchingMatch.listener.event.MatchRequestEvent;
+import com.matchingMatch.match.exception.MatchNotFoundException;
+import com.matchingMatch.match.exception.UnauthorizedAccessException;
+import com.matchingMatch.team.TeamNotFoundException;
 import com.matchingMatch.team.domain.entity.Team;
 
 import java.time.LocalDateTime;
 
+import com.matchingMatch.team.domain.entity.TeamEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -32,7 +39,6 @@ public class MatchingService {
 
     private final TeamAdapter teamAdapter;
 
-    @Transactional
     public void sendMatchRequest(Long matchId, Long userId) {
 
         // TODO 이미 확정된 매치가 일정이 겹치는 경우 예외처리 추가
@@ -42,11 +48,6 @@ public class MatchingService {
 
         match.checkAlreadyConfirmed();
 
-        boolean teamExists = teamAdapter.existsById(userId);
-        if (!teamExists) {
-            throw new IllegalArgumentException();
-        }
-
         MatchRequestEntity matchRequest = MatchRequestEntity.builder()
                 .sendTeamId(sendTeam.getId())
                 .matchId(matchId)
@@ -54,10 +55,11 @@ public class MatchingService {
                 .build();
         matchRequestAdapter.save(matchRequest);
 
+        eventPublisher.publishEvent(new MatchRequestEvent(matchId, match.getHostId(), sendTeam.getId()));
+
         // TODO: 매치 요청 알림 보내기
     }
 
-    @Transactional
     public void cancelMatchRequest(Long requestId, Long userId) {
 
         MatchRequestEntity matchRequest = matchRequestAdapter.findById(requestId);
@@ -67,26 +69,26 @@ public class MatchingService {
         matchTeamValidator.checkHost(match, userId);
 
         matchRequestAdapter.deleteById(requestId);
+
     }
 
-    @Transactional
     public void confirmMatchRequest(Long matchId, Long currentUserId, Long requestingTeamId) {
 
         Match match = matchAdapter.getMatchBy(matchId);
         Team requestingTeam = teamAdapter.getTeamBy(requestingTeamId);
 
-
         matchTeamValidator.checkHost(match, currentUserId);
         match.checkAlreadyConfirmed();
+
         match.confirmMatch(requestingTeam);
 
         matchAdapter.updateMatch(match);
         matchRequestAdapter.deleteAllByMatchId(matchId);
 
+
         // TODO 알림 보내기
     }
 
-    @Transactional
     public void cancelConfirmedMatch(Long matchId, Long currentUserId) {
 
         Match match = matchAdapter.getMatchBy(matchId);
@@ -98,7 +100,6 @@ public class MatchingService {
         matchAdapter.updateMatch(match);
     }
 
-    @Transactional
     public void refuseMatchRequest(Long matchRequestId, Long currentUserId) {
 
         MatchRequestEntity request = matchRequestAdapter.findById(matchRequestId);
@@ -110,7 +111,6 @@ public class MatchingService {
         matchRequestAdapter.deleteById(matchRequestId);
     }
 
-    @Transactional
     public void rateMannerPoint(Long matchId, MannerRate mannerRate) {
 
         Match match = matchAdapter.getMatchBy(matchId);
