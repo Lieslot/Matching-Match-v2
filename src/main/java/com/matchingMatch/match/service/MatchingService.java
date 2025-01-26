@@ -8,22 +8,23 @@ import com.matchingMatch.match.TeamAdapter;
 import com.matchingMatch.match.domain.MannerRate;
 import com.matchingMatch.match.domain.Match;
 import com.matchingMatch.match.MatchAdapter;
-import com.matchingMatch.match.domain.entity.MannerRateCheckEntity;
-import com.matchingMatch.match.domain.entity.MatchEntity;
+import com.matchingMatch.match.domain.StadiumAdapter;
 import com.matchingMatch.match.domain.entity.MatchRequestEntity;
 import com.matchingMatch.listener.event.MatchRequestEvent;
-import com.matchingMatch.match.exception.MatchNotFoundException;
-import com.matchingMatch.match.exception.UnauthorizedAccessException;
-import com.matchingMatch.team.TeamNotFoundException;
+import com.matchingMatch.match.domain.entity.StadiumEntity;
+import com.matchingMatch.match.dto.MatchRequestDetail;
+import com.matchingMatch.match.dto.MatchRequestThumbnail;
 import com.matchingMatch.team.domain.entity.Team;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-import com.matchingMatch.team.domain.entity.TeamEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +37,7 @@ public class MatchingService {
     private final MatchTeamValidator matchTeamValidator;
     private final MannerRater mannerRater;
     private final ApplicationEventPublisher eventPublisher;
+    private final StadiumAdapter stadiumAdapter;
 
     private final TeamAdapter teamAdapter;
 
@@ -127,5 +129,44 @@ public class MatchingService {
         teamAdapter.save(team);
 
     }
+    // TODO: 페이징 추가
+    public List<MatchRequestThumbnail> getRequestThumbnail(Long userId) {
+        Team team = teamAdapter.getTeamByLeaderId(userId);
 
+        List<MatchRequestEntity> requests = matchRequestAdapter.findAllByTargetTeamId(team.getId());
+
+        List<Long> teamIds = requests.stream()
+                .map(MatchRequestEntity::getTargetTeamId)
+                .toList();
+
+        Map<Long, Team> teams = teamAdapter.getAllTeamBy(teamIds).stream()
+                .collect(Collectors.toMap(Team::getId, Function.identity()));
+
+        return requests.stream()
+                .map(r -> MatchRequestThumbnail.builder()
+                        .id(r.getId())
+                        .targetTeamName(teams.get(r.getTargetTeamId()).getName())
+                        .targetTeamId(r.getTargetTeamId())
+                        .targetTeamLogoUrl(teams.get(r.getTargetTeamId()).getLogoUrl())
+                        .matchId(r.getMatchId())
+                        .build())
+                .toList();
+    }
+
+
+    public MatchRequestDetail getRequestDetail(Long matchId) {
+
+        Match match = matchAdapter.getMatchBy(matchId);
+        StadiumEntity stadium = stadiumAdapter.getStadiumEntityBy(match.getStadiumId());
+
+        return MatchRequestDetail.builder()
+                .targetTeamId(match.getParticipantId())
+                .matchId(match.getId())
+                .targetTeamName(teamAdapter.getTeamBy(match.getParticipantId()).getName())
+                .startTime(match.getStartTime().toString())
+                .endTime(match.getEndTime().toString())
+                .stadiumName(stadium.getName())
+                .stadiumAddress(stadium.getAddress())
+                .build();
+    }
 }

@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -43,6 +44,21 @@ public class MatchAdapter {
         return toMach(matchEntity, mannerRateCheckEntity);
 
     }
+
+    @Transactional
+    public List<Match> getAllMatchesByIds(Collection<Long> matchIds) {
+        Map<Long, MatchEntity> matches = matchRepository.findAllByIdIn(matchIds)
+                .stream()
+                .collect(Collectors.toMap(MatchEntity::getId, Function.identity()));
+
+
+        List<MannerRateCheckEntity> mannerRateCheckEntities = mannerRateCheckRepository.findAllByMatchIdIn(matchIds);
+
+        return mannerRateCheckEntities.stream()
+                .map(mannerRateCheckEntity -> toMach(matches.get(mannerRateCheckEntity.getMatchId()), mannerRateCheckEntity))
+                .toList();
+    }
+
 
     // TODO 추후에 페이징 추가
     @Transactional(readOnly = true)
