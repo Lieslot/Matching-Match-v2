@@ -1,9 +1,9 @@
 package com.matchingMatch.match.service;
 
 import com.matchingMatch.listener.event.MatchDeleteEvent;
-import com.matchingMatch.match.MatchAdapter;
-import com.matchingMatch.match.MatchTeamValidator;
-import com.matchingMatch.match.TeamAdapter;
+import com.matchingMatch.match.implement.MatchAdapter;
+import com.matchingMatch.match.implement.MatchTeamValidator;
+import com.matchingMatch.match.implement.TeamAdapter;
 import com.matchingMatch.match.domain.Match;
 import com.matchingMatch.match.domain.entity.MatchEntity;
 import com.matchingMatch.match.dto.MatchPostListElementResponse;
@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;

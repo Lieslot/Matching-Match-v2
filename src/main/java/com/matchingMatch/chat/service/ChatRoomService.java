@@ -12,7 +12,7 @@ import com.matchingMatch.chat.entity.ChatRoomParticipantEntity;
 import com.matchingMatch.chat.entity.repository.ChatRepository;
 import com.matchingMatch.chat.entity.repository.ChatRoomParticipantRepository;
 import com.matchingMatch.chat.entity.repository.ChatRoomRepository;
-import com.matchingMatch.match.TeamAdapter;
+import com.matchingMatch.match.implement.TeamAdapter;
 import com.matchingMatch.team.domain.entity.Team;
 import com.matchingMatch.user.domain.repository.UserRepository;
 

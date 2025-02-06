@@ -2,6 +2,7 @@ package com.matchingMatch.match;
 
 import com.matchingMatch.TestDataBuilder;
 import com.matchingMatch.match.exception.UnauthorizedAccessException;
+import com.matchingMatch.match.implement.TeamAdapter;
 import com.matchingMatch.team.domain.entity.LeaderRequestEntity;
 import com.matchingMatch.team.domain.entity.Team;
 import com.matchingMatch.team.domain.repository.LeaderRequestRepository;

@@ -3,7 +3,7 @@ package com.matchingMatch.chat;
 import com.matchingMatch.chat.entity.BlockChatUserEntity;
 import com.matchingMatch.chat.entity.repository.BlockUserRepository;
 import com.matchingMatch.chat.service.ChatUserService;
-import com.matchingMatch.match.TeamAdapter;
+import com.matchingMatch.match.implement.TeamAdapter;
 import com.matchingMatch.match.domain.enums.Role;
 import com.matchingMatch.user.domain.UserDetail;
 import org.junit.jupiter.api.AfterEach;

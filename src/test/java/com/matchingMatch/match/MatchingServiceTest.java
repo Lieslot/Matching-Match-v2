@@ -10,14 +10,17 @@ import com.matchingMatch.match.domain.entity.MatchRequestEntity;
 import com.matchingMatch.match.domain.repository.MatchRequestRepository;
 import com.matchingMatch.match.exception.MatchAlreadyConfirmedException;
 import com.matchingMatch.match.exception.UnauthorizedAccessException;
+import com.matchingMatch.match.implement.MannerRater;
+import com.matchingMatch.match.implement.MatchAdapter;
+import com.matchingMatch.match.implement.MatchRequestAdapter;
+import com.matchingMatch.match.implement.MatchTeamValidator;
+import com.matchingMatch.match.implement.TeamAdapter;
 import com.matchingMatch.match.service.MatchingService;
 import com.matchingMatch.team.domain.entity.Team;
 import com.matchingMatch.user.domain.UserDetail;
 import com.matchingMatch.user.domain.repository.UserRepository;
-import org.assertj.core.api.Assert;
+
 import org.assertj.core.api.Assertions;
-import org.assertj.core.data.Offset;
-import org.assertj.core.data.Percentage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -27,7 +30,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ContextConfiguration;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.matchingMatch.listener.TeamDeleteEvent;
-import com.matchingMatch.match.TeamAdapter;
+import com.matchingMatch.match.implement.TeamAdapter;
 import com.matchingMatch.match.dto.TeamProfileResponse;
 import com.matchingMatch.match.dto.TeamProfileUpdateRequest;
 import com.matchingMatch.match.exception.UnauthorizedAccessException;

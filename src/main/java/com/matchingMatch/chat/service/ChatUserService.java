@@ -10,7 +10,7 @@ import com.matchingMatch.chat.dto.BlockedUserResponse;
 import com.matchingMatch.chat.dto.BlockedUsersResponse;
 import com.matchingMatch.chat.entity.BlockChatUserEntity;
 import com.matchingMatch.chat.entity.repository.BlockUserRepository;
-import com.matchingMatch.match.TeamAdapter;
+import com.matchingMatch.match.implement.TeamAdapter;
 import com.matchingMatch.user.domain.UserDetail;
 import com.matchingMatch.user.domain.repository.UserRepository;
 

@@ -9,7 +9,7 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.WebpushConfig;
 import com.google.firebase.messaging.WebpushNotification;
-import com.matchingMatch.match.TeamAdapter;
+import com.matchingMatch.match.implement.TeamAdapter;
 import com.matchingMatch.notification.common.NotificationTemplate;
 import com.matchingMatch.notification.domain.FcmSubscriptionRepository;
 import com.matchingMatch.notification.domain.MatchNotificationEntity;

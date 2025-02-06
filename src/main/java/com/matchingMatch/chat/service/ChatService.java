@@ -12,7 +12,7 @@ import com.matchingMatch.chat.entity.ChatEntity;
 import com.matchingMatch.chat.entity.ChatType;
 import com.matchingMatch.chat.file.FileStorage;
 import com.matchingMatch.chat.implement.ChatAdapter;
-import com.matchingMatch.match.TeamAdapter;
+import com.matchingMatch.match.implement.TeamAdapter;
 import com.matchingMatch.team.domain.entity.Team;
 
 import lombok.RequiredArgsConstructor;

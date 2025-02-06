@@ -1,4 +1,4 @@
-package com.matchingMatch.match;
+package com.matchingMatch.match.implement;
 
 import org.springframework.stereotype.Component;
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import com.matchingMatch.listener.event.MatchCancelEvent;
 import com.matchingMatch.listener.event.MatchConfirmEvent;
 import com.matchingMatch.listener.event.MatchRequestEvent;
-import com.matchingMatch.match.TeamAdapter;
+import com.matchingMatch.match.implement.TeamAdapter;
 import com.matchingMatch.notification.domain.MatchNotificationEntity;
 import com.matchingMatch.notification.domain.entity.MatchNotificationType;
 import com.matchingMatch.notification.implement.MatchNotificationPushAdapter;

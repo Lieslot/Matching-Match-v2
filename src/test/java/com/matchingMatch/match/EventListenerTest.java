@@ -3,6 +3,8 @@ package com.matchingMatch.match;
 import com.matchingMatch.TestDataBuilder;
 import com.matchingMatch.match.domain.entity.MatchEntity;
 import com.matchingMatch.match.domain.entity.MatchRequestEntity;
+import com.matchingMatch.match.implement.MatchAdapter;
+import com.matchingMatch.match.implement.TeamAdapter;
 import com.matchingMatch.match.service.MatchPostService;
 import com.matchingMatch.team.domain.entity.LeaderRequestEntity;
 import com.matchingMatch.team.domain.entity.Team;
@@ -41,9 +43,9 @@ public class EventListenerTest {
     TestDataBuilder testDataBuilder = new TestDataBuilder();
 
     @Autowired
-    TeamAdapter teamAdapter;
+	TeamAdapter teamAdapter;
     @Autowired
-    MatchAdapter matchAdapter;
+	MatchAdapter matchAdapter;
     @Autowired
     TeamService teamService;
     @Autowired
