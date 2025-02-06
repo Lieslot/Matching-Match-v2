@@ -1,6 +1,6 @@
 package com.matchingMatch.notification.common;
 
-import com.matchingMatch.notification.domain.MatchNotificationType;
+import com.matchingMatch.notification.domain.entity.MatchNotificationType;
 
 import java.util.Arrays;
 

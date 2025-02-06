@@ -5,7 +5,7 @@ import com.matchingMatch.auth.AuthenticatedUser;
 import com.matchingMatch.auth.Authentication;
 import com.matchingMatch.auth.dto.UserAuth;
 import com.matchingMatch.notification.dto.PublicSubscriptionRequest;
-import com.matchingMatch.notification.service.PushService;
+import com.matchingMatch.notification.service.NotificationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/notification")
 public class NotificationController {
 
-    private final PushService pushService;
+    private final NotificationService pushService;
 
 
     @PostMapping("/subscribe")

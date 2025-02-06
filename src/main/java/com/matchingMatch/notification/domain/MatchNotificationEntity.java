@@ -1,6 +1,7 @@
 package com.matchingMatch.notification.domain;
 
 import com.matchingMatch.match.domain.BaseEntity;
+import com.matchingMatch.notification.domain.entity.MatchNotificationType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

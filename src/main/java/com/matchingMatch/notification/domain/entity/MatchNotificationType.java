@@ -1,4 +1,4 @@
-package com.matchingMatch.notification.domain;
+package com.matchingMatch.notification.domain.entity;
 
 public enum MatchNotificationType {
 

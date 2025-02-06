@@ -1,5 +1,6 @@
 package com.matchingMatch.notification.domain;
 
+import com.matchingMatch.notification.domain.entity.FcmSubscription;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

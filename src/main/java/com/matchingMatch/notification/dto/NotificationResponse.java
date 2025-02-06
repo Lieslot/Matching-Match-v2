@@ -1,7 +1,7 @@
 package com.matchingMatch.notification.dto;
 
 
-import com.matchingMatch.notification.domain.MatchNotificationType;
+import com.matchingMatch.notification.domain.entity.MatchNotificationType;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

@@ -2,7 +2,7 @@ package com.matchingMatch.notification;
 
 import com.matchingMatch.TestDataBuilder;
 import com.matchingMatch.match.domain.entity.MatchEntity;
-import com.matchingMatch.notification.domain.FcmMatchNotificationPusher;
+import com.matchingMatch.notification.implement.FcmMatchNotificationPusher;
 import com.matchingMatch.notification.domain.MatchNotificationEntity;
 import com.matchingMatch.notification.domain.MatchNotificationRepository;
 import com.matchingMatch.match.MannerRater;
@@ -11,8 +11,7 @@ import com.matchingMatch.match.MatchRequestAdapter;
 import com.matchingMatch.match.MatchTeamValidator;
 import com.matchingMatch.match.TeamAdapter;
 import com.matchingMatch.match.service.MatchingService;
-import com.matchingMatch.notification.domain.DBMatchNotificationPusher;
-import com.matchingMatch.notification.domain.MatchNotificationType;
+import com.matchingMatch.notification.domain.entity.MatchNotificationType;
 import com.matchingMatch.team.domain.entity.Team;
 import com.matchingMatch.user.domain.UserDetail;
 import org.junit.jupiter.api.BeforeEach;

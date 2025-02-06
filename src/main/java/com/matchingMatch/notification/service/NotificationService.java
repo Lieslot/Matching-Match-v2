@@ -2,8 +2,8 @@ package com.matchingMatch.notification.service;
 
 
 import com.matchingMatch.notification.domain.MatchNotificationEntity;
-import com.matchingMatch.notification.domain.MatchNotificationPushAdapter;
-import com.matchingMatch.notification.domain.FcmSubscription;
+import com.matchingMatch.notification.implement.MatchNotificationPushAdapter;
+import com.matchingMatch.notification.domain.entity.FcmSubscription;
 import com.matchingMatch.notification.domain.FcmSubscriptionRepository;
 import com.matchingMatch.notification.dto.PublicSubscriptionRequest;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class PushService {
+public class NotificationService {
 
     private final MatchNotificationPushAdapter notificationPushAdapter;
-    private final FcmSubscriptionRepository publicSubscriptionRepository;
+    private final FcmSubscriptionRepository fcmSubscriptionRepository;
 
     public void push(MatchNotificationEntity notification) {
         notificationPushAdapter.push(notification);
@@ -26,7 +26,7 @@ public class PushService {
                 .fcmToken(publicSubscriptionRequest.getFcmToken())
                 .build();
 
-        publicSubscriptionRepository.deleteAllByUserId(userId);
-        publicSubscriptionRepository.save(publicSubscription);
+        fcmSubscriptionRepository.deleteAllByUserId(userId);
+        fcmSubscriptionRepository.save(publicSubscription);
     }
 }

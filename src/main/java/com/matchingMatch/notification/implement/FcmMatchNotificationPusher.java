@@ -1,4 +1,4 @@
-package com.matchingMatch.notification.domain;
+package com.matchingMatch.notification.implement;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
@@ -7,6 +7,9 @@ import com.google.firebase.messaging.WebpushConfig;
 import com.google.firebase.messaging.WebpushNotification;
 import com.matchingMatch.match.TeamAdapter;
 import com.matchingMatch.notification.common.NotificationTemplate;
+import com.matchingMatch.notification.domain.FcmSubscriptionRepository;
+import com.matchingMatch.notification.domain.MatchNotificationEntity;
+import com.matchingMatch.notification.domain.entity.FcmSubscription;
 import com.matchingMatch.team.domain.entity.Team;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

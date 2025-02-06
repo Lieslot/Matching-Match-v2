@@ -1,5 +1,6 @@
-package com.matchingMatch.notification.domain;
+package com.matchingMatch.notification.implement;
 
+import com.matchingMatch.notification.domain.MatchNotificationEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
