@@ -1,19 +1,20 @@
 package com.matchingMatch.notification.controller;
 
-
-import com.matchingMatch.auth.AuthenticatedUser;
-import com.matchingMatch.auth.Authentication;
-import com.matchingMatch.auth.dto.UserAuth;
-import com.matchingMatch.notification.dto.PublicSubscriptionRequest;
-import com.matchingMatch.notification.service.NotificationService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.matchingMatch.auth.AuthenticatedUser;
+import com.matchingMatch.auth.Authentication;
+import com.matchingMatch.auth.dto.UserAuth;
+import com.matchingMatch.notification.dto.PublicSubscriptionRequest;
+import com.matchingMatch.notification.service.NotificationService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,9 +32,6 @@ public class NotificationController {
         pushService.subscribe(publicSubscriptionRequest,userAuth.getId());
 
     }
-
-
-
 
 
 

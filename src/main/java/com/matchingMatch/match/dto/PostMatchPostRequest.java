@@ -1,11 +1,12 @@
 package com.matchingMatch.match.dto;
 
-import com.matchingMatch.match.domain.Match;
+import java.time.LocalDateTime;
+
 import com.matchingMatch.match.domain.Stadium;
 import com.matchingMatch.match.domain.entity.MatchEntity;
 import com.matchingMatch.match.domain.enums.Gender;
+
 import jakarta.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,7 +16,6 @@ public class PostMatchPostRequest {
 
     @NotNull
     private Long hostId;
-
 
     private Long postId;
 
