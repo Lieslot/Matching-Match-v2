@@ -4,6 +4,7 @@ package com.matchingMatch.match;
 import com.matchingMatch.TestDataBuilder;
 import com.matchingMatch.match.domain.MannerRate;
 import com.matchingMatch.match.domain.Match;
+import com.matchingMatch.match.domain.StadiumAdapter;
 import com.matchingMatch.match.domain.entity.MatchEntity;
 import com.matchingMatch.match.domain.entity.MatchRequestEntity;
 import com.matchingMatch.match.domain.repository.MatchRequestRepository;
@@ -37,7 +38,7 @@ import static org.mockito.Mockito.verify;
 
 @DataJpaTest
 @Import({MatchingService.class, MatchAdapter.class, MatchRequestAdapter.class, TeamAdapter.class
-        , MatchTeamValidator.class, MannerRater.class})
+        , MatchTeamValidator.class, MannerRater.class, StadiumAdapter.class})
 public class MatchingServiceTest {
 
 
@@ -46,6 +47,9 @@ public class MatchingServiceTest {
 
     @Autowired
     private MatchAdapter matchAdapter;
+
+    @Autowired
+    private StadiumAdapter stadiumAdapter;
 
     @Autowired
     private MatchRequestAdapter matchRequestAdapter;

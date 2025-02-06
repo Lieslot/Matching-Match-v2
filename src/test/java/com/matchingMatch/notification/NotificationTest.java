@@ -1,6 +1,7 @@
 package com.matchingMatch.notification;
 
 import com.matchingMatch.TestDataBuilder;
+import com.matchingMatch.match.domain.StadiumAdapter;
 import com.matchingMatch.match.domain.entity.MatchEntity;
 import com.matchingMatch.notification.implement.FcmMatchNotificationPusher;
 import com.matchingMatch.notification.domain.MatchNotificationEntity;
@@ -24,7 +25,7 @@ import org.springframework.context.annotation.Import;
 @DataJpaTest
 
 @Import({MatchingService.class, MatchAdapter.class, MatchRequestAdapter.class, TeamAdapter.class
-        , MatchTeamValidator.class, MannerRater.class, FcmMatchNotificationPusher.class})
+        , MatchTeamValidator.class, MannerRater.class, FcmMatchNotificationPusher.class, StadiumAdapter.class})
 public class NotificationTest {
 
 
@@ -75,15 +76,6 @@ public class NotificationTest {
         matchAdapter.save(match);
     }
 
-    @Test
-    void test() {
-        fcmMatchNotificationPusher.push(MatchNotificationEntity.builder()
-                .targetMatchId(match.getId())
-                .targetTeamId(guestId)
-                .sendTeamId(hostId)
-                .notificationType(MatchNotificationType.MATCH_REQUEST)
-                .build());
-    }
 
 
 }

@@ -48,7 +48,6 @@ public class MatchPostService {
 		return matchAdapter.save(matchPost);
 	}
 
-	@Transactional
 	public void deleteMatchPost(Long matchId, Long userId) {
 		Match match = matchAdapter.getMatchBy(matchId);
 
@@ -59,7 +58,6 @@ public class MatchPostService {
 	}
 
 	// TODO 추후에 일관성 고민해보기
-	@Transactional
 	public void updateMatch(ModifyMatchPostRequest updatedMatchPost, Long userId) {
 
 		Match match = matchAdapter.getMatchBy(updatedMatchPost.getPostId());
