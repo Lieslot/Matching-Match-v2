@@ -1,12 +1,13 @@
 package com.matchingMatch.chat.entity.repository;
 
-import com.matchingMatch.chat.entity.ChatEntity;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import com.matchingMatch.chat.entity.ChatEntity;
 
 public interface ChatRepository extends JpaRepository<ChatEntity, Long> {
 
-    List<ChatEntity> findAllByRoomId(Long roomId);
+	List<ChatEntity> findAllByRoomId(Long roomId);
 
 }

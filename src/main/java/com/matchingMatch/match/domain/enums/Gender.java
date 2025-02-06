@@ -1,6 +1,5 @@
 package com.matchingMatch.match.domain.enums;
 
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -8,10 +7,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Gender {
 
-    MALE("남성"),
-    FEMALE("여성"),
-    MIXED("혼성");
+	MALE("남성"),
+	FEMALE("여성"),
+	MIXED("혼성");
 
-
-    private final String value;
+	private final String value;
 }

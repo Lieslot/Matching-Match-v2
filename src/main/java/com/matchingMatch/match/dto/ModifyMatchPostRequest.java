@@ -1,25 +1,26 @@
 package com.matchingMatch.match.dto;
 
+import java.time.LocalDateTime;
+
 import com.matchingMatch.match.domain.enums.Gender;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Getter
 public class ModifyMatchPostRequest {
 
-    @NotNull
-    private Long postId;
+	@NotNull
+	private Long postId;
 
-    private LocalDateTime startTime;
+	private LocalDateTime startTime;
 
-    private LocalDateTime endTime;
+	private LocalDateTime endTime;
 
-    private Gender gender;
+	private Gender gender;
 
-    private Integer stadiumCost;
+	private Integer stadiumCost;
 
-    private String etc;
+	private String etc;
 
 }

@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 public class MatchRefuseRequest {
-    @NotNull
-    private Long matchRequestId;
+	@NotNull
+	private Long matchRequestId;
 }

@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @Getter
 public class SendImageRequest {
-    @NotNull
-    private Long roomId = -1L;
-    @NotNull
-    private Long teamId;
-    @NotNull
-    private Long targetTeamId;
+	@NotNull
+	private Long roomId = -1L;
+	@NotNull
+	private Long teamId;
+	@NotNull
+	private Long targetTeamId;
 
 }

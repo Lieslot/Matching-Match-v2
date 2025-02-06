@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 public class MannerRateRequest {
 
-    @NotNull
-    private Long matchId;
-    @NotNull
-    private Long rate;
+	@NotNull
+	private Long matchId;
+	@NotNull
+	private Long rate;
 }

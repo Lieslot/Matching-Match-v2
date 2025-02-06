@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 public class LeaderRefuseRequest {
 
-    @NotNull
-    private Long teamId;
+	@NotNull
+	private Long teamId;
 }

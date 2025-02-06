@@ -1,7 +1,7 @@
 package com.matchingMatch.team.domain.entity;
 
-
 import com.matchingMatch.match.domain.BaseEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,28 +17,27 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LeaderRequestEntity extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false, unique = true)
-    private Long teamId;
+	@Column(nullable = false, unique = true)
+	private Long teamId;
 
-    private Long sendUserId;
+	private Long sendUserId;
 
-    private Long targetUserId;
+	private Long targetUserId;
 
+	public boolean hasTargetUserId(Long targetUserId) {
+		return this.targetUserId.equals(targetUserId);
+	}
 
-    public boolean hasTargetUserId(Long targetUserId) {
-        return this.targetUserId.equals(targetUserId);
-    }
-
-    @Builder
-    public LeaderRequestEntity(Long id, Long teamId, Long sendUserId, Long targetUserId) {
-        this.id = id;
-        this.teamId = teamId;
-        this.sendUserId = sendUserId;
-        this.targetUserId = targetUserId;
-    }
+	@Builder
+	public LeaderRequestEntity(Long id, Long teamId, Long sendUserId, Long targetUserId) {
+		this.id = id;
+		this.teamId = teamId;
+		this.sendUserId = sendUserId;
+		this.targetUserId = targetUserId;
+	}
 
 }

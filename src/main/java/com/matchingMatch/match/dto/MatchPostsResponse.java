@@ -8,12 +8,12 @@ import lombok.Getter;
 @Getter
 public class MatchPostsResponse {
 
-    @NotNull
-    public MatchPostsResponse(List<MatchPostListElementResponse> matchPosts) {
-        this.matchPosts = matchPosts;
-    }
+	@NotNull
+	public MatchPostsResponse(List<MatchPostListElementResponse> matchPosts) {
+		this.matchPosts = matchPosts;
+	}
 
-    @NotNull
-    private List<MatchPostListElementResponse> matchPosts;
+	@NotNull
+	private List<MatchPostListElementResponse> matchPosts;
 
 }

@@ -1,6 +1,7 @@
 package com.matchingMatch.notification.domain.entity;
 
 import com.matchingMatch.match.domain.BaseEntity;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,17 +16,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FcmSubscription extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Long userId;
-    private String fcmToken;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	private Long userId;
+	private String fcmToken;
 
-
-    @Builder
-    public FcmSubscription(Long id, Long userId, String fcmToken) {
-        this.id = id;
-        this.userId = userId;
-        this.fcmToken = fcmToken;
-    }
+	@Builder
+	public FcmSubscription(Long id, Long userId, String fcmToken) {
+		this.id = id;
+		this.userId = userId;
+		this.fcmToken = fcmToken;
+	}
 }

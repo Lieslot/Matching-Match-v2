@@ -1,7 +1,7 @@
 package com.matchingMatch.auth.domain;
 
-
 import com.matchingMatch.match.domain.BaseEntity;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
@@ -15,15 +15,14 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RefreshToken extends BaseEntity {
 
-    public RefreshToken(Long teamId, String content) {
-        this.teamId = teamId;
-        this.content = content;
-    }
+	public RefreshToken(Long teamId, String content) {
+		this.teamId = teamId;
+		this.content = content;
+	}
 
-    @Id
-    private Long teamId;
+	@Id
+	private Long teamId;
 
-
-    private String content;
+	private String content;
 
 }

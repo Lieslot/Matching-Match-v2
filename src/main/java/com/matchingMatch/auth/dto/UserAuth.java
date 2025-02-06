@@ -1,31 +1,29 @@
 package com.matchingMatch.auth.dto;
 
-
 import com.matchingMatch.match.domain.enums.Role;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.apache.catalina.User;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserAuth {
 
-    @NotNull
-    private Long id;
-    @NotNull
-    private Role role;
+	@NotNull
+	private Long id;
+	@NotNull
+	private Role role;
 
-    public static UserAuth team(Long id) {
+	public static UserAuth team(Long id) {
 
-        return new UserAuth(id, Role.USER);
-    }
+		return new UserAuth(id, Role.USER);
+	}
 
-    public static UserAuth guest() {
-        return new UserAuth(-1L, Role.Guest);
-    }
-
+	public static UserAuth guest() {
+		return new UserAuth(-1L, Role.Guest);
+	}
 
 }

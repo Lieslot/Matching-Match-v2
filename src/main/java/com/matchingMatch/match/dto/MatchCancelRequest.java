@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class MatchCancelRequest {
-    @NotNull
-    private Long matchRequestId;
+	@NotNull
+	private Long matchRequestId;
 
 }

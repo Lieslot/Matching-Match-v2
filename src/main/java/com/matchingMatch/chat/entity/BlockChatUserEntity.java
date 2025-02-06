@@ -1,6 +1,12 @@
 package com.matchingMatch.chat.entity;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
 import com.matchingMatch.match.domain.BaseEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,10 +16,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
-
-import java.time.LocalDateTime;
 
 @Entity(name = "block_chat_user")
 @Getter
@@ -22,33 +24,31 @@ import java.time.LocalDateTime;
 @SQLRestriction("deleted_at IS NULL")
 public class BlockChatUserEntity extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false, unique = true)
-    private Long userId;
+	@Column(nullable = false, unique = true)
+	private Long userId;
 
-    @Column(nullable = false)
-    private Long blockUserId;
+	@Column(nullable = false)
+	private Long blockUserId;
 
-    @Column(nullable = false)
-    private Long blockTeamId;
+	@Column(nullable = false)
+	private Long blockTeamId;
 
-    private LocalDateTime deletedAt;
+	private LocalDateTime deletedAt;
 
-    @Builder
-    public BlockChatUserEntity(Long id, Long userId, Long blockUserId, Long blockTeamId) {
-        this.id = id;
-        this.userId = userId;
-        this.blockUserId = blockUserId;
-        this.blockTeamId = blockTeamId;
-    }
+	@Builder
+	public BlockChatUserEntity(Long id, Long userId, Long blockUserId, Long blockTeamId) {
+		this.id = id;
+		this.userId = userId;
+		this.blockUserId = blockUserId;
+		this.blockTeamId = blockTeamId;
+	}
 
-    public void unblock() {
-        deletedAt = null;
-    }
-
-
+	public void unblock() {
+		deletedAt = null;
+	}
 
 }

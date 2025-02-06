@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 public class MatchBookmarkRequest {
-    @NotNull
-    private Long matchId;
+	@NotNull
+	private Long matchId;
 
-    public MatchBookmarkRequest(Long matchId) {
-        this.matchId = matchId;
-    }
+	public MatchBookmarkRequest(Long matchId) {
+		this.matchId = matchId;
+	}
 }

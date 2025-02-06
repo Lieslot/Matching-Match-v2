@@ -1,6 +1,5 @@
 package com.matchingMatch.chat.entity;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,25 +15,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatRoomParticipantEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false)
-    private Long roomId;
+	@Column(nullable = false)
+	private Long roomId;
 
-    @Column(nullable = false)
-    private Long teamId;
+	@Column(nullable = false)
+	private Long teamId;
 
-    @Column(nullable = false)
-    private Long lastReadChatId;
+	@Column(nullable = false)
+	private Long lastReadChatId;
 
-    @Builder
-    public ChatRoomParticipantEntity(Long id, Long roomId, Long teamId, Long lastReadChatId) {
-        this.id = id;
-        this.roomId = roomId;
-        this.teamId = teamId;
-        this.lastReadChatId = lastReadChatId;
-    }
+	@Builder
+	public ChatRoomParticipantEntity(Long id, Long roomId, Long teamId, Long lastReadChatId) {
+		this.id = id;
+		this.roomId = roomId;
+		this.teamId = teamId;
+		this.lastReadChatId = lastReadChatId;
+	}
 
 }

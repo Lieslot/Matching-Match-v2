@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class UserWithDrawRequest {
-    @NotNull
-    private Long id;
+	@NotNull
+	private Long id;
 
 }

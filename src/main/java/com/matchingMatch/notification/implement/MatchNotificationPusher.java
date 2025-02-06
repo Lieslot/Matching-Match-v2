@@ -4,5 +4,5 @@ import com.matchingMatch.notification.domain.MatchNotificationEntity;
 
 public interface MatchNotificationPusher {
 
-    void push(MatchNotificationEntity notification);
+	void push(MatchNotificationEntity notification);
 }

@@ -1,85 +1,82 @@
 package com.matchingMatch.listener;
 
-
-import com.matchingMatch.match.TeamAdapter;
-import com.matchingMatch.listener.event.MatchCancelEvent;
-import com.matchingMatch.listener.event.MatchConfirmEvent;
-import com.matchingMatch.listener.event.MatchRequestEvent;
-import com.matchingMatch.notification.domain.MatchNotificationEntity;
-import com.matchingMatch.notification.implement.MatchNotificationPushAdapter;
-import com.matchingMatch.notification.domain.entity.MatchNotificationType;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import com.matchingMatch.listener.event.MatchCancelEvent;
+import com.matchingMatch.listener.event.MatchConfirmEvent;
+import com.matchingMatch.listener.event.MatchRequestEvent;
+import com.matchingMatch.match.TeamAdapter;
+import com.matchingMatch.notification.domain.MatchNotificationEntity;
+import com.matchingMatch.notification.domain.entity.MatchNotificationType;
+import com.matchingMatch.notification.implement.MatchNotificationPushAdapter;
+
+import lombok.RequiredArgsConstructor;
+
 @Component
 @RequiredArgsConstructor
 public class NotificationEventListener {
 
-    private static final Logger log = LoggerFactory.getLogger(NotificationEventListener.class);
-    private final TeamAdapter teamAdapter;
-    private final MatchNotificationPushAdapter notificationPusher;
+	private static final Logger log = LoggerFactory.getLogger(NotificationEventListener.class);
+	private final TeamAdapter teamAdapter;
+	private final MatchNotificationPushAdapter notificationPusher;
 
+	@Async
+	@EventListener
+	public void publishMatchConfirmNotification(MatchConfirmEvent matchConfirmEvent) {
 
+		Long matchId = matchConfirmEvent.getMatchId();
+		Long targetTeamId = matchConfirmEvent.getTargetTeamId();
+		Long sendTeamId = matchConfirmEvent.getSendTeamId();
 
-    @Async
-    @EventListener
-    public void publishMatchConfirmNotification(MatchConfirmEvent matchConfirmEvent) {
+		MatchNotificationEntity notification = MatchNotificationEntity.builder()
+			.targetMatchId(matchId)
+			.targetTeamId(targetTeamId)
+			.sendTeamId(sendTeamId)
+			.notificationType(MatchNotificationType.MATCH_CONFIRM)
+			.build();
 
-        Long matchId = matchConfirmEvent.getMatchId();
-        Long targetTeamId = matchConfirmEvent.getTargetTeamId();
-        Long sendTeamId = matchConfirmEvent.getSendTeamId();
+		notificationPusher.push(notification);
 
-        MatchNotificationEntity notification = MatchNotificationEntity.builder()
-                .targetMatchId(matchId)
-                .targetTeamId(targetTeamId)
-                .sendTeamId(sendTeamId)
-                .notificationType(MatchNotificationType.MATCH_CONFIRM)
-                .build();
+	}
 
-        notificationPusher.push(notification);
+	@Async
+	@EventListener
+	public void publishConfirmedMatchCancelNotification(MatchCancelEvent confirmedMatchCancelEvent) {
 
-    }
+		Long matchId = confirmedMatchCancelEvent.getMatchId();
+		Long targetTeamId = confirmedMatchCancelEvent.getTargetTeamId();
+		Long sendTeamId = confirmedMatchCancelEvent.getSendTeamId();
 
-    @Async
-    @EventListener
-    public void publishConfirmedMatchCancelNotification(MatchCancelEvent confirmedMatchCancelEvent) {
+		MatchNotificationEntity notification = MatchNotificationEntity.builder()
+			.targetMatchId(matchId)
+			.targetTeamId(targetTeamId)
+			.sendTeamId(sendTeamId)
+			.notificationType(MatchNotificationType.MATCH_CONFIRM_CANCEL)
+			.build();
 
-        Long matchId = confirmedMatchCancelEvent.getMatchId();
-        Long targetTeamId = confirmedMatchCancelEvent.getTargetTeamId();
-        Long sendTeamId = confirmedMatchCancelEvent.getSendTeamId();
+		notificationPusher.push(notification);
+	}
 
-        MatchNotificationEntity notification = MatchNotificationEntity.builder()
-                .targetMatchId(matchId)
-                .targetTeamId(targetTeamId)
-                .sendTeamId(sendTeamId)
-                .notificationType(MatchNotificationType.MATCH_CONFIRM_CANCEL)
-                .build();
+	@Async
+	@EventListener
+	public void publishMatchRequestNotification(MatchRequestEvent matchRequestEvent) {
 
-        notificationPusher.push(notification);
-    }
+		Long matchId = matchRequestEvent.getMatchId();
+		Long sendTeamId = matchRequestEvent.getSendTeamId();
+		Long targetTeamId = matchRequestEvent.getTargetTeamId();
 
+		MatchNotificationEntity notification = MatchNotificationEntity.builder()
+			.targetMatchId(matchId)
+			.targetTeamId(targetTeamId)
+			.sendTeamId(sendTeamId)
+			.notificationType(MatchNotificationType.MATCH_REQUEST)
+			.build();
 
-    @Async
-    @EventListener
-    public void publishMatchRequestNotification(MatchRequestEvent matchRequestEvent) {
-
-        Long matchId = matchRequestEvent.getMatchId();
-        Long sendTeamId = matchRequestEvent.getSendTeamId();
-        Long targetTeamId = matchRequestEvent.getTargetTeamId();
-
-        MatchNotificationEntity notification = MatchNotificationEntity.builder()
-                .targetMatchId(matchId)
-                .targetTeamId(targetTeamId)
-                .sendTeamId(sendTeamId)
-                .notificationType(MatchNotificationType.MATCH_REQUEST)
-                .build();
-
-        notificationPusher.push(notification);
-    }
-
+		notificationPusher.push(notification);
+	}
 
 }

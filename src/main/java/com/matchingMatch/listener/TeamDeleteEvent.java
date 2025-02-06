@@ -7,5 +7,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class TeamDeleteEvent {
 
-    private Long teamId;
+	private Long teamId;
 }

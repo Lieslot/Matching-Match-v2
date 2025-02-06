@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @Getter
 public class SignUpRequest {
-        @NotNull
-        private String username;
-        @NotNull
-        private String password;
-        @NotNull
-        private String nickname;
+	@NotNull
+	private String username;
+	@NotNull
+	private String password;
+	@NotNull
+	private String nickname;
 
 }

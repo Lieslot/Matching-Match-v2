@@ -6,15 +6,15 @@ import lombok.Getter;
 
 @Getter
 public class ExistChatRoomRequest {
-    @NotNull
-    private Long roomId;
-    @NotNull
-    private Long teamId;
+	@NotNull
+	private Long roomId;
+	@NotNull
+	private Long teamId;
 
-    @Builder
-    public ExistChatRoomRequest(Long roomId, Long userId) {
-        this.roomId = roomId;
-        this.teamId = userId;
-    }
+	@Builder
+	public ExistChatRoomRequest(Long roomId, Long userId) {
+		this.roomId = roomId;
+		this.teamId = userId;
+	}
 
 }

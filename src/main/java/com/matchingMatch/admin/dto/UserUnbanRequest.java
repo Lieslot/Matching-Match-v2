@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 public class UserUnbanRequest {
 
-    @NotNull
-    private Long id;
+	@NotNull
+	private Long id;
 }

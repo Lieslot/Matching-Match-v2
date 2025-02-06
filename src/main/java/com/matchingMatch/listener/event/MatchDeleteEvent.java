@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class MatchDeleteEvent {
-    private Long matchId;
+	private Long matchId;
 }

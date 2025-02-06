@@ -1,13 +1,13 @@
 package com.matchingMatch.chat.entity.repository;
 
-import com.matchingMatch.chat.entity.ChatRoomParticipantEntity;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-import java.util.Optional;
+import com.matchingMatch.chat.entity.ChatRoomParticipantEntity;
 
 public interface ChatRoomParticipantRepository extends JpaRepository<ChatRoomParticipantEntity, Long> {
-    void deleteByRoomIdAndTeamId(Long roomId, Long teamId);
+	void deleteByRoomIdAndTeamId(Long roomId, Long teamId);
 
-    List<ChatRoomParticipantEntity> findAllByTeamId(Long id);
+	List<ChatRoomParticipantEntity> findAllByTeamId(Long id);
 }

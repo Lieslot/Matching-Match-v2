@@ -1,16 +1,15 @@
 package com.matchingMatch.team.domain.entity;
 
+import java.util.Objects;
 
 import com.matchingMatch.match.domain.BaseEntity;
 import com.matchingMatch.match.domain.enums.Gender;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
-import java.util.Objects;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,129 +19,125 @@ import lombok.Setter;
 @Setter
 public class TeamEntity extends BaseEntity {
 
+	public static TeamEntity of(Team team) {
 
-    public static TeamEntity of(Team team) {
+		return TeamEntity.builder()
+			.id(team.getId())
+			.name(team.getName())
+			.description(team.getDescription())
+			.logoUrl(team.getLogoUrl())
+			.leaderId(team.getLeaderId())
+			.mannerPointSum(team.getMannerPointSum())
+			.matchCount(team.getMatchCount())
+			.region(team.getRegion())
+			.gender(team.getGender())
+			.build();
+	}
 
-        return TeamEntity.builder()
-                .id(team.getId())
-                .name(team.getName())
-                .description(team.getDescription())
-                .logoUrl(team.getLogoUrl())
-                .leaderId(team.getLeaderId())
-                .mannerPointSum(team.getMannerPointSum())
-                .matchCount(team.getMatchCount())
-                .region(team.getRegion())
-                .gender(team.getGender())
-                .build();
-    }
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Column(unique = true, nullable = false)
+	private String name;
 
-    @Column(unique = true, nullable = false)
-    private String name;
+	private String description;
 
-    private String description;
+	private String logoUrl;
+	@Column(nullable = false)
+	private Long leaderId;
 
-    private String logoUrl;
-    @Column(nullable = false)
-    private Long leaderId;
+	private Long mannerPointSum = 0L;
 
-    private Long mannerPointSum = 0L;
+	private Long matchCount = 0L;
 
-    private Long matchCount = 0L;
+	@Column(nullable = false)
+	private String region;
 
-    @Column(nullable = false)
-    private String region;
+	@Column(nullable = false)
+	private Gender gender;
 
-    @Column(nullable = false)
-    private Gender gender;
+	@Builder
+	public TeamEntity(Long id, String name, String description, String logoUrl, Long mannerPointSum, Long matchCount,
+		String region, Gender gender, Long leaderId) {
+		this.id = id;
+		this.name = name;
+		this.matchCount = matchCount;
+		this.mannerPointSum = mannerPointSum;
+		this.description = description;
+		this.logoUrl = logoUrl;
+		this.region = region;
+		this.gender = gender;
+		this.leaderId = leaderId;
 
+	}
 
+	public TeamEntity() {
 
-    @Builder
-    public TeamEntity(Long id, String name, String description, String logoUrl, Long mannerPointSum, Long matchCount,
-                      String region, Gender gender, Long leaderId) {
-        this.id = id;
-        this.name = name;
-        this.matchCount = matchCount;
-        this.mannerPointSum = mannerPointSum;
-        this.description = description;
-        this.logoUrl = logoUrl;
-        this.region = region;
-        this.gender = gender;
-        this.leaderId = leaderId;
+	}
 
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		TeamEntity team = (TeamEntity)o;
+		return Objects.equals(id, team.id);
+	}
 
-    public TeamEntity() {
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
 
-    }
+	// TODO 이미 평가한 경우 무시하도록 예외처리
+	public void rate(Long mannerPoint) {
+		mannerPointSum += mannerPoint;
+		matchCount++;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        TeamEntity team = (TeamEntity) o;
-        return Objects.equals(id, team.id);
-    }
+	//    public void addNotification(Notification notification) {
+	//        this.notifications.add(notification);
+	//    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+	//    public void confirmParticipant(Match match) {
+	//
+	//        participatedMatches.add(match);
+	//
+	//    }
+	//
+	//    public void cancelParticipant(Match match) {
+	//
+	//        participatedMatches.add(match);
+	//
+	//    }
+	//
+	//    public void addMatchBookMark(MatchBookmark matchBookMark) {
+	//        matchBookmarks.add(matchBookMark);
+	//    }
+	//
+	//    public void removeMatchBookmark(Long matchBookmarkId) {
+	//        matchBookmarks.removeIf(matchBookmark -> matchBookmark.getId().equals(matchBookmarkId));
+	//    }
 
+	public float calculateMannerPoint() {
+		return (float)this.mannerPointSum / this.matchCount;
+	}
 
-    // TODO 이미 평가한 경우 무시하도록 예외처리
-    public void rate(Long mannerPoint) {
-        mannerPointSum += mannerPoint;
-        matchCount++;
-    }
-
-//    public void addNotification(Notification notification) {
-//        this.notifications.add(notification);
-//    }
-
-//    public void confirmParticipant(Match match) {
-//
-//        participatedMatches.add(match);
-//
-//    }
-//
-//    public void cancelParticipant(Match match) {
-//
-//        participatedMatches.add(match);
-//
-//    }
-//
-//    public void addMatchBookMark(MatchBookmark matchBookMark) {
-//        matchBookmarks.add(matchBookMark);
-//    }
-//
-//    public void removeMatchBookmark(Long matchBookmarkId) {
-//        matchBookmarks.removeIf(matchBookmark -> matchBookmark.getId().equals(matchBookmarkId));
-//    }
-
-    public float calculateMannerPoint() {
-        return (float) this.mannerPointSum / this.matchCount;
-    }
-
-    public Team toDomain() {
-        return Team.builder()
-                .id(id)
-                .name(name)
-                .teamDescription(description)
-                .teamLogoUrl(logoUrl)
-                .leaderId(leaderId)
-                .mannerPointSum(mannerPointSum)
-                .matchCount(matchCount)
-                .region(region)
-                .gender(gender)
-                .build();
-    }
+	public Team toDomain() {
+		return Team.builder()
+			.id(id)
+			.name(name)
+			.teamDescription(description)
+			.teamLogoUrl(logoUrl)
+			.leaderId(leaderId)
+			.mannerPointSum(mannerPointSum)
+			.matchCount(matchCount)
+			.region(region)
+			.gender(gender)
+			.build();
+	}
 }

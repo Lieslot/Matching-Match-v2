@@ -11,11 +11,11 @@ import lombok.Setter;
 @Getter
 public class ChatRoomEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Setter
-    private Long lastChatId;
+	@Setter
+	private Long lastChatId;
 
 }

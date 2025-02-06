@@ -1,31 +1,31 @@
 package com.matchingMatch.match.domain.enums.converter;
 
-import com.matchingMatch.match.domain.enums.Gender;
-import jakarta.persistence.AttributeConverter;
-import jakarta.persistence.Converter;
 import java.util.stream.Stream;
 
+import com.matchingMatch.match.domain.enums.Gender;
+
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
 public class GenderConverter implements AttributeConverter<Gender, String> {
 
+	@Override
+	public String convertToDatabaseColumn(Gender gender) {
 
-    @Override
-    public String convertToDatabaseColumn(Gender gender) {
+		if (gender == null) {
+			return null;
+		}
 
-        if (gender == null) {
-            return null;
-        }
+		return gender.getValue();
+	}
 
-        return gender.getValue();
-    }
-
-    @Override
-    public Gender convertToEntityAttribute(String s) {
-        return Stream.of(Gender.values())
-                     .filter(g -> g.getValue()
-                                   .equals(s))
-                     .findFirst()
-                     .orElseThrow(IllegalArgumentException::new);
-    }
+	@Override
+	public Gender convertToEntityAttribute(String s) {
+		return Stream.of(Gender.values())
+			.filter(g -> g.getValue()
+				.equals(s))
+			.findFirst()
+			.orElseThrow(IllegalArgumentException::new);
+	}
 }
