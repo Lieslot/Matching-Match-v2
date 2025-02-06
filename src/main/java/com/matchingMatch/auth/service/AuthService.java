@@ -7,15 +7,19 @@ import com.matchingMatch.auth.domain.RefreshTokenRepository;
 
 import java.util.Optional;
 
+import com.matchingMatch.auth.dto.SignUpRequest;
+import com.matchingMatch.match.domain.enums.Role;
 import com.matchingMatch.user.domain.UserDetail;
 import com.matchingMatch.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class AuthService {
 
@@ -27,6 +31,7 @@ public class AuthService {
 
     @Transactional
     public AuthToken login(String username, String password) {
+
 
         UserDetail user = userRepository.findByUsername(username).orElseThrow(() -> new BadCredentialsException("아이디 또는 비밀번호가 잘못됨"));
 
@@ -58,6 +63,20 @@ public class AuthService {
             throw new BadCredentialsException("아이디 또는 비밀번호가 잘못됨");
 
         }
+    }
+
+
+    public void signUp(SignUpRequest signUpRequest) {
+        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
+        }
+
+        userRepository.save(UserDetail.builder()
+                .username(signUpRequest.getUsername())
+                .password(passwordEncoder.encode(signUpRequest.getPassword()))
+                .nickname(signUpRequest.getNickname())
+                .role(Role.USER)
+                .build());
     }
 
 

@@ -45,7 +45,7 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
         String accessToken = webRequest.getHeader(ACCESS_TOKEN_KEY);
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
 
-        if (request != null) {
+        if (request == null) {
 
             throw new IllegalArgumentException();
         }

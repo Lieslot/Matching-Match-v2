@@ -3,10 +3,9 @@ package com.matchingMatch.notification.controller;
 
 import com.matchingMatch.auth.AuthenticatedUser;
 import com.matchingMatch.auth.Authentication;
-import com.matchingMatch.notification.domain.PublicSubscription;
+import com.matchingMatch.auth.dto.UserAuth;
 import com.matchingMatch.notification.dto.PublicSubscriptionRequest;
 import com.matchingMatch.notification.service.PushService;
-import com.matchingMatch.team.service.TeamService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,11 +26,13 @@ public class NotificationController {
     @PostMapping("/subscribe")
     @ResponseStatus(HttpStatus.OK)
     @AuthenticatedUser
-    public void subscribe(@Valid @RequestBody PublicSubscriptionRequest publicSubscriptionRequest, @Authentication Long userId) {
+    public void subscribe(@Valid @RequestBody PublicSubscriptionRequest publicSubscriptionRequest, @Authentication UserAuth userAuth) {
 
-        pushService.subscribe(publicSubscriptionRequest, userId);
+        pushService.subscribe(publicSubscriptionRequest,userAuth.getId());
 
     }
+
+
 
 
 

@@ -3,7 +3,6 @@ package com.matchingMatch.notification.domain;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
-import com.google.firebase.messaging.Notification;
 import com.google.firebase.messaging.WebpushConfig;
 import com.google.firebase.messaging.WebpushNotification;
 import com.matchingMatch.match.TeamAdapter;
@@ -21,13 +20,13 @@ import java.text.MessageFormat;
 public class FcmMatchNotificationPusher {
 
     private final TeamAdapter teamAdapter;
-    private final PublicSubscriptionRepository publicSubscriptionRepository;
+    private final FcmSubscriptionRepository publicSubscriptionRepository;
 
 
     public void push(MatchNotificationEntity matchNotification) {
 
         Team targetTeam = teamAdapter.getTeamBy(matchNotification.getSendTeamId());
-        PublicSubscription subscription = publicSubscriptionRepository.findByUserId(targetTeam.getLeaderId()).orElseThrow(
+        FcmSubscription subscription = publicSubscriptionRepository.findByUserId(targetTeam.getLeaderId()).orElseThrow(
                 () -> new IllegalArgumentException("Subscription not found")
         );
 
@@ -48,7 +47,7 @@ public class FcmMatchNotificationPusher {
         // TODO FCM 전송
         Message fcmMessage = Message.builder()
                 .setWebpushConfig(webpushConfig)
-                .setToken(subscription.getEndpoint())
+                .setToken(subscription.getFcmToken())
                 .build();
 
 
