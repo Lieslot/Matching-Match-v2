@@ -12,7 +12,6 @@ import com.matchingMatch.auth.Authentication;
 import com.matchingMatch.auth.dto.UserAuth;
 import com.matchingMatch.notification.dto.PublicSubscriptionRequest;
 import com.matchingMatch.notification.service.NotificationService;
-
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
