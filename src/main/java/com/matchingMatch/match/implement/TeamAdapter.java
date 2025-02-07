@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.matchingMatch.match.domain.repository.TeamRepository;
 import com.matchingMatch.team.TeamNotFoundException;
@@ -23,6 +24,7 @@ public class TeamAdapter {
 	private final UserRepository userRepository;
 	private final LeaderRequestRepository leaderRequestRepository;
 
+	@Transactional(readOnly = true)
 	public Team getTeamBy(Long teamId) {
 
 		TeamEntity team = teamRepository.findById(teamId)
@@ -57,6 +59,7 @@ public class TeamAdapter {
 		return teamRepository.save(TeamEntity.of(team)).getId();
 	}
 
+
 	public void save(LeaderRequestEntity leaderRequestEntity) {
 		leaderRequestRepository.save(leaderRequestEntity);
 	}
@@ -77,7 +80,7 @@ public class TeamAdapter {
 	public Long countUserTeam(Long userId) {
 		return teamRepository.countAllByLeaderId(userId);
 	}
-
+	@Transactional(readOnly = true)
 	public Team getTeamByLeaderId(Long userId) {
 		TeamEntity teamEntity = teamRepository.findByLeaderId(userId)
 			.orElseThrow(() -> new IllegalArgumentException("Team Not Found" + "userId: " + userId));

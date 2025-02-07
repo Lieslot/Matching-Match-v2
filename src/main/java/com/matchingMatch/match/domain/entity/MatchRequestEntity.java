@@ -55,4 +55,6 @@ public class MatchRequestEntity extends BaseEntity {
 		return Objects.hash(sendTeamId, matchId);
 	}
 
+
+
 }

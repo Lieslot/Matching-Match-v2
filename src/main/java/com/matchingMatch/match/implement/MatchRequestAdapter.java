@@ -3,6 +3,7 @@ package com.matchingMatch.match.implement;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.matchingMatch.match.domain.entity.MatchRequestEntity;
 import com.matchingMatch.match.domain.repository.MatchRequestRepository;
@@ -18,7 +19,7 @@ public class MatchRequestAdapter {
 	public void deleteByMatchIdAndSendTeamId(Long matchId, Long teamId) {
 		matchRequestRepository.deleteByMatchIdAndSendTeamId(matchId, teamId);
 	}
-
+	@Transactional
 	public void deleteAllByMatchId(Long matchId) {
 		matchRequestRepository.deleteAllByMatchId(matchId);
 	}
@@ -34,6 +35,10 @@ public class MatchRequestAdapter {
 	public MatchRequestEntity findById(Long matchRequestId) {
 		return matchRequestRepository.findById(matchRequestId)
 			.orElseThrow(IllegalArgumentException::new);
+	}
+
+	public boolean existsById(Long matchRequestId) {
+		return matchRequestRepository.existsById(matchRequestId);
 	}
 
 	public List<MatchRequestEntity> findAllBySendTeamId(Long teamId) {

@@ -31,7 +31,7 @@ public class MatchRequestController {
 	@AuthenticatedUser
 	public List<MatchRequestThumbnail> getReceivedRequests(@Authentication UserAuth userAuth) {
 
-		return matchingService.getRequestThumbnail(userAuth.getId());
+		return matchingService.getRequestThumbnails(userAuth.getId());
 	}
 
 	@GetMapping("/requests/{matchId}/detail")

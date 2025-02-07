@@ -1,5 +1,7 @@
 package com.matchingMatch.match.service;
 
+import com.matchingMatch.listener.event.MatchConfirmEvent;
+import com.matchingMatch.match.exception.UnauthorizedAccessException;
 import com.matchingMatch.match.implement.MannerRater;
 import com.matchingMatch.match.implement.MatchRequestAdapter;
 import com.matchingMatch.match.implement.MatchTeamValidator;
@@ -58,17 +60,20 @@ public class MatchingService {
 		matchRequestAdapter.save(matchRequest);
 
 		eventPublisher.publishEvent(new MatchRequestEvent(matchId, match.getHostId(), sendTeam.getId()));
-
-		// TODO: 매치 요청 알림 보내기
 	}
 
 	public void cancelMatchRequest(Long requestId, Long userId) {
 
 		MatchRequestEntity matchRequest = matchRequestAdapter.findById(requestId);
+
+		Team team = teamAdapter.getTeamByLeaderId(userId);
+		if (!matchRequest.getSendTeamId().equals(team.getId())) {
+			throw new UnauthorizedAccessException();
+		}
+
 		Match match = matchAdapter.getMatchBy(matchRequest.getMatchId());
 
 		match.checkAlreadyConfirmed();
-		matchTeamValidator.checkHost(match, userId);
 
 		matchRequestAdapter.deleteById(requestId);
 
@@ -87,7 +92,7 @@ public class MatchingService {
 		matchAdapter.updateMatch(match);
 		matchRequestAdapter.deleteAllByMatchId(matchId);
 
-		// TODO 알림 보내기
+		eventPublisher.publishEvent(new MatchConfirmEvent(match.getHostId(), requestingTeamId, matchId));
 	}
 
 	public void cancelConfirmedMatch(Long matchId, Long currentUserId) {
@@ -130,7 +135,7 @@ public class MatchingService {
 	}
 
 	// TODO: 페이징 추가
-	public List<MatchRequestThumbnail> getRequestThumbnail(Long userId) {
+	public List<MatchRequestThumbnail> getRequestThumbnails(Long userId) {
 		Team team = teamAdapter.getTeamByLeaderId(userId);
 
 		List<MatchRequestEntity> requests = matchRequestAdapter.findAllByTargetTeamId(team.getId());

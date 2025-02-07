@@ -21,8 +21,7 @@ public class TeamEntity extends BaseEntity {
 
 	public static TeamEntity of(Team team) {
 
-		return TeamEntity.builder()
-			.id(team.getId())
+		TeamEntityBuilder builder = TeamEntity.builder()
 			.name(team.getName())
 			.description(team.getDescription())
 			.logoUrl(team.getLogoUrl())
@@ -30,8 +29,12 @@ public class TeamEntity extends BaseEntity {
 			.mannerPointSum(team.getMannerPointSum())
 			.matchCount(team.getMatchCount())
 			.region(team.getRegion())
-			.gender(team.getGender())
-			.build();
+			.gender(team.getGender());
+
+		if (team.getId() != null) {
+			builder.id(team.getId());
+		}
+		return builder.build();
 	}
 
 	@Id

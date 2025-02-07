@@ -8,6 +8,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.matchingMatch.match.domain.Match;
@@ -73,7 +74,7 @@ public class MatchAdapter {
 				mannerRateCheckEntity -> toMach(matches.get(mannerRateCheckEntity.getMatchId()), mannerRateCheckEntity))
 			.toList();
 	}
-
+	@Transactional
 	public void updateMatch(Match match) {
 		MatchEntity matchEntity = MatchEntity.from(match);
 		matchRepository.save(matchEntity);
