@@ -5,7 +5,7 @@
 ### サービス説明
 
 - [1. サービス説明](#1-サービス説明)
-- [2. 役割分担](#2-役割分担)
+- [2. ユーザーの区分](#2-ユーザーの区分)
 - [3. ユーザーフロー](#3-ユーザーフロー)
 
 ### アプリケーション説明
@@ -41,54 +41,34 @@
 
 ### ユーザーストーリー図
 
-#### 1. マッチ申請フロー
-
 ```mermaid
 sequenceDiagram
-    participant マッチ申請者 as マッチ申請者
-    participant システム as システム
-    participant マッチ主催者 as マッチ主催者
+    participant Host as 主催者
+    participant System as システム
+    participant Requester as 申請者
 
-    マッチ申請者->>システム: マッチ投稿リスト照会
-    システム-->>マッチ申請者: マッチリスト表示
-    マッチ申請者->>システム: 特定マッチ詳細照会
-    システム-->>マッチ申請者: マッチ詳細情報表示
-    マッチ申請者->>システム: マッチ参加申請
-    システム->>システム: マッチ申請情報(match_request)保存
-    システム->>システム: 主催者への通知(match_notification)作成
-    システム-->>マッチ主催者: [Push] 新規マッチ申請通知
-    マッチ主催者->>マッチ主催者: 通知確認
+    Host->>System: マッチ作成を要請
+    
+    Note over Requester, System: 時間が経過
+
+    Requester->>System: マッチリストを閲覧
+    Requester->>System: マッチ参加を申請
+    System-->>Host: [通知] 新規マッチ申請
+
+    Note over Host, System: 時間が経過
+
+    Host->>System: 申請リストを閲覧
+    Host->>System: マッチ申請を承諾
+    System-->>Requester: [通知] マッチ確定
 ```
 
-1. マッチ申請者がシステムに登録されたマッチリストを閲覧します。
-2. 気に入ったマッチを選択し、詳細情報を確認します。
-3. 参加したい場合は、「マッチ参加申請」を送信します。
-4. システムはこの申請を保存し、マッチ主催者にプッシュ通知を送り、新規申請があったことを知らせます。
+**全体的なフローの説明:**
+1. **マッチ作成:** 主催者が新しいマッチを作成します。
+2. **マッチ申請:** 申請者がマッチリストを閲覧して参加を申請すると、主催者に通知が届きます。
+3. **マッチ承諾:** 主催者が申請を承諾すると、申請者に最終確定の通知が届きます。
 
 
-#### 2. マッチ承諾フロー
 
-```mermaid
-sequenceDiagram
-    participant マッチ主催者 as マッチ主催者
-    participant システム as システム
-    participant マッチ申請者 as マッチ申請者
-
-    マッチ主催者->>システム: 受信したマッチ申請リスト照会
-    システム-->>マッチ主催者: 申請リスト表示
-    マッチ主催者->>システム: 特定申請詳細照会
-    システム-->>マッチ主催者: 申請チームのプロフィールなど詳細情報表示
-    マッチ主催者->>システム: マッチ承諾
-    システム->>システム: マッチ情報(match)に申請チーム情報を更新し、確定
-    システム->>システム: 申請者への通知(match_notification)作成
-    システム-->>マッチ申請者: [Push] マッチ確定通知
-    マッチ申請者->>マッチ申請者: 通知確認
-```
-
-1. マッチ主催者が自分に届いたマッチ申請リストを閲覧します。
-2. 特定の申請を選択し、申請したチームの情報を確認します。
-3. 申請を承諾すると、システムはマッチを最終確定状態に変更します。
-4. システムはマッチ申請者にマッチが確定したことをプッシュ通知で知らせ、両チームのマッチスケジュールが確定します。
 
 
 # アプリケーション説明
@@ -215,7 +195,7 @@ erDiagram
 
     match {
         Long id PK
-        Long hostId FK
+        Long マッチ主催者Id FK
         Long participantId FK
         LocalDateTime startTime
         LocalDateTime endTime
@@ -245,7 +225,7 @@ erDiagram
         Long id PK
         Long matchId FK
         Boolean isParticipantRate
-        Boolean isHostRate
+        Boolean isマッチ主催者Rate
     }
 
     leader_request {
@@ -266,7 +246,7 @@ erDiagram
 
     users ||--o{ team : "has"
     team ||--o{ RefreshToken : "has"
-    team ||--o{ match : "hosts"
+    team ||--o{ match : "マッチ主催者s"
     team ||--o{ match : "participates_in"
     team ||--o{ match_request : "sends"
     team ||--o{ match_request : "receives"
@@ -300,7 +280,7 @@ erDiagram
 classDiagram
     class Match {
         +Long id
-        +Long hostId
+        +Long マッチ主催者Id
         +Long participantId
         +LocalDateTime startTime
         +LocalDateTime endTime
@@ -310,14 +290,14 @@ classDiagram
         +Integer stadiumCost
         +String etc
         +Boolean isParticipantRate
-        +Boolean isHostRate
+        +Boolean isマッチ主催者Rate
         +checkAlreadyConfirmed()
         +confirmMatch(Team team)
         +cancelMatch()
         +checkCancelDeadline(LocalDateTime now)
         +isConfirmed()
         +started()
-        +rateHost()
+        +rateマッチ主催者()
         +rateParticipantRate()
         +update(ModifyMatchPostRequest newDetail)
         +isEnd()
@@ -370,7 +350,7 @@ classDiagram
         +unban()
     }
 
-    Match --> Team : "participantId, hostId"
+    Match --> Team : "participantId, マッチ主催者Id"
     Match --> Stadium : "stadiumId"
     Team --> UserDetail : "leaderId"
     Match o-- MannerRate
