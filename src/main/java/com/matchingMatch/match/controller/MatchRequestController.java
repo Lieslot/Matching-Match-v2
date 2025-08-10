@@ -25,7 +25,6 @@ public class MatchRequestController {
 
 	private final MatchingService matchingService;
 
-	// TODO 다른 사람이 신청한 매치 요청 목록 보기
 	@GetMapping("/requests")
 	@ResponseStatus(HttpStatus.OK)
 	@AuthenticatedUser

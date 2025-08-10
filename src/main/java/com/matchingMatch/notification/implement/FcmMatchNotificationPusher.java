@@ -48,7 +48,6 @@ public class FcmMatchNotificationPusher {
 					.build()
 			).build();
 
-		// TODO FCM 전송
 		Message fcmMessage = Message.builder()
 			.setWebpushConfig(webpushConfig)
 			.setToken(subscription.getFcmToken())

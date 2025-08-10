@@ -89,8 +89,6 @@ public class TeamService {
 		Team team = teamAdapter.getTeamBy(teamId);
 		team.changeLeader(leaderRequest.getTargetUserId());
 		teamAdapter.save(team);
-
-		// TODO 알림 날리기
 	}
 
 	@Transactional

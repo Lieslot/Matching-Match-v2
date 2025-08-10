@@ -95,8 +95,6 @@ public class MatchPostController {
 		return new MatchPostsResponse(posts);
 	}
 
-	// TODO 내가 신청한 매치 목록 보기
-
 	@GetMapping("/{teamId}/host")
 	@AuthenticatedUser
 	@ResponseStatus(HttpStatus.OK)

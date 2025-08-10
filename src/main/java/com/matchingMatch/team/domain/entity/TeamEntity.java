@@ -102,30 +102,6 @@ public class TeamEntity extends BaseEntity {
 		matchCount++;
 	}
 
-	//    public void addNotification(Notification notification) {
-	//        this.notifications.add(notification);
-	//    }
-
-	//    public void confirmParticipant(Match match) {
-	//
-	//        participatedMatches.add(match);
-	//
-	//    }
-	//
-	//    public void cancelParticipant(Match match) {
-	//
-	//        participatedMatches.add(match);
-	//
-	//    }
-	//
-	//    public void addMatchBookMark(MatchBookmark matchBookMark) {
-	//        matchBookmarks.add(matchBookMark);
-	//    }
-	//
-	//    public void removeMatchBookmark(Long matchBookmarkId) {
-	//        matchBookmarks.removeIf(matchBookmark -> matchBookmark.getId().equals(matchBookmarkId));
-	//    }
-
 	public float calculateMannerPoint() {
 		return (float)this.mannerPointSum / this.matchCount;
 	}

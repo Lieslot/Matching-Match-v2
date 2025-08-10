@@ -55,7 +55,6 @@ public class AuthController {
 
 	}
 
-	// TODO 회원가입 기능 추가
 
 	@PostMapping("/sign-up")
 	@ResponseStatus(HttpStatus.CREATED)

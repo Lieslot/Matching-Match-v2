@@ -185,7 +185,6 @@ public class MatchingServiceTest {
 		Assertions.assertThat(result).isInstanceOf(IllegalArgumentException.class);
 	}
 
-	// TODO 매치 신청 취소 성공
 
 	@Test
 	void match_request_cancel_success() {
@@ -200,7 +199,6 @@ public class MatchingServiceTest {
 		Assertions.assertThat(matchRequestRepository.count()).isEqualTo(0);
 	}
 
-	// TODO 매치 신청 취소 실패
 	// TODO 추후에 동시성 문제로 테스트 작성
 	@Test
 	void match_request_cancel_failed_when_match_has_already_confirmed() {
@@ -218,7 +216,6 @@ public class MatchingServiceTest {
 		Assertions.assertThat(result).isInstanceOf(IllegalArgumentException.class);
 	}
 
-	// TODO 매치 신청 수락 성공
 
 	@Test
 	void match_request_confirm_success() {
@@ -235,8 +232,6 @@ public class MatchingServiceTest {
 		Assertions.assertThat(match.isConfirmed()).isTrue();
 	}
 
-	// TODO 매치 신청 수락 실패
-	@Test
 	void match_request_confirm_failed_when_match_has_already_confirmed() {
 		// given
 		matchService.sendMatchRequest(match.getId(), guestId);
@@ -267,7 +262,6 @@ public class MatchingServiceTest {
 		Assertions.assertThat(result).isInstanceOf(UnauthorizedAccessException.class);
 	}
 
-	// TODO 매치 신청 거절 성공
 
 	@Test
 	void match_request_reject_success() {
@@ -282,7 +276,6 @@ public class MatchingServiceTest {
 		Assertions.assertThat(matchRequestRepository.count()).isEqualTo(0);
 	}
 
-	// TODO 매치 신청 거절 실패
 
 	// TODO 추후에 동시성 테스트
 	@Test
@@ -315,8 +308,6 @@ public class MatchingServiceTest {
 		// then
 		Assertions.assertThat(result).isInstanceOf(UnauthorizedAccessException.class);
 	}
-
-	// TODO 매너 점수 매기기 성공
 
 	@Test
 	void manner_rate_success_host() {
@@ -358,10 +349,6 @@ public class MatchingServiceTest {
 		Assertions.assertThat(match.getIsParticipantRate()).isTrue();
 	}
 
-	// 1. host
-	// 2. guest
-	// TODO 매너 점수 매기기 실패
-
 	@Test
 	void manner_rate_failed_when_already_rated() {
 		// given
@@ -400,8 +387,6 @@ public class MatchingServiceTest {
 		Assertions.assertThat(result).isInstanceOf(IllegalArgumentException.class);
 	}
 
-	// TODO 매치 확정 취소 성공
-
 	@Test
 	void match_confirm_cancel_success() {
 		// given
@@ -418,8 +403,6 @@ public class MatchingServiceTest {
 		Match match = matchAdapter.getMatchBy(this.match.getId());
 		Assertions.assertThat(match.isConfirmed()).isFalse();
 	}
-
-	// TODO 매치 확정 취소 실패
 
 	@Test
 	void match_confirm_cancel_failed_when_cancel_deadline_is_not_over() {
@@ -459,8 +442,6 @@ public class MatchingServiceTest {
 		Assertions.assertThat(result).isInstanceOf(UnauthorizedAccessException.class);
 	}
 
-	// TODO 매치 확정 성공
-
 	@Test
 	void match_confirm_success() {
 		// given
@@ -473,8 +454,6 @@ public class MatchingServiceTest {
 		Match match = matchAdapter.getMatchBy(this.match.getId());
 		Assertions.assertThat(match.isConfirmed()).isTrue();
 	}
-
-	// TODO 매치 확정 실패
 
 	@Test
 	void match_confirm_failed_when_match_has_already_confirmed() {

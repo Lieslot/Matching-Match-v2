@@ -15,7 +15,6 @@ import com.matchingMatch.match.exception.UnauthorizedAccessException;
 @Component
 public class UserAuthVerifier {
 
-	// TODO ADMIN인지 체크하기
 
 	@Before("@annotation(com.matchingMatch.auth.AuthenticatedAdmin)")
 	public void verifyAdmin(final JoinPoint joinPoint) {

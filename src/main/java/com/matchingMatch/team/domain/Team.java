@@ -73,7 +73,6 @@ public class Team {
 		return BigDecimal.valueOf(mannerPointSum).divide(BigDecimal.valueOf(matchCount), 2, RoundingMode.HALF_UP);
 	}
 
-	// TODO 체크 로직과 예외처리 로직 분리
 	public void checkLeader(Long leaderId) {
 		if (!this.leaderId.equals(leaderId)) {
 			throw new UnauthorizedAccessException();
