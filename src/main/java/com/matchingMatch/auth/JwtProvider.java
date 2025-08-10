@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
-@PropertySource("classpath:secret.yml")
+@PropertySource("classpath:secret.sample.yml")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Slf4j
 public class JwtProvider {
