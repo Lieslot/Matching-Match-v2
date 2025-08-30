@@ -1,4 +1,4 @@
-package com.matchingMatch.match.domain;
+package com.matchingMatch.match.implement;
 
 import com.matchingMatch.match.domain.entity.StadiumEntity;
 import com.matchingMatch.match.domain.repository.StadiumRepository;

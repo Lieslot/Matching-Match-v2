@@ -1,7 +1,7 @@
 package com.matchingMatch.notification;
 
 import com.matchingMatch.TestDataBuilder;
-import com.matchingMatch.match.domain.StadiumAdapter;
+import com.matchingMatch.match.implement.StadiumAdapter;
 import com.matchingMatch.match.domain.entity.MatchEntity;
 import com.matchingMatch.notification.implement.FcmMatchNotificationPusher;
 import com.matchingMatch.notification.domain.MatchNotificationRepository;

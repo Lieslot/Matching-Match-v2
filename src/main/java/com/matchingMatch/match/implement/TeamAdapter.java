@@ -33,14 +33,6 @@ public class TeamAdapter {
 		return team.toDomain();
 	}
 
-	//    public Team getTeamBy(String username) {
-	//        UserDetail userDetail = userRepository.findByUsername(username)
-	//                .orElseThrow(IllegalArgumentException::new);
-	//        TeamEntity teamEntity  = teamRepository.findAllByLeaderId(username)
-	//                .orElseThrow(IllegalArgumentException::new);
-	//        return teamEntity.toDomain();
-	//    }
-
 	public TeamEntity getTeamEntityBy(Long teamId) {
 		return teamRepository.findById(teamId)
 			.orElseThrow(() -> new TeamNotFoundException(teamId));

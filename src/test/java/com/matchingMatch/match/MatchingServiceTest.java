@@ -13,8 +13,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -23,18 +21,15 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.transaction.TestTransaction;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.matchingMatch.TestDataBuilder;
 import com.matchingMatch.match.domain.MannerRate;
 import com.matchingMatch.match.domain.Match;
-import com.matchingMatch.match.domain.StadiumAdapter;
+import com.matchingMatch.match.implement.StadiumAdapter;
 import com.matchingMatch.match.domain.entity.MatchEntity;
 import com.matchingMatch.match.domain.entity.MatchRequestEntity;
-import com.matchingMatch.match.domain.repository.MatchRepository;
 import com.matchingMatch.match.domain.repository.MatchRequestRepository;
-import com.matchingMatch.match.domain.repository.TeamRepository;
 import com.matchingMatch.match.exception.MatchAlreadyConfirmedException;
 import com.matchingMatch.match.exception.UnauthorizedAccessException;
 import com.matchingMatch.match.implement.MannerRater;
@@ -46,9 +41,6 @@ import com.matchingMatch.match.service.MatchingService;
 import com.matchingMatch.team.domain.Team;
 import com.matchingMatch.user.domain.UserDetail;
 import com.matchingMatch.user.domain.repository.UserRepository;
-
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 
 @DataJpaTest
 @Import({MatchingService.class, MatchAdapter.class, MatchRequestAdapter.class, TeamAdapter.class

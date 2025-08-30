@@ -9,7 +9,7 @@ import com.matchingMatch.match.implement.TeamAdapter;
 import com.matchingMatch.match.domain.MannerRate;
 import com.matchingMatch.match.domain.Match;
 import com.matchingMatch.match.implement.MatchAdapter;
-import com.matchingMatch.match.domain.StadiumAdapter;
+import com.matchingMatch.match.implement.StadiumAdapter;
 import com.matchingMatch.match.domain.entity.MatchRequestEntity;
 import com.matchingMatch.listener.event.MatchRequestEvent;
 import com.matchingMatch.match.domain.entity.StadiumEntity;
