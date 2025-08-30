@@ -25,7 +25,6 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		// Spring Security 인증 차단
 		return http.cors(cors ->
 			cors.configurationSource(corsConfigurationSource())
 		).csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(authorizeRequests ->
@@ -38,7 +37,6 @@ public class SecurityConfig {
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		// 허용할 오리진, 메서드, 헤더를 설정합니다.
 		configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
 		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		configuration.setAllowCredentials(true);

@@ -1,4 +1,4 @@
-package com.matchingMatch.team.domain.entity;
+package com.matchingMatch.team.domain;
 
 import static java.util.Objects.*;
 

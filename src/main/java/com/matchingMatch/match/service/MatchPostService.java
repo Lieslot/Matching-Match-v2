@@ -9,7 +9,7 @@ import com.matchingMatch.match.domain.entity.MatchEntity;
 import com.matchingMatch.match.dto.MatchPostListElementResponse;
 import com.matchingMatch.match.dto.ModifyMatchPostRequest;
 import com.matchingMatch.match.dto.PostMatchPostRequest;
-import com.matchingMatch.team.domain.entity.Team;
+import com.matchingMatch.team.domain.Team;
 import com.matchingMatch.team.domain.entity.TeamEntity;
 
 import lombok.RequiredArgsConstructor;

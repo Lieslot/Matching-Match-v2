@@ -2,7 +2,7 @@ package com.matchingMatch.match.domain;
 
 import com.matchingMatch.TestDataBuilder;
 import com.matchingMatch.match.exception.MatchAlreadyConfirmedException;
-import com.matchingMatch.team.domain.entity.Team;
+import com.matchingMatch.team.domain.Team;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 

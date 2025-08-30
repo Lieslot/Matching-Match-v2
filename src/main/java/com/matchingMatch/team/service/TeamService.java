@@ -10,7 +10,7 @@ import com.matchingMatch.match.dto.TeamProfileResponse;
 import com.matchingMatch.match.dto.TeamProfileUpdateRequest;
 import com.matchingMatch.match.exception.UnauthorizedAccessException;
 import com.matchingMatch.team.domain.entity.LeaderRequestEntity;
-import com.matchingMatch.team.domain.entity.Team;
+import com.matchingMatch.team.domain.Team;
 import com.matchingMatch.team.dto.TeamRegisterRequest;
 import com.matchingMatch.user.domain.repository.UserRepository;
 

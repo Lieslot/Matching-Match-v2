@@ -43,7 +43,7 @@ import com.matchingMatch.match.implement.MatchRequestAdapter;
 import com.matchingMatch.match.implement.MatchTeamValidator;
 import com.matchingMatch.match.implement.TeamAdapter;
 import com.matchingMatch.match.service.MatchingService;
-import com.matchingMatch.team.domain.entity.Team;
+import com.matchingMatch.team.domain.Team;
 import com.matchingMatch.user.domain.UserDetail;
 import com.matchingMatch.user.domain.repository.UserRepository;
 

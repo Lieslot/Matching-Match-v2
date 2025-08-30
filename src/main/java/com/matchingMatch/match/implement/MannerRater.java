@@ -6,7 +6,7 @@ import com.matchingMatch.match.domain.MannerRate;
 import com.matchingMatch.match.domain.Match;
 import com.matchingMatch.match.exception.MatchAlreadyRatedException;
 import com.matchingMatch.match.exception.UnauthorizedAccessException;
-import com.matchingMatch.team.domain.entity.Team;
+import com.matchingMatch.team.domain.Team;
 
 import lombok.RequiredArgsConstructor;
 

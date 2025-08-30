@@ -14,7 +14,7 @@ import com.matchingMatch.notification.common.NotificationTemplate;
 import com.matchingMatch.notification.domain.FcmSubscriptionRepository;
 import com.matchingMatch.notification.domain.MatchNotificationEntity;
 import com.matchingMatch.notification.domain.entity.FcmSubscription;
-import com.matchingMatch.team.domain.entity.Team;
+import com.matchingMatch.team.domain.Team;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

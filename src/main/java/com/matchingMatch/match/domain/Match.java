@@ -10,7 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.matchingMatch.match.domain.enums.Gender;
 import com.matchingMatch.match.dto.ModifyMatchPostRequest;
 import com.matchingMatch.match.exception.MatchAlreadyConfirmedException;
-import com.matchingMatch.team.domain.entity.Team;
+import com.matchingMatch.team.domain.Team;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;

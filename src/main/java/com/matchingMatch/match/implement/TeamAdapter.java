@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.matchingMatch.match.domain.repository.TeamRepository;
 import com.matchingMatch.team.TeamNotFoundException;
 import com.matchingMatch.team.domain.entity.LeaderRequestEntity;
-import com.matchingMatch.team.domain.entity.Team;
+import com.matchingMatch.team.domain.Team;
 import com.matchingMatch.team.domain.entity.TeamEntity;
 import com.matchingMatch.team.domain.repository.LeaderRequestRepository;
 import com.matchingMatch.user.domain.repository.UserRepository;

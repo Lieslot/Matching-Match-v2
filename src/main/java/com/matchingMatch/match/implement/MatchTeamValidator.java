@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 import com.matchingMatch.match.domain.Match;
 import com.matchingMatch.match.exception.UnauthorizedAccessException;
-import com.matchingMatch.team.domain.entity.Team;
+import com.matchingMatch.team.domain.Team;
 
 import lombok.RequiredArgsConstructor;
 

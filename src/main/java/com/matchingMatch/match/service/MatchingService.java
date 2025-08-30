@@ -15,7 +15,7 @@ import com.matchingMatch.listener.event.MatchRequestEvent;
 import com.matchingMatch.match.domain.entity.StadiumEntity;
 import com.matchingMatch.match.dto.MatchRequestDetail;
 import com.matchingMatch.match.dto.MatchRequestThumbnail;
-import com.matchingMatch.team.domain.entity.Team;
+import com.matchingMatch.team.domain.Team;
 
 import java.time.LocalDateTime;
 import java.util.List;

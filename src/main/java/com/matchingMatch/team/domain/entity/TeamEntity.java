@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.matchingMatch.match.domain.BaseEntity;
 import com.matchingMatch.match.domain.enums.Gender;
+import com.matchingMatch.team.domain.Team;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -6,7 +6,7 @@ import com.matchingMatch.match.domain.entity.StadiumEntity;
 import com.matchingMatch.match.domain.enums.Gender;
 import com.matchingMatch.match.domain.enums.Role;
 import com.matchingMatch.match.domain.enums.SeoulDistrict;
-import com.matchingMatch.team.domain.entity.Team;
+import com.matchingMatch.team.domain.Team;
 import com.matchingMatch.user.domain.UserDetail;
 
 import java.time.LocalDateTime;
